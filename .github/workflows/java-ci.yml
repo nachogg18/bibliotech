@@ -1,11 +1,6 @@
 name: Java CI
 
 on:
-  push:
-    branches:
-      - develop
-      - master
-      - 'feature/**'
   pull_request:
     branches:
       - develop
