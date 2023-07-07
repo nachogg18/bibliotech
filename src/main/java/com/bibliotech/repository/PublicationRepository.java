@@ -2,14 +2,10 @@ package com.bibliotech.repository;
 
 import com.bibliotech.entity.Publication;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PublicationRepository extends CrudRepository<Publication, Long> {
-    Publication findById(long id);
-
-    List<Publication> findPublicationByName(String name);
-
-    Publication save(Publication publication);
-
+@Repository
+public interface PublicationRepository extends BaseRepository<Publication, Long> {
 }
