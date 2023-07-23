@@ -25,7 +25,7 @@ public class Ejemplar extends Base{
     private int nroInventario;
 
     @Column(name="fechaAlta")
-    private Date fechaAlta;
+    private Date fechaAlta = new Date();
 
     @Column(name="fechaBaja")
     private Date fechaBaja;
