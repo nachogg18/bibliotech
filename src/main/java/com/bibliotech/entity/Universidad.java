@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "universidad")
-public class Edicion extends Base {
+public class Universidad extends Base {
    @Column(name="nombreUniversidad")
    private String nombre;
    
