@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "universidad")
-public class Edicion extends Base {
+public class Universidad extends Base {
    @Column(name="nombreUniversidad")
    private String nombre;
    
