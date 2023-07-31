@@ -12,6 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Publication extends Base {
 
-    @Column(name="nombre")
-    private String nombre;
+    @Column(name="name")
+    private String name;
 }
