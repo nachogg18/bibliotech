@@ -4,7 +4,9 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Publication;
 import com.bibliotech.repository.PublicationRepository;
 import com.bibliotech.repository.specifications.Filter;
+import com.bibliotech.repository.specifications.Publication_;
 import com.bibliotech.service.PublicationServiceImpl;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,9 +29,11 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     @GetMapping
     @RequestMapping(path = "/searchByParams")
-    public ResponseEntity<Object> findPublicationWithName(@RequestBody(required = false) List<Filter> filterList) throws Exception {
+    public ResponseEntity<Object> findPublicationWithName(List<Filter> filterList) throws Exception {
         
         logger.info("request {}", Objects.toString(filterList, ""));
+        
+        List<Filter> validatedFilterList = validateFieldsFromFilterList(filterList);
         
         try {
             return ResponseEntity.of(Optional.of(getQueryResult(filterList)));
@@ -43,7 +47,7 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     }
 
-  public List<Publication> getQueryResult(List<Filter> filterList) throws Exception {
+  private List<Publication> getQueryResult(List<Filter> filterList) throws Exception {
         logger.info("filters: ", Objects.toString(filterList, ""));
         
         if(!Objects.isNull(filterList) && filterList.size()>0) {
@@ -61,5 +65,18 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
             return this.service.findAll();
         }
     }
+
+    private List<Filter> validateFieldsFromFilterList(List<Filter> filterList) {
+
+        List<Filter> validatedFieldsFilterList = new ArrayList<>();
+        filterList.stream()
+                .filter(
+                        filterToValidate -> Publication_.getFieldsFilter().stream().
+                                anyMatch(fieldfilter -> fieldfilter.equals(filterToValidate))).map(filterValidated -> validatedFieldsFilterList.add(filterValidated));
+
+        return validatedFieldsFilterList;
+    }
+
+
 }
 
