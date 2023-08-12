@@ -1,6 +1,6 @@
 package com.bibliotech.dto;
 
-import com.bibliotech.utils.DateUtils;
+import com.bibliotech.utils.DateTimeUtils;
 import jakarta.validation.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,7 +43,7 @@ public record PublicationSearchRequestDTO (
 
     private Optional<LocalDateTime> validateDate(String stringDate) throws DateTimeException {
         if (StringUtils.isNotBlank(stringDate)) {
-            return Optional.of(DateUtils.fromDate(stringDate));
+            return Optional.of(DateTimeUtils.fromDate(stringDate));
         }
         return Optional.empty();
     }
