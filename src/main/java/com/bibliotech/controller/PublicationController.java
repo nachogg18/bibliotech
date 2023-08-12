@@ -1,10 +1,11 @@
 package com.bibliotech.controller;
 
 
+import com.bibliotech.dto.PublicationSearchRequestDTO;
 import com.bibliotech.entity.Publication;
+import com.bibliotech.mapper.SearchRequestMapper;
 import com.bibliotech.repository.PublicationRepository;
-import com.bibliotech.repository.specifications.Filter;
-import com.bibliotech.repository.specifications.Publication_;
+import com.bibliotech.repository.specifications.EspecificationFilter;
 import com.bibliotech.service.PublicationServiceImpl;
 import jakarta.validation.ValidationException;
 import java.util.*;
@@ -27,18 +28,22 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     @GetMapping
     @RequestMapping(path = "/searchByParams")
-    public ResponseEntity<Object> findPublicationWithName(@RequestBody List<Filter> filterList)  {
+    public ResponseEntity<Object> findPublicationWithName(@RequestBody PublicationSearchRequestDTO request)  {
         
-        /*
-        TODO: Crear una request para que el cliente del controller tenga un conjunto de datos para buscar
-        TODO: pero que no tenga liberados los filtros de la especificacion   
-         */
-        
-        logger.info("request {}", Objects.toString(filterList, ""));
         try {
-            validateFieldsFromFilterList(filterList);
+            logger.info("request {}", Objects.toString(request, "empty request"));
             
-            return ResponseEntity.of(Optional.of(getQueryResult(filterList)));
+            request.validateRequest();
+            
+            var especificationFilterList = SearchRequestMapper.toEspecificationFilter(request);
+
+            logger.info("especificationFilterList: {}", Objects.toString(especificationFilterList, ""));
+            
+            validateFieldsFromFilterList(especificationFilterList);
+
+            logger.info("especificationFilterList validated: {}", Objects.toString(especificationFilterList, ""));
+            
+            return ResponseEntity.of(Optional.of(getQueryResult(especificationFilterList)));
         } 
         catch (ValidationException exception) {
             return ResponseEntity.badRequest().body("error en los parametros de busqueda");
@@ -53,12 +58,12 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     }
 
-  private List<Publication> getQueryResult(List<Filter> filterList) throws Exception {
-        logger.info("filters: ", Objects.toString(filterList, ""));
+  private List<Publication> getQueryResult(List<EspecificationFilter> especificationFilterList) throws Exception {
+        logger.info("filters: ", Objects.toString(especificationFilterList, ""));
         
-        if(!Objects.isNull(filterList) && filterList.size()>0) {
+        if(!Objects.isNull(especificationFilterList) && especificationFilterList.size()>0) {
             try {
-                return this.service.findByParams(filterList);
+                return this.service.findByParams(especificationFilterList);
             } catch ( InvalidDataAccessApiUsageException invalidDataAccessApiUsageException) {
                 logger.info("exception:", invalidDataAccessApiUsageException.getMessage());
                 throw invalidDataAccessApiUsageException;
@@ -72,13 +77,11 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
         }
     }
 
-    private void validateFieldsFromFilterList(List<Filter> filterList) throws ValidationException {
-        
-        boolean containsAll = new HashSet<>(Publication_.getFieldsFilter())
-                .containsAll(filterList.stream().map(filter -> filter.getField()).toList());
-
-       if (!containsAll) {
-           throw new ValidationException("some_of_criteria_filters_are_invalid");
+    private void validateFieldsFromFilterList(List<EspecificationFilter> especificationFilterList) throws ValidationException {
+       if (especificationFilterList.size() == 0) {
+           String msg = "request_is";
+           logger.info(msg);
+           throw new ValidationException(msg);
        }
        
        /*

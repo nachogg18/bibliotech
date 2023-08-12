@@ -8,7 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class PublicationSpecifications {
     
-    public static Specification<Publication> createSpecification(Filter input) {
+    public static Specification<Publication> createSpecification(EspecificationFilter input) {
         switch (input.getOperator()){
 
             case EQUALS:
