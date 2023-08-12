@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
-public class Filter {
+public class EspecificationFilter {
     private String field;
     private QueryOperator operator;
     private String value;

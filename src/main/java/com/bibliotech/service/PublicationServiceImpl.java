@@ -6,7 +6,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 import com.bibliotech.entity.Publication;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PublicationRepository;
-import com.bibliotech.repository.specifications.Filter;
+import com.bibliotech.repository.specifications.EspecificationFilter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,14 +22,14 @@ public class PublicationServiceImpl extends BaseServiceImpl<Publication, Long> i
         super(baseRepository);
     }
 
-    public List<Publication> findByParams(List<Filter> filterList) {
-        return this.publicationRepository.findAll(getSpecificationFromFilters(filterList));
+    public List<Publication> findByParams(List<EspecificationFilter> especificationFilterList) {
+        return this.publicationRepository.findAll(getSpecificationFromFilters(especificationFilterList));
     }
 
-    private Specification<Publication> getSpecificationFromFilters(List<Filter> filter) {
+    private Specification<Publication> getSpecificationFromFilters(List<EspecificationFilter> especificationFilter) {
         Specification<Publication> specification =
-                where(createSpecification(filter.remove(0)));
-        for (Filter input : filter) {
+                where(createSpecification(especificationFilter.remove(0)));
+        for (EspecificationFilter input : especificationFilter) {
             specification = specification.and(createSpecification(input));
         }
         return specification;
