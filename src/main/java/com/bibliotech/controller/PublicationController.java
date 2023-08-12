@@ -27,7 +27,12 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     @GetMapping
     @RequestMapping(path = "/searchByParams")
-    public ResponseEntity<Object> findPublicationWithName(@RequestBody List<Filter> filterList) throws Exception {
+    public ResponseEntity<Object> findPublicationWithName(@RequestBody List<Filter> filterList)  {
+        
+        /*
+        TODO: Crear una request para que el cliente del controller tenga un conjunto de datos para buscar
+        TODO: pero que no tenga liberados los filtros de la especificacion   
+         */
         
         logger.info("request {}", Objects.toString(filterList, ""));
         try {
@@ -68,15 +73,11 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
     }
 
     private void validateFieldsFromFilterList(List<Filter> filterList) throws ValidationException {
+        
+        boolean containsAll = new HashSet<>(Publication_.getFieldsFilter())
+                .containsAll(filterList.stream().map(filter -> filter.getField()).toList());
 
-       List<Map<String, Optional<Map<String, String>>>> filterResultMap = filterList.stream()
-                .map(filterToValidate ->
-                        Map.of(filterToValidate.getField(),
-                                Publication_
-                                        .getFieldNameAndTypeByFieldName(filterToValidate.getField()))).toList();
-       
-
-       if (filterResultMap.size() != filterList.size() ) {
+       if (!containsAll) {
            throw new ValidationException("some_of_criteria_filters_are_invalid");
        }
        

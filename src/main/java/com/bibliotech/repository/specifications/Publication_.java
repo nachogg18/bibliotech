@@ -3,12 +3,9 @@ package com.bibliotech.repository.specifications;
 import com.bibliotech.entity.Publication;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
-import javax.annotation.processing.Generated;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import javax.annotation.processing.Generated;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Publication.class)
@@ -30,23 +27,4 @@ public class Publication_ {
     public static List<String> getFieldsFilter() {
         return List.of(NAME, START_DATE, END_DATE, PUBLICATION_DATE, ISBN);
     }
-
-    private static List<Map<String, String>> getFieldNamesAndTypes() {
-        return List.of(id, name, startDate, endDate, publicationDate, isbn)
-                .stream()
-                .map(singularAttribute -> Map.of(
-                        singularAttribute.getType().getJavaType().getName(),
-                        singularAttribute.getName()))
-                .collect(Collectors.toList());
-    }
-
-    public static Optional<Map<String, String>> getFieldNameAndTypeByFieldName(String fieldName) {
-        return getFieldNamesAndTypes()
-                .stream()
-                .filter( nameTypeMap -> nameTypeMap.containsKey(fieldName))
-                .findAny();
-    }
-
-
-
 }
