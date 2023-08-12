@@ -6,10 +6,8 @@ import com.bibliotech.repository.PublicationRepository;
 import com.bibliotech.repository.specifications.Filter;
 import com.bibliotech.repository.specifications.Publication_;
 import com.bibliotech.service.PublicationServiceImpl;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import jakarta.validation.ValidationException;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +27,23 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     @GetMapping
     @RequestMapping(path = "/searchByParams")
-    public ResponseEntity<Object> findPublicationWithName(List<Filter> filterList) throws Exception {
+    public ResponseEntity<Object> findPublicationWithName(@RequestBody List<Filter> filterList)  {
+        
+        /*
+        TODO: Crear una request para que el cliente del controller tenga un conjunto de datos para buscar
+        TODO: pero que no tenga liberados los filtros de la especificacion   
+         */
         
         logger.info("request {}", Objects.toString(filterList, ""));
-        
-        List<Filter> validatedFilterList = validateFieldsFromFilterList(filterList);
-        
         try {
+            validateFieldsFromFilterList(filterList);
+            
             return ResponseEntity.of(Optional.of(getQueryResult(filterList)));
-        } catch (InvalidDataAccessApiUsageException exception) {
+        } 
+        catch (ValidationException exception) {
+            return ResponseEntity.badRequest().body("error en los parametros de busqueda");
+        }
+        catch (InvalidDataAccessApiUsageException exception) {
             return ResponseEntity.badRequest().body("error en los parametros de busqueda");
         } catch (Exception exception) {
             logger.info("Exception:", exception);
@@ -66,15 +72,19 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
         }
     }
 
-    private List<Filter> validateFieldsFromFilterList(List<Filter> filterList) {
+    private void validateFieldsFromFilterList(List<Filter> filterList) throws ValidationException {
+        
+        boolean containsAll = new HashSet<>(Publication_.getFieldsFilter())
+                .containsAll(filterList.stream().map(filter -> filter.getField()).toList());
 
-        List<Filter> validatedFieldsFilterList = new ArrayList<>();
-        filterList.stream()
-                .filter(
-                        filterToValidate -> Publication_.getFieldsFilter().stream().
-                                anyMatch(fieldfilter -> fieldfilter.equals(filterToValidate))).map(filterValidated -> validatedFieldsFilterList.add(filterValidated));
-
-        return validatedFieldsFilterList;
+       if (!containsAll) {
+           throw new ValidationException("some_of_criteria_filters_are_invalid");
+       }
+       
+       /*
+       TODO: comprobar si cada campo coincide con el tipo del metamodelo
+        */
+       
     }
 
 

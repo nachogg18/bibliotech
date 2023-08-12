@@ -3,9 +3,9 @@ package com.bibliotech.repository.specifications;
 import com.bibliotech.entity.Publication;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
-import javax.annotation.processing.Generated;
 import java.time.Instant;
 import java.util.List;
+import javax.annotation.processing.Generated;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(Publication.class)
