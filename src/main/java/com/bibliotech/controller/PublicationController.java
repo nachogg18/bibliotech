@@ -58,22 +58,17 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     }
 
-  private List<Publication> getQueryResult(List<EspecificationFilter> especificationFilterList) throws Exception {
+    private List<Publication> getQueryResult(List<EspecificationFilter> especificationFilterList) throws Exception {
         logger.info("filters: ", Objects.toString(especificationFilterList, ""));
-        
-        if(!Objects.isNull(especificationFilterList) && especificationFilterList.size()>0) {
-            try {
-                return this.service.findByParams(especificationFilterList);
-            } catch ( InvalidDataAccessApiUsageException invalidDataAccessApiUsageException) {
-                logger.info("exception:", invalidDataAccessApiUsageException.getMessage());
-                throw invalidDataAccessApiUsageException;
-            } catch (Exception exception) {
-                logger.info("exception:", exception.toString());
-                throw exception;
-            }
-            
-        } else {
-            return this.service.findAll();
+
+        try {
+            return this.service.findByParams(especificationFilterList);
+        } catch ( InvalidDataAccessApiUsageException invalidDataAccessApiUsageException) {
+            logger.info("exception:", invalidDataAccessApiUsageException.getMessage());
+            throw invalidDataAccessApiUsageException;
+        } catch (Exception exception) {
+            logger.info("exception:", exception.toString());
+            throw exception;
         }
     }
 
