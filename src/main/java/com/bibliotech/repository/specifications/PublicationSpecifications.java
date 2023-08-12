@@ -2,6 +2,7 @@ package com.bibliotech.repository.specifications;
 
 
 import com.bibliotech.entity.Publication;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,6 +36,20 @@ public class PublicationSpecifications {
                                         root.get(input.getField()).getJavaType(),
                                         input.getValue()));
 
+            case GREATER_OR_EQUAL_THAN_DATETIME:
+                return (root, query, criteriaBuilder) ->
+                        criteriaBuilder.greaterThanOrEqualTo(root.get(input.getField()),
+                                (LocalDateTime) castToRequiredType(
+                                        root.get(input.getField()).getJavaType(),
+                                        input.getValue()));
+
+            case LESS_OR_EQUAL_THAN_DATETIME:
+                return (root, query, criteriaBuilder) ->
+                        criteriaBuilder.lessThanOrEqualTo(root.get(input.getField()),
+                                (LocalDateTime) castToRequiredType(
+                                        root.get(input.getField()).getJavaType(),
+                                        input.getValue()));     
+
             case LESS_THAN:
                 return (root, query, criteriaBuilder) ->
                         criteriaBuilder.lt(root.get(input.getField()),
@@ -67,6 +82,8 @@ public class PublicationSpecifications {
             return Integer.valueOf(value);
         } else if(Enum.class.isAssignableFrom(fieldType)) {
             return Enum.valueOf(fieldType, value);
+        } else if(fieldType.isAssignableFrom(LocalDateTime.class)) {
+            return LocalDateTime.parse(value);
         }
         return null;
     }

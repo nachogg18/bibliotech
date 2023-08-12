@@ -35,7 +35,7 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
             
             request.validateRequest();
             
-            var especificationFilterList = SearchRequestMapper.toEspecificationFilter(request);
+            var especificationFilterList = SearchRequestMapper.toPublicationEspecificationFilter(request);
 
             logger.info("especificationFilterList: {}", Objects.toString(especificationFilterList, ""));
             
@@ -46,10 +46,10 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
             return ResponseEntity.of(Optional.of(getQueryResult(especificationFilterList)));
         } 
         catch (ValidationException exception) {
-            return ResponseEntity.badRequest().body("error en los parametros de busqueda");
+            return ResponseEntity.badRequest().body("Error en los parametros de busqueda");
         }
         catch (InvalidDataAccessApiUsageException exception) {
-            return ResponseEntity.badRequest().body("error en los parametros de busqueda");
+            return ResponseEntity.badRequest().body("Hubo un problema al realizar la consulta");
         } catch (Exception exception) {
             logger.info("Exception:", exception);
             return ResponseEntity.internalServerError().body("Hubo un problema al realizar la operacion ");
@@ -58,7 +58,7 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     }
 
-    private List<Publication> getQueryResult(List<EspecificationFilter> especificationFilterList) throws Exception {
+    private List<Publication> getQueryResult(List<EspecificationFilter> especificationFilterList) {
         logger.info("filters: ", Objects.toString(especificationFilterList, ""));
 
         try {
@@ -74,7 +74,7 @@ public class PublicationController extends BaseControllerImpl<Publication, Publi
 
     private void validateFieldsFromFilterList(List<EspecificationFilter> especificationFilterList) throws ValidationException {
        if (especificationFilterList.size() == 0) {
-           String msg = "request_is";
+           String msg = "request_is_empty";
            logger.info(msg);
            throw new ValidationException(msg);
        }

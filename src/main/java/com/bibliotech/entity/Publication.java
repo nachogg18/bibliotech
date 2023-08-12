@@ -1,10 +1,8 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
-
-import java.time.Instant;
-
 
 @Entity
 @Table(name= "publication")
@@ -18,10 +16,10 @@ public class Publication extends Base {
     private String name;
 
     @Column(name="start_date")
-    private Instant startDate;
+    private LocalDateTime startDate;
 
     @Column(name="end_date")
-    private Instant endDate;
+    private LocalDateTime endDate;
 
     @Column(name="isbn")
     private String isbn;
@@ -30,5 +28,5 @@ public class Publication extends Base {
     private String synopsis;
 
     @Column(name="publication_date")
-    private Instant publicationDate;
+    private LocalDateTime publicationDate;
 }
