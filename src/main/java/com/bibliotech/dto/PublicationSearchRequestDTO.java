@@ -1,14 +1,23 @@
 package com.bibliotech.dto;
 
+import com.bibliotech.utils.DateTimeUtils;
 import jakarta.validation.ValidationException;
 import org.apache.commons.lang3.StringUtils;
+
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 public record PublicationSearchRequestDTO (
         String name,
         String id,
-        String startDate,
-        String endDate,
-        String publicationDate,
+        String startDateAfter,
+        String startDateBefore,
+        String endDateAfter,
+        String endDateBefore,
+        String publicationDateAfter,
+        String publicationDateBefore,
         String isbn
         )
 {
@@ -17,14 +26,42 @@ public record PublicationSearchRequestDTO (
         if (StringUtils.isBlank(this.id)
                 && StringUtils.isBlank(this.isbn)
                 && StringUtils.isBlank(this.name)
-                && StringUtils.isBlank(this.startDate)
-                && StringUtils.isBlank(this.endDate)
-                && StringUtils.isBlank(this.publicationDate)
+                && StringUtils.isBlank(this.startDateBefore)
+                && StringUtils.isBlank(this.startDateAfter)
+                && StringUtils.isBlank(this.endDateBefore)
+                && StringUtils.isBlank(this.endDateAfter)
+                && StringUtils.isBlank(this.publicationDateBefore)
+                && StringUtils.isBlank(this.publicationDateAfter)
         ) {
             String msg = "request_is_empty";
             throw new ValidationException(msg);
         }
+
+        validateDates();
+
     }
+
+    private Optional<LocalDateTime> validateDate(String stringDate) throws DateTimeException {
+        if (StringUtils.isNotBlank(stringDate)) {
+            return Optional.of(DateTimeUtils.fromDate(stringDate));
+        }
+        return Optional.empty();
+    }
+
+    private void validateDates() {
+        try {
+            validateDate(this.startDateAfter);
+            validateDate(this.startDateBefore);
+            validateDate(this.endDateAfter);
+            validateDate(this.endDateBefore);
+            validateDate(this.publicationDateAfter);
+            validateDate(this.publicationDateBefore);
+        } catch (DateTimeParseException e) {
+            String msg = "invalid_format_datetimes";
+            throw new ValidationException(msg);
+        }
+    }
+
 
 }
 
