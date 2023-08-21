@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 public class SearchRequestMapper {
-    public static List<EspecificationFilter> toEspecificationFilter(PublicationSearchRequestDTO publicationSearchRequestDTO) {
+    public static List<EspecificationFilter> toPublicationEspecificationFilter(PublicationSearchRequestDTO publicationSearchRequestDTO) {
     List<EspecificationFilter> filterList = new ArrayList<>();
 
         if (StringUtils.isNotBlank(publicationSearchRequestDTO.id())) {
@@ -42,14 +42,64 @@ public class SearchRequestMapper {
             filterList.add(isbnEspFilter);
         }
 
-        if (StringUtils.isNotBlank(publicationSearchRequestDTO.isbn())) {
-            EspecificationFilter isbnEspFilter = EspecificationFilter.builder()
-                    .field(Publication_.ISBN)
-                    .operator(QueryOperator.EQUALS_STRING)
-                    .value(publicationSearchRequestDTO.isbn())
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.startDateAfter())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.GREATER_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.startDateAfter())
                     .build();
 
-            filterList.add(isbnEspFilter);
+            filterList.add(startDateEspFilter);
+        }
+
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.startDateBefore())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.LESS_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.startDateBefore())
+                    .build();
+
+            filterList.add(startDateEspFilter);
+        }
+
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.endDateAfter())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.GREATER_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.endDateAfter())
+                    .build();
+
+            filterList.add(startDateEspFilter);
+        }
+
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.endDateBefore())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.LESS_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.endDateBefore())
+                    .build();
+
+            filterList.add(startDateEspFilter);
+        }
+
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.publicationDateAfter())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.GREATER_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.publicationDateAfter())
+                    .build();
+
+            filterList.add(startDateEspFilter);
+        }
+
+        if (StringUtils.isNotBlank(publicationSearchRequestDTO.publicationDateBefore())) {
+            EspecificationFilter startDateEspFilter = EspecificationFilter.builder()
+                    .field(Publication_.START_DATE)
+                    .operator(QueryOperator.LESS_OR_EQUAL_THAN_DATETIME)
+                    .value(publicationSearchRequestDTO.publicationDateBefore())
+                    .build();
+
+            filterList.add(startDateEspFilter);
         }
 
         return filterList;

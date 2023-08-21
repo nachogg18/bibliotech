@@ -3,9 +3,10 @@ public enum QueryOperator {
     GREATER_THAN,
     LESS_THAN,
     EQUALS,
-
     EQUALS_STRING,
     LIKE,
     NOT_EQ,
-    IN
+    IN,
+    GREATER_OR_EQUAL_THAN_DATETIME,
+    LESS_OR_EQUAL_THAN_DATETIME,
 }
