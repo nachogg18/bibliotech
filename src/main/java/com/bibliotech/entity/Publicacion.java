@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name= "publicacion")
+@Table(name = "publicacion")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,6 +29,9 @@ public class Publicacion extends Base {
 
     @Column
     private Date fechaBaja;
+
+    @Column
+    private String descripcion;
 
     @ManyToMany
     @JoinTable(name = "publicacion_autor",

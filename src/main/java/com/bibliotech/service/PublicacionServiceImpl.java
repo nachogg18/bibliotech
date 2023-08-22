@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.PublicacionResponseDTO;
 import com.bibliotech.entity.Publicacion;
+import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PublicacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +23,7 @@ public class PublicacionServiceImpl extends BaseServiceImpl<Publicacion, Long> i
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO() {
         List<Publicacion> publicaciones = publicacionRepository.findAll();
-        return publicaciones.stream().map(
-                publicacion -> {
-                    PublicacionResponseDTO dto = new PublicacionResponseDTO();
-                    dto.setId(publicacion.getId());
-                    dto.setTituloPublicacion(publicacion.getTitulo());
-                    publicacion.getAutores().forEach(a -> dto.getNombreAutores().add(a.getApellido().toUpperCase() + ", " + a.getNombre()));
-                    dto.setNombreEditorial(publicacion.getEditoriales().get(0).getNombre()); // TODO: Tomar la ultima editorial
-                    dto.setAnioPublicacion(publicacion.getAnio());
-                    dto.setNombreEdicion(publicacion.getEdicion().getNombre());
-                    return dto;
-                }
-        ).toList();
+        return PublicacionRequestMapper.toResponseDTO(publicaciones);
     }
 
 }
