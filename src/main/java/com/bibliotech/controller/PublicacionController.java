@@ -1,18 +1,13 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.BusquedaPublicacionCategoriaDTO;
 import com.bibliotech.dto.DetallePublicacionDTO;
 import com.bibliotech.dto.PublicacionResponseDTO;
-import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
-import com.bibliotech.service.PublicacionServiceImpl;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,20 +15,28 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "api/v1/publicaciones")
 @Log4j2
-public class PublicacionController extends BaseControllerImpl<Publicacion, PublicacionServiceImpl> {
+public class PublicacionController {
 
-    @Autowired
-    private PublicacionService publicacionService;
+    private final PublicacionService publicacionService;
 
-    @GetMapping(path = "/findAll")
-    public List<PublicacionResponseDTO> findAll() {
-        log.debug("Request to get all Publicacion");
-        return publicacionService.findAllPublicacionDTO();
+    public PublicacionController(PublicacionService publicacionService) {
+        this.publicacionService = publicacionService;
     }
 
-    @GetMapping(path = "/findOne")
-    public ResponseEntity<DetallePublicacionDTO> getDetallePublicacion() {
-        return new ResponseEntity(null, HttpStatus.OK);
+    @PostMapping(path = "")
+    public List<PublicacionResponseDTO> findAll(
+            @RequestParam String parametro,
+            @RequestParam(required = false) String contenido,
+            @RequestBody(required = false) List<BusquedaPublicacionCategoriaDTO> busquedaPublicacion
+            ) {
+        log.debug("(POST) Request to get PublicacionResponseDTO list");
+        return publicacionService.findAllPublicacionDTO(parametro, contenido, busquedaPublicacion);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<DetallePublicacionDTO> getDetallePublicacion(@PathVariable Long id) {
+        log.debug("(GET) Request to get DetallePublicacionDTO");
+        return new ResponseEntity<>(publicacionService.getDetallePublicacion(id), HttpStatus.OK);
     }
 
 }
