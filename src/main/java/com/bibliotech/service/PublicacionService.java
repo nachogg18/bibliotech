@@ -1,12 +1,13 @@
 package com.bibliotech.service;
 
 
+import com.bibliotech.dto.BusquedaPublicacionCategoriaDTO;
+import com.bibliotech.dto.DetallePublicacionDTO;
 import com.bibliotech.dto.PublicacionResponseDTO;
-import com.bibliotech.entity.Publicacion;
 
 import java.util.List;
 
-public interface PublicacionService extends BaseService<Publicacion, Long>{
-    List<PublicacionResponseDTO> findAllPublicacionDTO();
-
+public interface PublicacionService {
+    List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
+    DetallePublicacionDTO getDetallePublicacion(Long id);
 }

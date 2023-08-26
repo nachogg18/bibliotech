@@ -24,7 +24,7 @@ public class CategoriaController {
 
     @GetMapping("/filtros")
     public List<FiltroCategoriaDTO> findAllDTO() {
-        log.debug("Request to get FiltroCategoriaDTO list");
+        log.debug("(GET) Request to get FiltroCategoriaDTO list");
         return categoriaService.findAllDTO();
     }
 

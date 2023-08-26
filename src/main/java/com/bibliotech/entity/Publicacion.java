@@ -3,6 +3,7 @@ package com.bibliotech.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,11 +40,11 @@ public class Publicacion extends Base {
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
 
-//    @ManyToMany
-//    @JoinTable(name = "publicacion_categoria",
-//            joinColumns = @JoinColumn(name = "publicacion_id"),
-//            inverseJoinColumns = @JoinColumn(name = "categoria_id"))
-//    private List<Categoria> categorias;
+    @ManyToMany
+    @JoinTable(name = "publicacion_categoria_publicacion",
+            joinColumns = @JoinColumn(name = "publicacion_id"),
+            inverseJoinColumns = @JoinColumn(name = "categoria_publicacion_id"))
+    private List<CategoriaPublicacion> categoriaPublicacionList = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "publicacion_editorial",
@@ -53,6 +54,9 @@ public class Publicacion extends Base {
 
     @ManyToOne
     private Edicion edicion;
+
+    @OneToMany
+    private List<Ejemplar> ejemplares = new ArrayList<>();
 
 //    @Column
 //    private TipoPublicacion tipoPublicacion;
