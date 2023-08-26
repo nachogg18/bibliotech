@@ -2,13 +2,16 @@ package com.bibliotech.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name= "categoria")
@@ -26,4 +29,7 @@ public class Categoria extends Base{
 
     @Column(name="fechaBaja")
     private Date fechaBaja;
+
+    @OneToMany
+    private List<CategoriaValor> categoriaValorList = new ArrayList<>();
 }
