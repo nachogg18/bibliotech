@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
 server:
   error:
     include-stacktrace: never
