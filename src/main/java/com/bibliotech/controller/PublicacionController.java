@@ -1,8 +1,6 @@
 package com.bibliotech.controller;
 
-import com.bibliotech.dto.BusquedaPublicacionCategoriaDTO;
-import com.bibliotech.dto.DetallePublicacionDTO;
-import com.bibliotech.dto.PublicacionResponseDTO;
+import com.bibliotech.dto.*;
 import com.bibliotech.service.PublicacionService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -27,16 +25,22 @@ public class PublicacionController {
     public List<PublicacionResponseDTO> findAll(
             @RequestParam String parametro,
             @RequestParam(required = false) String contenido,
-            @RequestBody(required = false) List<BusquedaPublicacionCategoriaDTO> busquedaPublicacion
+            @RequestBody List<BusquedaPublicacionCategoriaDTO> busquedaPublicacion
             ) {
         log.debug("(POST) Request to get PublicacionResponseDTO list");
         return publicacionService.findAllPublicacionDTO(parametro, contenido, busquedaPublicacion);
     }
 
+    @GetMapping(path = "")
+    public ResponseEntity<PageDTO<PublicacionPaginadaDTO>> getAllPublicacionPaged(@RequestParam(defaultValue = "1") int page) {
+        log.debug("(POST) Request to get PublicacionResponseDTO list paginated");
+        return ResponseEntity.status(HttpStatus.OK).body(publicacionService.findAllPublicacionPaginatedDTO(page));
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetallePublicacionDTO> getDetallePublicacion(@PathVariable Long id) {
         log.debug("(GET) Request to get DetallePublicacionDTO");
-        return new ResponseEntity<>(publicacionService.getDetallePublicacion(id), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(publicacionService.getDetallePublicacion(id));
     }
 
 }

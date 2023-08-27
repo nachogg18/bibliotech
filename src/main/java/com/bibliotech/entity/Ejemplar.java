@@ -11,26 +11,24 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name= "ejemplar")
+@Table(name = "ejemplar")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ejemplar extends Base{
+public class Ejemplar extends Base {
+    @Column
+    private Long serialNFC;
 
-    @Column(name="valoracionPromedio")
-    private float valoracionPromedio;
-
-    @Column(name="nroInventario")
-    private int nroInventario;
-
-    @Column(name="fechaAlta")
+    @Column(name = "fechaAlta")
     private Date fechaAlta = new Date();
 
-    @Column(name="fechaBaja")
+    @Column(name = "fechaBaja")
     private Date fechaBaja;
 
     @OneToMany
     private List<EjemplarEstado> ejemplarEstadoList = new ArrayList<>();
 
+    @OneToMany
+    private List<Comentario> comentarios = new ArrayList<>();
 }

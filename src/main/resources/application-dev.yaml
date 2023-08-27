@@ -1,3 +1,7 @@
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    com.bibliotech: DEBUG
 spring:
   datasource:
     url: ${DB_URL}
