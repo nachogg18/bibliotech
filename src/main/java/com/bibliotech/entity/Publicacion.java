@@ -56,7 +56,16 @@ public class Publicacion extends Base {
     private Edicion edicion;
 
     @OneToMany
+    @JoinTable(name = "publicacion_ejemplar",
+            joinColumns = @JoinColumn(name = "publicacion_id"),
+            inverseJoinColumns = @JoinColumn(name = "ejemplar_id"))
     private List<Ejemplar> ejemplares = new ArrayList<>();
+
+    @OneToMany
+    @JoinTable(name = "publicacion_comentario",
+            joinColumns = @JoinColumn(name = "publicacion_id"),
+            inverseJoinColumns = @JoinColumn(name = "comentario_id"))
+    private List<Comentario> comentarios = new ArrayList<>();
 
 //    @Column
 //    private TipoPublicacion tipoPublicacion;
