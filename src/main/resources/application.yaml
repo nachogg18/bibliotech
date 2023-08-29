@@ -1,7 +1,6 @@
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    com.bibliotech: DEBUG
 spring:
   profiles:
     active: local
+server:
+  error:
+    include-stacktrace: never
