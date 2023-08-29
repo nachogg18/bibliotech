@@ -1,4 +1,4 @@
-package com.bibliotech.service;
+package com.bibliotech.security.service;
 
 import com.bibliotech.entity.Usuario;
 import com.bibliotech.repository.UsuarioRepository;
@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class customUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
