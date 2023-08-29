@@ -1,4 +1,7 @@
 spring:
+  sql:
+    init:
+      mode: always
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
