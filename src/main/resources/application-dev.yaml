@@ -1,14 +1,12 @@
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    com.bibliotech: DEBUG
 spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect:  org.hibernate.dialect.MySQLDialect
