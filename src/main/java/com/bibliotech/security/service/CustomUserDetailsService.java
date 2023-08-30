@@ -4,6 +4,7 @@ import com.bibliotech.entity.Usuario;
 import com.bibliotech.repository.UsuarioRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +31,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             userName = usuarios.get(0).getEmail();
             password = usuarios.get(0).getPwd();
             authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(usuarios.get(0).getRole()));
+            authorities.addAll(usuarios.get(0).getRoles().stream().map(
+                    rol -> new SimpleGrantedAuthority(rol.getName())
+            ).collect(Collectors.toList()));
         }
         return new User(userName,password,authorities);
     }
