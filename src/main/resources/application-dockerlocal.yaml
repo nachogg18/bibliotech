@@ -10,3 +10,6 @@ spring:
     properties:
       hibernate:
         dialect:  org.hibernate.dialect.MySQLDialect
+token:
+  signing:
+    key: 1234
