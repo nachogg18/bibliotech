@@ -8,3 +8,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+
+
+token:
+  signing:
+    key: ${TOKEN_SIGNING_KEY}
