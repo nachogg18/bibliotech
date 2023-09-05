@@ -12,4 +12,4 @@ spring:
         dialect:  org.hibernate.dialect.MySQLDialect
 token:
   signing:
-    key: 1234
+    key: test
