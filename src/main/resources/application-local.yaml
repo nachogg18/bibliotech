@@ -1,16 +1,22 @@
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    com.bibliotech: DEBUG
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
   jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect:  org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+  docker:
+    compose:
+      enabled: true
+      path: /h2-console
 
 token:
   signing:
-    key: testjsdsfdjsfdsfljsdflsdfjweg834gt322367t234762
+    key: test1352675ghjt7789798578455855seserewgweew
