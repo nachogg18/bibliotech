@@ -12,9 +12,11 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
+  docker:
+    compose:
       enabled: true
       path: /h2-console
 
 token:
   signing:
-    key: test
+    key: test1352675ghjt7789798578455855seserewgweew
