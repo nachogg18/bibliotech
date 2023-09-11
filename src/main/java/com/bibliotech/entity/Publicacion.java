@@ -67,7 +67,7 @@ public class Publicacion extends Base {
             inverseJoinColumns = @JoinColumn(name = "comentario_id"))
     private List<Comentario> comentarios = new ArrayList<>();
 
-//    @Column
-//    private TipoPublicacion tipoPublicacion;
+    @ManyToOne
+    private TipoPublicacion tipoPublicacion;
 
 }

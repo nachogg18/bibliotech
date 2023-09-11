@@ -8,6 +8,7 @@ import com.bibliotech.repository.*;
 import com.bibliotech.utils.PageUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,6 +36,11 @@ public class PublicacionServiceImpl implements PublicacionService {
         this.editorialRepository = editorialRepository;
         this.pageUtil = pageUtil;
         this.listToPageDTOMapper = listToPageDTOMapper;
+    }
+
+    @Override
+    public List<Publicacion> findAll() {
+        return publicacionRepository.findAll();
     }
 
     @Override
