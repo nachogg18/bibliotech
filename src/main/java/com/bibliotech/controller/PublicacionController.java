@@ -1,6 +1,7 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
+import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -31,15 +32,18 @@ public class PublicacionController {
         return publicacionService.findAllPublicacionDTO(parametro, contenido, busquedaPublicacion);
     }
 
-    @GetMapping(path = "")
+    @GetMapping
+    public List<Publicacion> findAll(){
+        return publicacionService.findAll();
+    }
+
+    @GetMapping(path = "/paged")
     public ResponseEntity<PageDTO<PublicacionPaginadaDTO>> getAllPublicacionPaged(@RequestParam(defaultValue = "1") int page) {
-        log.debug("(POST) Request to get PublicacionResponseDTO list paginated");
         return ResponseEntity.status(HttpStatus.OK).body(publicacionService.findAllPublicacionPaginatedDTO(page));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<DetallePublicacionDTO> getDetallePublicacion(@PathVariable Long id) {
-        log.debug("(GET) Request to get DetallePublicacionDTO");
         return ResponseEntity.status(HttpStatus.OK).body(publicacionService.getDetallePublicacion(id));
     }
 
