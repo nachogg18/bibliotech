@@ -25,4 +25,13 @@ public class Autor extends Base {
 
     @Column(name="fechaBaja")
     private Date fechaBaja;
+
+    @Column
+    private Date fechaNacimiento;
+
+    @Column
+    private String nacionalidad;
+
+    @Column
+    private String biografia;
 }
