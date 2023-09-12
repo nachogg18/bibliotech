@@ -7,5 +7,6 @@ import java.util.List;
 
 @Repository
 public interface EditorialRepository extends BaseRepository<Editorial, Long> {
+    List<Editorial> findByFechaBajaNull();
     List<Editorial> findByNombreContainingIgnoreCase(String nombre);
 }
