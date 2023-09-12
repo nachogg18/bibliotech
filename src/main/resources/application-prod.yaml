@@ -12,4 +12,4 @@ spring:
 
 token:
   signing:
-    key: ${TOKEN_SIGNING_KEY}
+    key: ${JWT_KEY}
