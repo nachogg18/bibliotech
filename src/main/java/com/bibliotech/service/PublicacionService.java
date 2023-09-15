@@ -3,7 +3,6 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.Publicacion;
-
 import java.util.List;
 
 public interface PublicacionService {

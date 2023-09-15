@@ -2,7 +2,6 @@ package com.bibliotech.mapper;
 
 import com.bibliotech.dto.PublicacionResponseDTO;
 import com.bibliotech.entity.Publicacion;
-
 import java.util.List;
 
 public class PublicacionRequestMapper {

@@ -2,9 +2,8 @@ package com.bibliotech.controller;
 
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.service.PlataformaService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/plataformas")

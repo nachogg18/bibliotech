@@ -1,17 +1,7 @@
 package com.bibliotech.security.dao.request;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SignUpRequest {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-}
+public record SignUpRequest(
+    String firstName,
+    String lastName,
+    String email,
+    String password
+){}

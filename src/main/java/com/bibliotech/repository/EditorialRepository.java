@@ -1,9 +1,8 @@
 package com.bibliotech.repository;
 
 import com.bibliotech.entity.Editorial;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EditorialRepository extends BaseRepository<Editorial, Long> {

@@ -2,9 +2,8 @@ package com.bibliotech.controller;
 
 import com.bibliotech.entity.Autor;
 import com.bibliotech.service.AutorService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/autores/")

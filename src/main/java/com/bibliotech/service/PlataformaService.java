@@ -1,7 +1,6 @@
 package com.bibliotech.service;
 
 import com.bibliotech.entity.Plataforma;
-
 import java.util.List;
 
 public interface PlataformaService {

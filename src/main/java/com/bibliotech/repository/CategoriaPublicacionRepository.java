@@ -1,7 +1,6 @@
 package com.bibliotech.repository;
 
 import com.bibliotech.entity.CategoriaPublicacion;
-
 import java.util.Collection;
 import java.util.List;
 

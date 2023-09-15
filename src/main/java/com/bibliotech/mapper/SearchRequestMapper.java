@@ -4,10 +4,10 @@ import com.bibliotech.dto.PublicationSearchRequestDTO;
 import com.bibliotech.repository.specifications.EspecificationFilter;
 import com.bibliotech.repository.specifications.Publication_;
 import com.bibliotech.repository.specifications.QueryOperator;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+
 public class SearchRequestMapper {
     public static List<EspecificationFilter> toPublicationEspecificationFilter(PublicationSearchRequestDTO publicationSearchRequestDTO) {
     List<EspecificationFilter> filterList = new ArrayList<>();
