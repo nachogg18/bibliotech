@@ -1,33 +1,42 @@
 package com.bibliotech.security.service.impl;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
+import com.bibliotech.security.repository.RoleRepository;
 import com.bibliotech.security.repository.UserRepository;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.JwtService;
-
+import com.bibliotech.utils.RoleUtils;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        var user = User.builder().firstName(request.getFirstName()).lastName(request.getLastName())
-                .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER).build();
+        List<Role> defaultRoleUser = roleRepository.findByName(RoleUtils.DEFAULT_ROL_USER);
+        
+        if (defaultRoleUser.isEmpty()) {
+            throw new RuntimeException("Error al obtener el user default");
+            
+        }
+
+        var user = User.builder().firstName(request.firstName()).lastName(request.lastName())
+                .email(request.email()).password(passwordEncoder.encode(request.password()))
+                    .roles(List.of(defaultRoleUser.stream().findAny().get())).build();
         userRepository.save(user);
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();

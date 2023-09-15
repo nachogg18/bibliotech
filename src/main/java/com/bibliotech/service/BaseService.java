@@ -1,11 +1,10 @@
 package com.bibliotech.service;
 
 import com.bibliotech.entity.Base;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.io.Serializable;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BaseService<E extends Base, ID extends Serializable> {
     public List<E> findAll() throws Exception;

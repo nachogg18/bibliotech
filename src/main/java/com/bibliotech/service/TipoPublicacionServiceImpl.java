@@ -2,9 +2,8 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.TipoPublicacion;
 import com.bibliotech.repository.TipoPublicacionRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TipoPublicacionServiceImpl implements TipoPublicacionService {

@@ -1,12 +1,11 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

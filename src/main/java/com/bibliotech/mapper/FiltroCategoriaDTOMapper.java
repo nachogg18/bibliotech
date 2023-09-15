@@ -3,7 +3,6 @@ package com.bibliotech.mapper;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
-
 import java.util.List;
 
 public class FiltroCategoriaDTOMapper {
