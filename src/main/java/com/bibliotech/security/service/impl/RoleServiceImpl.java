@@ -8,7 +8,6 @@ import com.bibliotech.security.repository.RoleRepository;
 import com.bibliotech.security.service.RoleService;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +59,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role assignUserToRol(Role role, User user) {
-        role.setUsers(Stream.concat(role.getUsers().stream(), Stream.of(user)).toList());
+        role.getUsers().add(user);
         return roleRepository.save(role);
     }
 
