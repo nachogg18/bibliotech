@@ -1,7 +1,6 @@
 package com.bibliotech.security.entity;
 
 import jakarta.persistence.*;
-
 import java.util.Collection;
 
 @Entity
