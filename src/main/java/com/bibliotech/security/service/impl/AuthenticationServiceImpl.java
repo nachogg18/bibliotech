@@ -5,12 +5,14 @@ import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
-import com.bibliotech.security.repository.RoleRepository;
 import com.bibliotech.security.repository.UserRepository;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.JwtService;
+import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.RoleUtils;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,25 +21,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
     public JwtAuthenticationResponse signup(SignUpRequest request) {
-        List<Role> defaultRoleUser = roleRepository.findByName(RoleUtils.DEFAULT_ROL_USER);
+        Optional<Role> role;
+        if (!request.rol().isEmpty()) {
+            role = roleService.findByName(request.rol());
+        } else {
+            role = roleService.findByName(RoleUtils.DEFAULT_ROL_USER);
+        }
         
-        if (defaultRoleUser.isEmpty()) {
+        
+        if (role.isEmpty()) {
             throw new RuntimeException("Error al obtener el user default");
             
         }
 
-        var user = User.builder().firstName(request.firstName()).lastName(request.lastName())
+        User user = User.builder().firstName(request.firstName()).lastName(request.lastName())
                 .email(request.email()).password(passwordEncoder.encode(request.password()))
-                    .roles(List.of(defaultRoleUser.stream().findAny().get())).build();
-        userRepository.save(user);
+                    .roles(List.of(role.stream().findAny().get())).build();
+        user = userRepository.save(user);
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
