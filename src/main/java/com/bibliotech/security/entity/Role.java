@@ -1,12 +1,7 @@
 package com.bibliotech.security.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.Collection;
 
@@ -23,6 +18,7 @@ public class Role {
     @ManyToMany
     @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
+    @Column(unique = true)
     private String name;
 
     private Instant startDate;
@@ -32,10 +28,10 @@ public class Role {
         super();
     }
 
-    public Role(final String name, final Instant startDate) {
+    public Role(final String name) {
         super();
         this.name = name;
-        this.startDate = startDate;
+        this.startDate = Instant.now();
     }
 
     //
