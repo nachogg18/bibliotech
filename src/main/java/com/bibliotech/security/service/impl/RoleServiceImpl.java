@@ -58,9 +58,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role assignUserToRol(Role role, User user) {
-        role.getUsers().add(user);
-        return roleRepository.save(role);
+    public Role assignUserToRol(Long roleId, User user) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        if (role.isEmpty()) {
+            throw new RuntimeException("El rol no existe");
+        }
+        role.get().getUsers().add(user);
+        return roleRepository.save(role.get());
     }
 
     

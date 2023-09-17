@@ -14,5 +14,5 @@ public interface RoleService  {
     CreateRoleResponse update(UpdateRoleRequest updateRoleRequest);
     
     Optional<Role> findByName(String RoleName);
-    Role assignUserToRol(Role role, User user);
+    Role assignUserToRol(Long roleId, User user);
 }
