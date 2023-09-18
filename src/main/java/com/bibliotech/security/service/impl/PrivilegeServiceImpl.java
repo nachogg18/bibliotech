@@ -30,11 +30,15 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         return privilegeRepository.findById(id);
     }
 
+    public Optional<Privilege> getPrivilegeByName(String name) {
+        return privilegeRepository.findByName(name);
+    }
+
     public Privilege savePrivilege(Privilege privilege) {
         return privilegeRepository.save(privilege);
     }
 
-    public void addRoleToPrivilege(Long privilegeId, Role role) {
+    public Privilege addRoleToPrivilege(Long privilegeId, Role role) {
         Optional<Privilege> privilegeOptional = privilegeRepository.findById(privilegeId);
 
         if (privilegeOptional.isPresent()) {
@@ -42,7 +46,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
             // Add the Role to the Privilege
             privilege.getRoles().add(role);
-            privilegeRepository.save(privilege);
+            return privilegeRepository.save(privilege);
+        } else {
+            throw  new RuntimeException("Error en la asignación de rol");
         }
     }
 }

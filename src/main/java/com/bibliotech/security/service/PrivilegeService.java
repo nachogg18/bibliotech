@@ -12,7 +12,9 @@ public interface PrivilegeService {
 
     Optional<Privilege> getPrivilegeById(Long id);
 
+    Optional<Privilege> getPrivilegeByName(String name);
+
     Privilege savePrivilege(Privilege privilege);
 
-    void addRoleToPrivilege(Long privilegeId, Role role);
+    Privilege addRoleToPrivilege(Long privilegeId, Role role);
 }
