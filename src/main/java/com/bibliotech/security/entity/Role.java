@@ -2,6 +2,7 @@ package com.bibliotech.security.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -31,6 +32,7 @@ public class Role {
         super();
         this.name = name;
         this.startDate = Instant.now();
+        this.setPrivileges(new ArrayList<>());
     }
 
     //
