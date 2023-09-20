@@ -1,31 +1,24 @@
 package com.bibliotech.entity;
 
-import jakarta.persistence.*;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Entity
 @Builder
-@Table(name = "plataforma")
+@Table(name = "link")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Plataforma extends Base {
+public class Link extends Base {
     @Column
-    private String nombre;
-
-    @OneToMany
-    private List<Link> links = List.of();
-
-    @Column
-    private String instrucciones;
+    private String url;
     @Column
     private Instant fechaAlta = Instant.now();
     @Column

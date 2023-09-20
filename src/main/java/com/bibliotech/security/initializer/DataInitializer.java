@@ -1,13 +1,19 @@
 package com.bibliotech.security.initializer;
 
+import com.bibliotech.entity.Link;
+import com.bibliotech.entity.Plataforma;
 import com.bibliotech.security.dao.request.CreateRoleRequest;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
+import com.bibliotech.service.LinkService;
+import com.bibliotech.service.PlataformaService;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.RoleUtils;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +30,23 @@ public class DataInitializer implements ApplicationRunner {
     private RoleService roleService;
 
     @Autowired
+    private PlataformaService plataformaService;
+
+    @Autowired
+    private LinkService linkService;
+
+    @Autowired
     private AuthenticationService authenticationService;
+
+
+
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        List<Link> enabledLinks = List.of(createLink());
+
+        createPlataformas(enabledLinks);
         
         createBasicPrivileges();
         
@@ -70,6 +89,22 @@ public class DataInitializer implements ApplicationRunner {
                         "password",
                         RoleUtils.ROL_SUPER_ADMIN
                 )
+        );
+    }
+
+
+    private Link createLink() {
+        return linkService.save( Link.builder()
+                                .url("hola").build());
+    }
+    private void createPlataformas(List<Link> enabledLinks) {
+
+        plataformaService.save(
+                Plataforma.builder()
+                        .fechaAlta(Instant.now())
+                        .links(enabledLinks)
+                        .nombre("plataforma")
+                        .build()
         );
     }
     
