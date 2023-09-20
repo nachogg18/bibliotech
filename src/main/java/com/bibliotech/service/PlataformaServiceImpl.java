@@ -2,6 +2,8 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.repository.PlataformaRepository;
+
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -39,6 +41,9 @@ public class PlataformaServiceImpl implements PlataformaService {
         Plataforma plataforma = plataformaRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
-        plataforma.setFechaBaja(new Date());
+
+        plataforma.setFechaBaja(Instant.now());
+
+        plataformaRepository.save(plataforma);
     }
 }
