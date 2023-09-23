@@ -1,13 +1,14 @@
 package com.bibliotech.repository;
 
 import com.bibliotech.entity.Usuario;
-import java.util.List;
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UsuarioRepository extends CrudRepository<Usuario,Long> {
+import java.util.List;
 
-    List<Usuario> findByEmail(String email);
-    
+@Repository
+public interface UsuarioRepository extends BaseRepository<Usuario, Long>, JpaSpecificationExecutor<Usuario> {
+
+    List<Usuario> findByEmail(String username);
 }

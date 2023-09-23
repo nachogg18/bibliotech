@@ -1,9 +1,9 @@
 package com.bibliotech.repository;
 
-import com.bibliotech.entity.Ejemplar;
+import com.bibliotech.entity.Prestamo;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EjemplarRepository extends BaseRepository<Ejemplar, Long>, JpaSpecificationExecutor<Ejemplar> {
+public interface PrestamosRepository extends BaseRepository<Prestamo, Long>, JpaSpecificationExecutor<Prestamo> {
 }

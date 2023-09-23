@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(1)
-public class TransactionFilter implements Filter {
+public class  TransactionFilter implements Filter {
     private final static Logger LOG = LoggerFactory.getLogger(TransactionFilter.class);
 
     @Override
