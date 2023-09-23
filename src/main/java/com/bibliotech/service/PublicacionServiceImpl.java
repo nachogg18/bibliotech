@@ -9,6 +9,7 @@ import com.bibliotech.utils.PageUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,10 @@ public class PublicacionServiceImpl implements PublicacionService {
     public List<Publicacion> findAll() {
         return publicacionRepository.findAll();
     }
+
+    public Optional<Publicacion> findById(Long id) {
+        return publicacionRepository.findById(id);
+    };
 
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
@@ -135,5 +140,7 @@ public class PublicacionServiceImpl implements PublicacionService {
 
         return listToPageDTOMapper.toPageDTO(page, categoryPage, publicacionesDTOList);
     }
+
+
 
 }
