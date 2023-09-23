@@ -84,7 +84,6 @@ public class PublicacionServiceImpl implements PublicacionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
 
         detallePublicacionDTO.setAutores(publicacion.getAutores().stream().map(autor -> autor.getApellido().toUpperCase() + ", " + autor.getNombre()).toList());
-        detallePublicacionDTO.setDescripcion(publicacion.getDescripcion());
         detallePublicacionDTO.setEdicion(publicacion.getEdicion().getNombre());
         detallePublicacionDTO.setTitulo(publicacion.getTitulo());
         detallePublicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());

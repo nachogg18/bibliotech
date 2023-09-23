@@ -1,9 +1,11 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.*;
 
 @Entity
@@ -14,9 +16,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Ejemplar extends Base {
-
-    @Column
-    private String inventario;
     @Column
     private String serialNFC;
     @Column(name = "fechaAlta")
@@ -27,7 +26,10 @@ public class Ejemplar extends Base {
     @OneToMany
     private List<EjemplarEstado> ejemplarEstadoList = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "ejemplar_comentario",
+            joinColumns = @JoinColumn(name = "publicacion_id"),
+            inverseJoinColumns = @JoinColumn(name = "comentario_id"))
     private List<Comentario> comentarios = new ArrayList<>();
 
     @OneToMany
@@ -35,4 +37,8 @@ public class Ejemplar extends Base {
 
     @ManyToOne
     private Publicacion publicacion;
+
+    @ManyToOne
+    private Ubicacion ubicacion;
+
 }

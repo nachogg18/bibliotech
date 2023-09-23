@@ -3,11 +3,14 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Autor;
 import com.bibliotech.service.AutorService;
 import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping(path = "/api/v1/autores/")
-@CrossOrigin(origins = "*")
+@RequestMapping(path = "/api/v1/autores")
 public class AutorController {
 
     private final AutorService autorService;
@@ -22,7 +25,7 @@ public class AutorController {
     }
 
     @PostMapping
-    public Autor save(@RequestBody Autor autor) {
+    public Autor post(@RequestBody Autor autor) {
         return autorService.save(autor);
     }
 
@@ -32,8 +35,10 @@ public class AutorController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        autorService.delete(id);
+    public ResponseEntity<Autor> delete(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(autorService.delete(id)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")));
     }
 
 }

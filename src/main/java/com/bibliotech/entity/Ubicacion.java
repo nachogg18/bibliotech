@@ -3,23 +3,24 @@ package com.bibliotech.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
-import java.time.Instant;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "categoria_valor")
+@Table(name = "ubicacion")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoriaValor extends Base {
+public class Ubicacion extends Base {
     @Column
-    private String nombre;
+    private String descripcion;
+    @Column
+    private boolean ocupada;
     @Column
     private Instant fechaAlta = Instant.now();
     @Column

@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Autor;
 import java.util.List;
+import java.util.Optional;
 
 public interface AutorService {
     List<Autor> findAll();
@@ -9,5 +10,5 @@ public interface AutorService {
 
     Autor edit(Autor autor, Long id);
 
-    void delete(Long id);
+    Optional<Autor> delete(Long id);
 }
