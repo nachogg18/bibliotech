@@ -34,7 +34,6 @@ public class EjemplarServiceImpl implements EjemplarService {
         }
 
         Ejemplar ejemplar = Ejemplar.builder()
-                .inventario(request.getIdInventario())
                 .fechaAlta(Instant.now())
                 .publicacion(publicacion.get())
                 .build();

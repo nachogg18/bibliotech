@@ -3,7 +3,9 @@ package com.bibliotech.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import java.util.Date;
+
+import java.time.Instant;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,7 +23,7 @@ public class Comentario extends Base {
     @Column
     private String comentario;
     @Column
-    private Date fechaAlta = new Date();
+    private Instant fechaAlta = Instant.now();
     @Column
-    private Date fechaBaja;
+    private Instant fechaBaja;
 }

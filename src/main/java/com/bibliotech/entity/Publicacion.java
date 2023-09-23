@@ -1,8 +1,9 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import lombok.*;
 
@@ -18,19 +19,19 @@ public class Publicacion extends Base {
     private short anio;
 
     @Column
-    private String isnb;
+    private String isbn;
 
     @Column
     private String titulo;
 
     @Column
-    private Date fechaAlta = new Date();
+    private int nroPaginas;
 
     @Column
-    private Date fechaBaja;
+    private Instant fechaAlta = Instant.now();
 
     @Column
-    private String descripcion;
+    private Instant fechaBaja;
 
     @ManyToMany
     @JoinTable(name = "publicacion_autor",
@@ -38,17 +39,14 @@ public class Publicacion extends Base {
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
 
-    @ManyToMany
-    @JoinTable(name = "publicacion_categoria_publicacion",
-            joinColumns = @JoinColumn(name = "publicacion_id"),
-            inverseJoinColumns = @JoinColumn(name = "categoria_publicacion_id"))
+    @OneToMany
     private List<CategoriaPublicacion> categoriaPublicacionList = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "publicacion_editorial",
             joinColumns = @JoinColumn(name = "publicacion_id"),
             inverseJoinColumns = @JoinColumn(name = "editorial_id"))
-    private List<Editorial> editoriales;
+    private List<Editorial> editoriales = new ArrayList<>();
 
     @ManyToOne
     private Edicion edicion;

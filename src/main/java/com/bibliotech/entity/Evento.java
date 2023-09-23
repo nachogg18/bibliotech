@@ -1,7 +1,9 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.Instant;
+
 import lombok.*;
 
 @Entity
@@ -13,11 +15,11 @@ import lombok.*;
 @Builder
 public class Evento extends Base {
     @Column(name = "fechaAlta")
-    private Date fechaAlta = new Date();
+    private Instant fechaAlta = Instant.now();
     @Column(name = "fechaBaja")
-    private Date fechaBaja;
+    private Instant fechaBaja;
     @ManyToOne
     private Ejemplar ejemplar;
-    @Column(name="tipoEvento")
+    @Column(name = "tipoEvento")
     private TipoEvento tipoEvento;
 }

@@ -3,7 +3,9 @@ package com.bibliotech.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.util.Date;
+
+import java.time.Instant;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,6 @@ public class Biblioteca extends Base {
     @NotNull
     private String nombre;
     @NotNull
-    private Date fechaAlta = new Date();
-    private Date fechaBaja;
+    private Instant fechaAlta = Instant.now();
+    private Instant fechaBaja;
 }

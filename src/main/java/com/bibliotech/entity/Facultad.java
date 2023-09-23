@@ -3,7 +3,9 @@ package com.bibliotech.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import java.util.Date;
+
+import java.time.Instant;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,14 +18,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "universidad")
-public class Universidad extends Base {
-   @Column(name="nombreUniversidad")
-   private String nombre;
-   
-   @Column(name="fechaAltaUniversidad")
-   private Date fechaAlta = new Date();
+@Table(name = "facultad")
+public class Facultad extends Base {
+    @Column
+    private String nombre;
 
-   @Column(name="fechaBajaUniversidad")
-   private Date fechaBaja = new Date();
+    @Column
+    private Instant fechaAlta = Instant.now();
+
+    @Column
+    private Instant fechaBaja;
 }

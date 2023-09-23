@@ -2,6 +2,8 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Edicion;
 import com.bibliotech.repository.EdicionRepository;
+
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +47,7 @@ public class EdicionServiceImpl implements EdicionService {
             if(edicion.getFechaBaja() != null)
                 edicionOptional = Optional.empty();
             else {
-                edicion.setFechaBaja(new Date());
+                edicion.setFechaBaja(Instant.now());
                 edicionOptional = Optional.of(edicionRepository.save(edicion));
             }
         }
