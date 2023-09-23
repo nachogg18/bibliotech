@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "api/v1/publicaciones")
 @Log4j2
 public class PublicacionController {
@@ -21,7 +20,7 @@ public class PublicacionController {
         this.publicacionService = publicacionService;
     }
 
-    @PostMapping(path = "")
+    @PostMapping(path = "/findByParams")
     public List<PublicacionResponseDTO> findAll(
             @RequestParam String parametro,
             @RequestParam(required = false) String contenido,

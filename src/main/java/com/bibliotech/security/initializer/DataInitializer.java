@@ -71,6 +71,9 @@ public class DataInitializer implements ApplicationRunner {
                         RoleUtils.ROL_SUPER_ADMIN
                 )
         );
+
+        //CREA UNA INSTRUCCION}
+
     }
     
     
