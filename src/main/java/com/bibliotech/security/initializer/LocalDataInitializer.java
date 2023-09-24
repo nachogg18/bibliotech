@@ -12,17 +12,18 @@ import com.bibliotech.service.LinkService;
 import com.bibliotech.service.PlataformaService;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.RoleUtils;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataInitializer implements ApplicationRunner {
+@Profile({"local","dockerlocal"})
+public class LocalDataInitializer implements ApplicationRunner {
     @Autowired
     private PrivilegeService privilegeService;
 

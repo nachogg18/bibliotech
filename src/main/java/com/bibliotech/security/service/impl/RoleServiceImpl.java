@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
 
         Role finalRole = role;
         
-        if (createRolerequest.privilegesIdsToAssign().isEmpty()) {
+        if (createRolerequest.privilegesIdsToAssign() == null || createRolerequest.privilegesIdsToAssign().isEmpty()) {
             Optional<Privilege> privilege = privilegeService.getPrivilegeByName(PrivilegeUtils.DEFAULT_PRIVILEGE);
             if (privilege.isPresent()) {
                 assignPrivilegeToRole(finalRole.getId(), privilege.get()); 
