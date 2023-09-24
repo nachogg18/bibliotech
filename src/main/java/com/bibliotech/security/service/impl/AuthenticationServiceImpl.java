@@ -14,15 +14,20 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component("authenticationService")
 @RequiredArgsConstructor
 @Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
+    
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -60,5 +65,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
+    }
+
+    @Override
+    public Boolean hasAdminRole() {
+        User userAuthenticated = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        return userAuthenticated.getRoles().stream().anyMatch(
+                role -> RoleUtils.GetRolesWithAdminProfile()
+                        .stream()
+                        .anyMatch(
+                                s -> {
+                                    Boolean result = s.equals(role.getName());
+                                    logger.debug(String.format("role_string: %s, match?: %s", s, result));
+                                    return s.equals(role.getName());
+                                }
+
+                        )
+        );
+        
     }
 }
