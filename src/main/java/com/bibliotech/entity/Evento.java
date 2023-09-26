@@ -14,12 +14,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Evento extends Base {
-    @Column(name = "fechaAlta")
-    private Instant fechaAlta = Instant.now();
-    @Column(name = "fechaBaja")
-    private Instant fechaBaja;
-    @ManyToOne
-    private Ejemplar ejemplar;
-    @Column(name = "tipoEvento")
-    private TipoEvento tipoEvento;
+    @Column
+    private Instant fecha = Instant.now();
+    @Column
+    private String comentario;
 }
