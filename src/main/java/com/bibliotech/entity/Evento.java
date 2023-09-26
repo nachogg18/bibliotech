@@ -1,8 +1,10 @@
 package com.bibliotech.entity;
 
+import com.bibliotech.security.entity.User;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.List;
 
 import lombok.*;
 
@@ -22,4 +24,6 @@ public class Evento extends Base {
     private Ejemplar ejemplar;
     @Column(name = "tipoEvento")
     private TipoEvento tipoEvento;
+    @OneToMany
+    private List<User> participantes;
 }
