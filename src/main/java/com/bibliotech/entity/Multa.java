@@ -7,15 +7,23 @@ import java.time.Instant;
 import lombok.*;
 
 @Entity
-@Table(name = "evento")
+@Table(name = "multa")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Evento extends Base {
+public class Multa extends Base {
     @Column
-    private Instant fecha = Instant.now();
+    private String descripcion;
     @Column
-    private String comentario;
+    private Instant fechaInicio;
+    @Column
+    private Instant fechaFin;
+    @Column
+    private Instant fechaAlta = Instant.now();
+    @Column
+    private Instant fechaBaja;
+    @ManyToOne
+    private TipoMulta tipoMulta;
 }
