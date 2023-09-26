@@ -1,8 +1,11 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.PrestamoDTO;
+import com.bibliotech.entity.EstadoPrestamo;
 import com.bibliotech.entity.Prestamo;
+import com.bibliotech.entity.PrestamoEstado;
 import com.bibliotech.repository.BaseRepository;
+import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     private UsuarioService usuarioService;
     @Autowired
     private EjemplarService ejemplarService;
+    @Autowired
+    private PrestamoEstadoRepository prestamoEstadoRepository;
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UsuarioService usuarioService) {
         super(baseRepository);
     }
@@ -28,11 +33,14 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 //        Prestamo prestamo = modelMapper.map(prestamoDTO, Prestamo.class);
 //        return prestamo;
         Prestamo prestamo = new Prestamo();
-        System.out.println(prestamoDTO);
         prestamo.setUsuario(usuarioService.findById(prestamoDTO.getUsuarioID()));
         prestamo.setEjemplar(ejemplarService.findById(prestamoDTO.getEjemplarID()));
         prestamo.setFechaBaja(prestamoDTO.getFechaFinEstimada());
         prestamo.setFechaInicioEstimada(prestamoDTO.getFechaInicioEstimada());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.ACTIVO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
         return prestamosRepository.save(prestamo);
     }
 }

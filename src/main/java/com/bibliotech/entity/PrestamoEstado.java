@@ -21,7 +21,8 @@ public class PrestamoEstado extends Base{
     @Column
     private Date fechaFin;
 
-    @ManyToOne
+    @Column
+    @Enumerated(EnumType.ORDINAL)
     private EstadoPrestamo estado;
 
 }

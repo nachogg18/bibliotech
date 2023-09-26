@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name= "prestamo")
@@ -44,6 +42,10 @@ public class Prestamo extends Base {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ejemplar_id")
     private Ejemplar ejemplar;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "estado_prestamo")
+    private List<PrestamoEstado> estado = new ArrayList<PrestamoEstado>();
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "multa_id")
