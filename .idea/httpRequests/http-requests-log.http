@@ -1,0 +1,674 @@
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T195003.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T194957.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T194734.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T194550-3.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T194550-2.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-26T194550-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-26T194550.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T193721.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T193720-2.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-26T193720-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-26T193720.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T193232.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T193229.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-26T193227.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-26T193226.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T192623-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T192623.500.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-26T192623.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-26T192622.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-26T191853-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-26T191853.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-26T191852-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-26T191852.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T210546-2.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-22T210546-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-22T210546.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-22T210545.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T210113.500.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-22T210113-1.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-22T210113.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-22T210112.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos/1
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T205719.500.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-22T205716.200.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-22T205713.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-22T205705.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos/1
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T205439.500.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios/1
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T205426.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos/1
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T205154.500.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T204859.500.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180902.500.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180856.200.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios/
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180852.404.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180848.200.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180752.500.json
+
+###
+
+GET http://localhost:8080/api/v1/prestamos/
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180746.404.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T180738.200.json
+
+###
+
+POST http://localhost:8080/api/v1/prestamosDTO
+Content-Type: application/json
+Content-Length: 114
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "usuarioID": 1,
+  "ejemplarID": 1,
+  "fechaFinEstimada": "2023-09-26",
+  "fechaInicioEstimada": "2023-09-19"
+}
+
+<> 2023-09-22T180517.200.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-22T180458.200.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T174617.200.json
+
+###
+
+GET http://localhost:8080/api/v1/usuarios
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-09-22T174603.200.json
+
+###
+
