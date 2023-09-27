@@ -1,16 +1,18 @@
 package com.bibliotech.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import java.util.Date;
+import jakarta.persistence.*;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
+@Builder
 @Table(name = "plataforma")
 @Data
 @NoArgsConstructor
@@ -18,12 +20,14 @@ import lombok.NoArgsConstructor;
 public class Plataforma extends Base {
     @Column
     private String nombre;
-    @Column
-    private String urlPlataforma;
+
+    @OneToMany
+    private List<Link> links = List.of();
+
     @Column
     private String instrucciones;
     @Column
-    private Date fechaAlta = new Date();
+    private Instant fechaAlta = Instant.now();
     @Column
-    private Date fechaBaja;
+    private Instant fechaBaja;
 }

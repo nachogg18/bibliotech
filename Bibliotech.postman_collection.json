@@ -7,41 +7,711 @@
 	},
 	"item": [
 		{
-			"name": "Registrar usuario",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"firstName\":\"usuarioNombre\",\r\n    \"lastName\":\"usuarioApellido\",\r\n    \"email\": \"usuarioEmail\",\r\n    \"password\":\"usuarioPassword\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "roles",
+			"item": [
+				{
+					"name": "Crear Rol",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"BIBLIOTECARIO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/roles/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"create"
+							]
 						}
-					}
+					},
+					"response": [
+						{
+							"name": "nombre vacio",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"create"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 01:54:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2023-09-15T01:54:27.846+00:00\",\n    \"status\": 400,\n    \"error\": \"Bad Request\",\n    \"message\": \"Validation failed for object='createRoleRequest'. Error count: 1\",\n    \"errors\": [\n        {\n            \"codes\": [\n                \"Pattern.createRoleRequest.name\",\n                \"Pattern.name\",\n                \"Pattern.java.lang.String\",\n                \"Pattern\"\n            ],\n            \"arguments\": [\n                {\n                    \"codes\": [\n                        \"createRoleRequest.name\",\n                        \"name\"\n                    ],\n                    \"arguments\": null,\n                    \"defaultMessage\": \"name\",\n                    \"code\": \"name\"\n                },\n                [],\n                {\n                    \"arguments\": null,\n                    \"defaultMessage\": \"[A-Z]{4,50}\",\n                    \"codes\": [\n                        \"[A-Z]{4,50}\"\n                    ]\n                }\n            ],\n            \"defaultMessage\": \"debe coincidir con \\\"[A-Z]{4,50}\\\"\",\n            \"objectName\": \"createRoleRequest\",\n            \"field\": \"name\",\n            \"rejectedValue\": \"\",\n            \"bindingFailure\": false,\n            \"code\": \"Pattern\"\n        }\n    ],\n    \"path\": \"/api/v1/roles/create\"\n}"
+						},
+						{
+							"name": "rol con minusculas",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"user\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"create"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 01:55:03 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2023-09-15T01:55:03.851+00:00\",\n    \"status\": 400,\n    \"error\": \"Bad Request\",\n    \"message\": \"Validation failed for object='createRoleRequest'. Error count: 1\",\n    \"errors\": [\n        {\n            \"codes\": [\n                \"Pattern.createRoleRequest.name\",\n                \"Pattern.name\",\n                \"Pattern.java.lang.String\",\n                \"Pattern\"\n            ],\n            \"arguments\": [\n                {\n                    \"codes\": [\n                        \"createRoleRequest.name\",\n                        \"name\"\n                    ],\n                    \"arguments\": null,\n                    \"defaultMessage\": \"name\",\n                    \"code\": \"name\"\n                },\n                [],\n                {\n                    \"arguments\": null,\n                    \"defaultMessage\": \"[A-Z]{4,50}\",\n                    \"codes\": [\n                        \"[A-Z]{4,50}\"\n                    ]\n                }\n            ],\n            \"defaultMessage\": \"debe coincidir con \\\"[A-Z]{4,50}\\\"\",\n            \"objectName\": \"createRoleRequest\",\n            \"field\": \"name\",\n            \"rejectedValue\": \"user\",\n            \"bindingFailure\": false,\n            \"code\": \"Pattern\"\n        }\n    ],\n    \"path\": \"/api/v1/roles/create\"\n}"
+						},
+						{
+							"name": "exito",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"create"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 01:55:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1\",\n    \"name\": \"USER\",\n    \"creationDate\": \"2023-09-15T01:55:24.037684500Z\",\n    \"endDate\": \"\"\n}"
+						}
+					]
 				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/signup",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"auth",
-						"signup"
+				{
+					"name": "Actualizar Rol",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"BIBLIOTECARIO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/roles/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"roles",
+								"create"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Faltan datos",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"BIBLIOTECARIO\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"update"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 01:36:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2023-09-15T01:36:55.974+00:00\",\n    \"status\": 400,\n    \"error\": \"Bad Request\",\n    \"message\": \"Validation failed for object='updateRoleRequest'. Error count: 2\",\n    \"errors\": [\n        {\n            \"codes\": [\n                \"NotNull.updateRoleRequest.enabled\",\n                \"NotNull.enabled\",\n                \"NotNull.java.lang.Boolean\",\n                \"NotNull\"\n            ],\n            \"arguments\": [\n                {\n                    \"codes\": [\n                        \"updateRoleRequest.enabled\",\n                        \"enabled\"\n                    ],\n                    \"arguments\": null,\n                    \"defaultMessage\": \"enabled\",\n                    \"code\": \"enabled\"\n                }\n            ],\n            \"defaultMessage\": \"no debe ser nulo\",\n            \"objectName\": \"updateRoleRequest\",\n            \"field\": \"enabled\",\n            \"rejectedValue\": null,\n            \"bindingFailure\": false,\n            \"code\": \"NotNull\"\n        },\n        {\n            \"codes\": [\n                \"NotNull.updateRoleRequest.id\",\n                \"NotNull.id\",\n                \"NotNull.java.lang.Long\",\n                \"NotNull\"\n            ],\n            \"arguments\": [\n                {\n                    \"codes\": [\n                        \"updateRoleRequest.id\",\n                        \"id\"\n                    ],\n                    \"arguments\": null,\n                    \"defaultMessage\": \"id\",\n                    \"code\": \"id\"\n                }\n            ],\n            \"defaultMessage\": \"no debe ser nulo\",\n            \"objectName\": \"updateRoleRequest\",\n            \"field\": \"id\",\n            \"rejectedValue\": null,\n            \"bindingFailure\": false,\n            \"code\": \"NotNull\"\n        }\n    ],\n    \"path\": \"/api/v1/roles/update\"\n}"
+						},
+						{
+							"name": "enabled tiene que ser booleano",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"1\",\r\n    \"name\": \"BIBLIOTECARIO\",\r\n    \"enabled\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"update"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 01:37:59 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2023-09-15T01:37:59.597+00:00\",\n    \"status\": 400,\n    \"error\": \"Bad Request\",\n    \"message\": \"Validation failed for object='updateRoleRequest'. Error count: 1\",\n    \"errors\": [\n        {\n            \"codes\": [\n                \"NotNull.updateRoleRequest.enabled\",\n                \"NotNull.enabled\",\n                \"NotNull.java.lang.Boolean\",\n                \"NotNull\"\n            ],\n            \"arguments\": [\n                {\n                    \"codes\": [\n                        \"updateRoleRequest.enabled\",\n                        \"enabled\"\n                    ],\n                    \"arguments\": null,\n                    \"defaultMessage\": \"enabled\",\n                    \"code\": \"enabled\"\n                }\n            ],\n            \"defaultMessage\": \"no debe ser nulo\",\n            \"objectName\": \"updateRoleRequest\",\n            \"field\": \"enabled\",\n            \"rejectedValue\": null,\n            \"bindingFailure\": false,\n            \"code\": \"NotNull\"\n        }\n    ],\n    \"path\": \"/api/v1/roles/update\"\n}"
+						},
+						{
+							"name": "NO SE ENCONTRO ROL",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"1\",\r\n    \"name\": \"BIBLIOTECARIO\",\r\n    \"enabled\":false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"update"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 02:15:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"timestamp\": \"2023-09-15T02:15:55.822+00:00\",\n    \"status\": 500,\n    \"error\": \"Internal Server Error\",\n    \"message\": \"No se encontró el rol\",\n    \"path\": \"/api/v1/roles/update\"\n}"
+						},
+						{
+							"name": "EXITO ENVIANDO NAME",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"1\",\r\n    \"name\": \"USER\",\r\n    \"enabled\":false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"update"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 02:16:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2\",\n    \"name\": \"USER\",\n    \"creationDate\": \"\",\n    \"endDate\": \"2023-09-15T02:16:40.053052200Z\"\n}"
+						},
+						{
+							"name": "EXITO ENVIANDO SOLO ID SIN NAME",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"1\",\r\n    \"enabled\":false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/roles/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"roles",
+										"update"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 15 Sep 2023 02:25:14 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"1\",\n    \"name\": \"USER\",\n    \"creationDate\": \"2023-09-15T02:25:03.568553Z\",\n    \"endDate\": \"2023-09-15T02:25:14.253541Z\"\n}"
+						}
 					]
 				}
-			},
-			"response": [
+			]
+		},
+		{
+			"name": "usuarios",
+			"item": [
 				{
 					"name": "Registrar usuario",
-					"originalRequest": {
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -68,96 +738,96 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Content-Type-Options",
-							"value": "nosniff"
-						},
-						{
-							"key": "X-XSS-Protection",
-							"value": "0"
-						},
-						{
-							"key": "Cache-Control",
-							"value": "no-cache, no-store, max-age=0, must-revalidate"
-						},
-						{
-							"key": "Pragma",
-							"value": "no-cache"
-						},
-						{
-							"key": "Expires",
-							"value": "0"
-						},
-						{
-							"key": "X-Frame-Options",
-							"value": "DENY"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Transfer-Encoding",
-							"value": "chunked"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 12 Sep 2023 10:38:33 GMT"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=60"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
+							"name": "Registrar usuario",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\":\"usuarioNombre\",\r\n    \"lastName\":\"usuarioApellido\",\r\n    \"email\": \"usuarioEmail\",\r\n    \"password\":\"usuarioPassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/auth/signup",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 12 Sep 2023 10:38:33 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDQU5JVE9AY2FuaXRvMTEiLCJpYXQiOjE2OTQ1MTUxMTMsImV4cCI6MTY5NDUxNjU1M30.N1SRrbTwEW9gROq5zZ2mWdPeFcB-c6-KsGDGtaszIs0\"\n}"
 						}
-					],
-					"cookie": [],
-					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDQU5JVE9AY2FuaXRvMTEiLCJpYXQiOjE2OTQ1MTUxMTMsImV4cCI6MTY5NDUxNjU1M30.N1SRrbTwEW9gROq5zZ2mWdPeFcB-c6-KsGDGtaszIs0\"\n}"
-				}
-			]
-		},
-		{
-			"name": "Iniciar sesion",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"usuarioEmail\",\r\n    \"password\":\"usuarioPassword\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/signin",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"auth",
-						"signin"
 					]
-				}
-			},
-			"response": [
+				},
 				{
 					"name": "Iniciar sesion",
-					"originalRequest": {
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -184,179 +854,89 @@
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
+					"response": [
 						{
-							"key": "X-Content-Type-Options",
-							"value": "nosniff"
-						},
-						{
-							"key": "X-XSS-Protection",
-							"value": "0"
-						},
-						{
-							"key": "Cache-Control",
-							"value": "no-cache, no-store, max-age=0, must-revalidate"
-						},
-						{
-							"key": "Pragma",
-							"value": "no-cache"
-						},
-						{
-							"key": "Expires",
-							"value": "0"
-						},
-						{
-							"key": "X-Frame-Options",
-							"value": "DENY"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Transfer-Encoding",
-							"value": "chunked"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 12 Sep 2023 10:44:40 GMT"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=60"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDQU5JVE9AY2FuaXRvMTEiLCJpYXQiOjE2OTQ1MTU0ODAsImV4cCI6MTY5NDUxNjkyMH0.BQSDWYfdu0rNJrlOMzqhoOTGLi-MhlUX6dq3htBmE2k\"\n}"
-				}
-			]
-		},
-		{
-			"name": "acceder recurso",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvRW1haWwiLCJpYXQiOjE2OTQ1MTY0OTYsImV4cCI6MTY5NDUxNzkzNn0.4fD-8YgLFDsURVKpqFhREvgZ6AHpCouXkDVOCyUgDQs",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"usuarioEmail\",\r\n    \"password\":\"usuarioPassword\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/auth/signin",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"auth",
-						"signin"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "acceder recurso",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+							"name": "Iniciar sesion",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"usuarioEmail\",\r\n    \"password\":\"usuarioPassword\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/v1/auth/signin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"signin"
+									]
 								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/resource",
-							"protocol": "http",
-							"host": [
-								"localhost"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 12 Sep 2023 10:44:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
 							],
-							"port": "8080",
-							"path": [
-								"api",
-								"v1",
-								"resource"
-							]
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDQU5JVE9AY2FuaXRvMTEiLCJpYXQiOjE2OTQ1MTU0ODAsImV4cCI6MTY5NDUxNjkyMH0.BQSDWYfdu0rNJrlOMzqhoOTGLi-MhlUX6dq3htBmE2k\"\n}"
 						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "plain",
-					"header": [
-						{
-							"key": "X-Content-Type-Options",
-							"value": "nosniff"
-						},
-						{
-							"key": "X-XSS-Protection",
-							"value": "0"
-						},
-						{
-							"key": "Cache-Control",
-							"value": "no-cache, no-store, max-age=0, must-revalidate"
-						},
-						{
-							"key": "Pragma",
-							"value": "no-cache"
-						},
-						{
-							"key": "Expires",
-							"value": "0"
-						},
-						{
-							"key": "X-Frame-Options",
-							"value": "DENY"
-						},
-						{
-							"key": "Content-Type",
-							"value": "text/plain;charset=UTF-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "21"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 12 Sep 2023 11:12:42 GMT"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=60"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						}
-					],
-					"cookie": [],
-					"body": "Here is your resource"
+					]
 				}
 			]
 		}

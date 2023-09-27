@@ -2,8 +2,12 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Edicion;
 import com.bibliotech.repository.EdicionRepository;
+
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,10 +40,17 @@ public class EdicionServiceImpl implements EdicionService {
     }
 
     @Override
-    public void delete(Long id) {
-        Edicion edicion = edicionRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
-        );
-        edicion.setFechaBaja(new Date());
+    public Optional<Edicion> delete(Long id) {
+        Optional<Edicion> edicionOptional = edicionRepository.findById(id);
+        if(edicionOptional.isPresent()) {
+            Edicion edicion = edicionOptional.get();
+            if(edicion.getFechaBaja() != null)
+                edicionOptional = Optional.empty();
+            else {
+                edicion.setFechaBaja(Instant.now());
+                edicionOptional = Optional.of(edicionRepository.save(edicion));
+            }
+        }
+        return edicionOptional;
     }
 }

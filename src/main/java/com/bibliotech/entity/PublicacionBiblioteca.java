@@ -1,7 +1,8 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "publicacion_biblioteca")
 public class PublicacionBiblioteca extends Base {
-    private Date fechaDesde = new Date();
-    private Date fechaHasta;
+    private Instant fechaDesde = Instant.now();
+    private Instant fechaHasta;
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "biblioteca_id")
     private Biblioteca biblioteca;

@@ -1,31 +1,33 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.Instant;
+
 import lombok.*;
 
 @Entity
-@Table(name= "autor")
+@Table(name = "autor")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Autor extends Base {
 
-    @Column(name="nombre")
+    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name="apellido")
+    @Column(name = "apellido")
     private String apellido;
 
-    @Column(name="fechaAlta")
-    private Date fechaAlta = new Date();
+    @Column(name = "fechaAlta")
+    private Instant fechaAlta = Instant.now();
 
-    @Column(name="fechaBaja")
-    private Date fechaBaja;
+    @Column(name = "fechaBaja")
+    private Instant fechaBaja;
 
     @Column
-    private Date fechaNacimiento;
+    private Instant  fechaNacimiento;
 
     @Column
     private String nacionalidad;
