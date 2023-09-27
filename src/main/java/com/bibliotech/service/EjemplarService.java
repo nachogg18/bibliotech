@@ -2,8 +2,9 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Ejemplar;
 import com.bibliotech.dto.CrearEjemplarDTO;
-import com.bibliotech.entity.Ejemplar;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface EjemplarService {
     List<Ejemplar> findAll();
@@ -15,5 +16,5 @@ public interface EjemplarService {
     Ejemplar edit(Ejemplar ejemplar, Long id);
 
     void delete(Long id);
-    Ejemplar findById(Long id);
+    Optional<Ejemplar> findById(Long id);
 }

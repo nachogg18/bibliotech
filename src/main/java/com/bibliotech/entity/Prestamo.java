@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.bibliotech.security.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class Prestamo extends Base {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    private User usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ejemplar_id")
