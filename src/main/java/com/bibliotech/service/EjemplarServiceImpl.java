@@ -61,4 +61,9 @@ public class EjemplarServiceImpl implements EjemplarService {
         ejemplar.setFechaBaja(Instant.now());
         ejemplarRepository.save(ejemplar);
     }
+
+    @Override
+    public Optional<Ejemplar> findById(Long id) {
+        return ejemplarRepository.findById(id);
+    }
 }
