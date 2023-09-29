@@ -3,6 +3,7 @@ package com.bibliotech.security.controller;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.service.RoleService;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -33,26 +34,31 @@ public class RoleController {
 
     @PostMapping ("/get-privileges-for-roles")
     @PreAuthorize("@authenticationService.hasAdminRole()")
-    public ResponseEntity<GetPrivilegesFromRoleResponse> getPrivilegesForRoles(@RequestBody @Valid GetPrivilegesFromRoleRequest request) {
+    public ResponseEntity<List<GetPrivilegesFromRoleResponse>> getPrivilegesForRoles(@RequestBody @Valid GetPrivilegesFromRoleRequest request) {
 
+        return ResponseEntity.ok(
 
-        var map = roleService.getPrivilegesFromRole(request.validateRequest().get(0));
+        request.validateRequest().stream().map(
+                roleService::getPrivilegesFromRole
+        ).map(
+                m -> 
+                new GetPrivilegesFromRoleResponse(
 
-        var privilegeSetToString = map.entrySet().stream().findAny().get().getValue().stream().map(privilege -> privilege.toString()).collect(Collectors.toSet());
+                        m.entrySet().stream().map(
+                                entry ->
+                                        new GetPrivilegesFromRoleDetailResponse(
+                                                entry.getKey().toString(),
+                                                entry.getValue().stream().map(
+                                                        privilege -> new PrivilegeDetailResponse(
+                                                                privilege.getId().toString(),
+                                                                privilege.getName()
+                                                        )
+                                                ).collect(Collectors.toList())
+                                        )
+                        ).collect(Collectors.toSet()))
+        ).collect(Collectors.toList())
+    );  
 
-
-        GetPrivilegesFromRoleResponse response = new GetPrivilegesFromRoleResponse(
-                map.entrySet().stream().findAny().get().getValue().stream().map(privilege -> new GetPrivilegesFromRoleDetailResponse(
-                        privilege.getId().toString(),
-                        privilege.getName())
-                ).collect(Collectors.toSet())
-        );
-
-
-
-        logger.info(response.toString());
-
-        return ResponseEntity.ok(response);
 
     }
     

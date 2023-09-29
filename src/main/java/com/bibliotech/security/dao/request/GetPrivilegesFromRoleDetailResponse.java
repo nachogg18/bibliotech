@@ -1,6 +1,8 @@
 package com.bibliotech.security.dao.request;
 
 
-public record GetPrivilegesFromRoleDetailResponse(String id, String name) {
+import java.util.List;
+
+public record GetPrivilegesFromRoleDetailResponse(String roleId, List<PrivilegeDetailResponse> privilegeDetailResponseList) {
 }
 
