@@ -17,63 +17,47 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
-public class RoleController { 
-    private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
-   
-    @Autowired
-    private final RoleService roleService;
+public class RoleController {
+  private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-   /* @PostMapping ("/get-privileges-for-roles")
-    @PreAuthorize("@authenticationService.hasAdminRole()")
-    public ResponseEntity<List<Map<Long, Set<Privilege>>>> getPrivilegesForRoles(@RequestBody @Valid GetPrivilegesFromRoleRequest request) {
+  @Autowired private final RoleService roleService;
 
-        return ResponseEntity.ok(request.validateRequest().stream().map(
-                roleId -> roleService.getPrivilegesFromRole(roleId)
-        ).collect(Collectors.toList()));
-    }*/
+  @PostMapping("/get-privileges-for-roles")
+  @PreAuthorize("@authenticationService.hasAdminRole()")
+  public ResponseEntity<List<GetPrivilegesFromRoleDetailResponse>> getPrivilegesForRoles(
+      @RequestBody @Valid GetPrivilegesFromRoleRequest request) {
 
-    @PostMapping ("/get-privileges-for-roles")
-    @PreAuthorize("@authenticationService.hasAdminRole()")
-    public ResponseEntity<List<GetPrivilegesFromRoleResponse>> getPrivilegesForRoles(@RequestBody @Valid GetPrivilegesFromRoleRequest request) {
+    return ResponseEntity.ok(
+        request.validateRequest().stream()
+            .map(roleService::getPrivilegesFromRole)
+            .flatMap(
+                m ->
 
-        return ResponseEntity.ok(
-
-        request.validateRequest().stream().map(
-                roleService::getPrivilegesFromRole
-        ).map(
-                m -> 
-                new GetPrivilegesFromRoleResponse(
-
-                        m.entrySet().stream().map(
+                        m.entrySet().stream()
+                            .map(
                                 entry ->
-                                        new GetPrivilegesFromRoleDetailResponse(
-                                                entry.getKey().toString(),
-                                                entry.getValue().stream().map(
-                                                        privilege -> new PrivilegeDetailResponse(
-                                                                privilege.getId().toString(),
-                                                                privilege.getName()
-                                                        )
-                                                ).collect(Collectors.toList())
-                                        )
-                        ).collect(Collectors.toSet()))
-        ).collect(Collectors.toList())
-    );  
+                                    new GetPrivilegesFromRoleDetailResponse(
+                                        entry.getKey().toString(),
+                                        entry.getValue().stream()
+                                            .map(
+                                                privilege ->
+                                                    new PrivilegeDetailResponse(
+                                                        privilege.getId().toString(),
+                                                        privilege.getName()))
+                                            .collect(Collectors.toList())))
+            ).toList());
+  }
 
+  @PostMapping("/create")
+  @PreAuthorize("@authenticationService.hasAdminRole()")
+  @Secured("SUPERADMIN")
+  public ResponseEntity<CreateRoleResponse> create(@RequestBody @Valid CreateRoleRequest request) {
+    return ResponseEntity.ok(roleService.create(request));
+  }
 
-    }
-    
-    @PostMapping("/create")
-    @PreAuthorize("@authenticationService.hasAdminRole()")
-    @Secured("SUPERADMIN")
-    public ResponseEntity<CreateRoleResponse> create(@RequestBody @Valid CreateRoleRequest request) {
-        return ResponseEntity.ok(roleService.create(request));
-    }
-
-    @PutMapping ("/update")
-    @PreAuthorize("@authenticationService.hasAdminRole()")
-    public ResponseEntity<CreateRoleResponse> update(@RequestBody @Valid UpdateRoleRequest request) {
-        return ResponseEntity.ok(roleService.update(request));
-    }
-
-
+  @PutMapping("/update")
+  @PreAuthorize("@authenticationService.hasAdminRole()")
+  public ResponseEntity<CreateRoleResponse> update(@RequestBody @Valid UpdateRoleRequest request) {
+    return ResponseEntity.ok(roleService.update(request));
+  }
 }
