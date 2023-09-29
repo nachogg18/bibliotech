@@ -7,14 +7,13 @@ import com.bibliotech.security.dao.request.UpdateRoleRequest;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
-
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public interface RoleService  {
 
-    Map<Long, Set<Privilege>> getPrivilegesFromRole(Long roleId);
+    Map<Long, List<Privilege>> getPrivilegesFromRole(Long roleId);
     
     CreateRoleResponse create(CreateRoleRequest createRolrequest);
     Role create(Role role);

@@ -10,9 +10,10 @@ import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,15 +35,15 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
-    public Map<Long, Set<Privilege>> getPrivilegesFromRole(Long roleId) {
+    public Map<Long, List<Privilege>> getPrivilegesFromRole(Long roleId) {
         Optional<Role> role = roleRepository.findById(roleId);
         
         if (role.isEmpty()) {
             logger.error(String.format("El rol con id %s no existe", roleId));
-            return Map.of(roleId, Set.of());
+            return Map.of(roleId, List.of());
         }
         
-        var map = Map.of(roleId, role.get().getPrivileges().stream().collect(Collectors.toSet()));
+        var map = Map.of(roleId, role.get().getPrivileges().stream().sorted(Comparator.comparingLong(Privilege::getId)).collect(Collectors.toList()));
         return map;
     }
 
