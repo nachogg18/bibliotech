@@ -1,8 +1,11 @@
 package com.bibliotech.security.dao.request;
+
+import jakarta.validation.constraints.*;
+
 public record SignUpRequest(
-    String firstName,
-    String lastName,
-    String email,
-    String password,
-    String rol
+        @NotBlank String firstName,
+        @NotBlank String lastName,
+        @Email String email,
+        @Min(5) @Max(30) String password,
+        @Positive Long roleId
 ){}

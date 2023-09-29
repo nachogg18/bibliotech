@@ -1,8 +1,16 @@
 package com.bibliotech.security.entity;
 
 import jakarta.persistence.*;
-import java.util.Collection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+import java.util.Collection;
+import java.util.Set;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "privileges")
 public class Privilege {
@@ -14,19 +22,13 @@ public class Privilege {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Resource resource;
+
+    @ManyToMany(mappedBy = "privileges", fetch = FetchType.EAGER)
     private Collection<Role> roles;
 
-    public Privilege() {
-        super();
-    }
-
-    public Privilege(final String name) {
-        super();
-        this.name = name;
-    }
-
-    //
+    private Set<Action> actions;
 
     public Long getId() {
         return id;
@@ -50,6 +52,23 @@ public class Privilege {
 
     public void setRoles(final Collection<Role> roles) {
         this.roles = roles;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(final Resource resource) {
+        this.resource = resource;
+    }
+
+
+    public Set<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<Action> actions) {
+        this.actions = actions;
     }
 
     @Override

@@ -8,6 +8,4 @@ public interface AuthenticationService {
     JwtAuthenticationResponse signup(SignUpRequest request);
 
     JwtAuthenticationResponse signin(SigninRequest request);
-
-    Boolean hasAdminRole();
 }

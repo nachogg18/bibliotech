@@ -2,9 +2,14 @@ package com.bibliotech.security.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -17,24 +22,13 @@ public class Role {
     private Collection<User> users;
 
     @ManyToMany
-    @JoinTable(name = "roles_privileges", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
+    @JoinTable(name = "roles_privileges",joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
     private Collection<Privilege> privileges;
     @Column(unique = true)
     private String name;
 
     private Instant startDate;
     private Instant endDate;
-
-    public Role() {
-        super();
-    }
-
-    public Role(final String name) {
-        super();
-        this.name = name;
-        this.startDate = Instant.now();
-        this.setPrivileges(new ArrayList<>());
-    }
 
     //
 
