@@ -10,7 +10,10 @@ import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,17 +32,30 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     private PrivilegeService privilegeService;
 
-    
-    
+
+    @Override
+    public Map<Long, Set<Privilege>> getPrivilegesFromRole(Long roleId) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        
+        if (role.isEmpty()) {
+            logger.error(String.format("El rol con id %s no existe", roleId));
+            return Map.of(roleId, Set.of());
+        }
+        
+        var map = Map.of(roleId, role.get().getPrivileges().stream().collect(Collectors.toSet()));
+        return map;
+    }
+
     @Override
     public CreateRoleResponse create(CreateRoleRequest createRolerequest) {
         if (!roleRepository.findByName(createRolerequest.name()).isEmpty()) {
             throw  new RuntimeException("El rol ya existe");
         }
-        
-        Role role = new Role(createRolerequest.name());
-        
-        
+
+    Role role = Role.builder()
+            .name(createRolerequest.name())
+            .build();
+
         role = roleRepository.save(role);
 
         Role finalRole = role;
@@ -63,6 +79,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Role create(Role role) {
+        return roleRepository.save(role);
+    }
+
+    @Override
     public CreateRoleResponse update(UpdateRoleRequest updateRoleRequest) {
 
         Optional<Role> existingRole = roleRepository.findById(updateRoleRequest.id());
@@ -74,6 +95,11 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.save(updateRoleRequest.toRole(existingRole.get()));
 
         return CreateRoleResponse.fromRole(role);
+    }
+
+    @Override
+    public Optional<Role> findById(Long roleId) {
+        return roleRepository.findById(roleId);
     }
 
     @Override

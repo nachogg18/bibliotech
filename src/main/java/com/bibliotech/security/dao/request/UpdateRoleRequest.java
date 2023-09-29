@@ -9,7 +9,7 @@ import java.time.Instant;
 import org.apache.commons.lang3.StringUtils;
 
 public record UpdateRoleRequest(@NotNull Long id, 
-                                @IsOptionalField @Pattern(regexp = RoleUtils.VALID_ROL_NAME_FORMAT) String name, 
+                                @IsOptionalField @Pattern(regexp = RoleUtils.VALID_ROLE_NAME_FORMAT) String name,
                                 @NotNull Boolean enabled) {
 
     public Role toRole(Role existingRole) {

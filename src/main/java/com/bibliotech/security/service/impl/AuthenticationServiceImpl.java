@@ -11,6 +11,7 @@ import com.bibliotech.security.service.JwtService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -34,18 +35,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
-    public JwtAuthenticationResponse signup(SignUpRequest request) {
-        Optional<Role> role;
-        if (!request.rol().isEmpty()) {
-            role = roleService.findByName(request.rol());
-        } else {
-            role = roleService.findByName(RoleUtils.DEFAULT_ROL_USER);
-        }
-        
+    public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
+        Optional<Role> role = roleService.findById(request.roleId());
         
         if (role.isEmpty()) {
-            throw new RuntimeException("Error al obtener el user default");
-            
+            logger.error("el rol con id no fue encontrado");
+            throw new RuntimeException("Recurso no encontrado");
         }
 
         User user = User.builder().firstName(request.firstName()).lastName(request.lastName())
@@ -67,7 +62,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
 
-    @Override
     public Boolean hasAdminRole() {
         User userAuthenticated = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         
@@ -84,5 +78,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         )
         );
         
+    }
+    public Boolean hasSomeRoleOf(List<String> roleNames) {
+        User userAuthenticated = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userAuthenticated.getRoles().stream().anyMatch(
+                role -> roleNames
+                        .stream()
+                        .anyMatch(
+                                s -> {
+                                    Boolean result = s.equals(role.getName());
+                                    logger.debug(String.format("role_string: %s, match?: %s", s, result));
+                                    return s.equals(role.getName());
+                                }
+
+                        )
+        );
+
     }
 }
