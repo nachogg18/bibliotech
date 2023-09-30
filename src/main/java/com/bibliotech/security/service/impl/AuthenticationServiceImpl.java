@@ -4,7 +4,10 @@ import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.entity.Role;
+import com.bibliotech.security.entity.Token;
+import com.bibliotech.security.entity.TokenType;
 import com.bibliotech.security.entity.User;
+import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.repository.UserRepository;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.JwtService;
@@ -34,6 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final TokenRepository tokenRepository;
     @Override
     public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
         Optional<Role> role = roleService.findById(request.roleId());
@@ -46,10 +50,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder().firstName(request.firstName()).lastName(request.lastName())
                 .email(request.email()).password(passwordEncoder.encode(request.password()))
                     .roles(List.of(role.stream().findAny().get())).build();
-        user = userRepository.save(user);
+        var savedUser = user = userRepository.save(user);
         roleService.assignUserToRol(role.get().getId(), user);
-        var jwt = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder().token(jwt).build();
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+        revokeAllUserTokens(user);
+        return JwtAuthenticationResponse.builder()
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .user(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+        tokenRepository.save(token);
+    }
+
+    private void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 
     @Override
