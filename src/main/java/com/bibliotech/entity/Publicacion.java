@@ -66,4 +66,7 @@ public class Publicacion extends Base {
     @ManyToOne
     private TipoPublicacion tipoPublicacion;
 
+    @OneToOne
+    private Link link;
+
 }

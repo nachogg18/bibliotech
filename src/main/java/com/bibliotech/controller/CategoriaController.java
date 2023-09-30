@@ -1,18 +1,17 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.FiltroCategoriaDTO;
+import com.bibliotech.entity.Categoria;
 import com.bibliotech.service.CategoriaService;
 import java.util.List;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(path = "api/v1/categorias")
-@Log4j2
+@RequestMapping(path = "/api/v1/categorias")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -21,9 +20,30 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
+    @GetMapping
+    public List<Categoria> findAll() {
+        return categoriaService.findAll();
+    }
+
+    @PostMapping
+    public Categoria post(@RequestBody Categoria categoria) {
+        return categoriaService.save(categoria);
+    }
+
+    @PutMapping("/{id}")
+    public Categoria edit(@RequestBody Categoria categoria, @PathVariable Long id) {
+        return categoriaService.edit(categoria, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Categoria> delete(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoriaService.delete(id)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")));
+    }
+
     @GetMapping("/filtros")
     public List<FiltroCategoriaDTO> findAllDTO() {
-        log.debug("(GET) Request to get FiltroCategoriaDTO list");
         return categoriaService.findAllDTO();
     }
 
