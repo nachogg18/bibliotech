@@ -21,3 +21,8 @@ token:
   signing:
     key: test1352675ghjt7789798578455855seserewgweew
 
+application:
+  security:
+    jwt:
+      refresh-token:
+        expiration: 604800000
