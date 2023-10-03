@@ -25,4 +25,4 @@ application:
   security:
     jwt:
       refresh-token:
-        expiration: ${EXPIRATION_REFRESH_TIME}
+        expiration: 604800000
