@@ -1,7 +1,10 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.CrearValorDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.CategoriaValor;
 import com.bibliotech.service.CategoriaValorService;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -25,8 +28,9 @@ public class CategoriaValorController {
     }
 
     @PostMapping
-    public CategoriaValor post(@RequestBody CategoriaValor categoriaValor) {
-        return categoriaValorService.save(categoriaValor);
+    public ResponseEntity<MostrarCategoriaValorDTO> post(@RequestBody CrearValorDTO valorDTO) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoriaValorService.save(valorDTO));
     }
 
     @PutMapping("/{id}")
