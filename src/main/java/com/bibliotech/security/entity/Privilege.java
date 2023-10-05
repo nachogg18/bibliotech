@@ -22,7 +22,7 @@ public class Privilege {
     @Column(unique = true)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Resource resource;
 
     @ManyToMany(mappedBy = "privileges", fetch = FetchType.EAGER)

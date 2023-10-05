@@ -3,9 +3,9 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Autor;
 import com.bibliotech.service.AutorService;
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,6 +25,7 @@ public class AutorController {
     }
 
     @PostMapping
+    @PreAuthorize("@authenticationService.hasPrivilegeOf('WRITE_AUTOR')")
     public Autor post(@RequestBody Autor autor) {
         return autorService.save(autor);
     }

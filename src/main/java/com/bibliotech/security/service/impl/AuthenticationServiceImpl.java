@@ -3,6 +3,7 @@ package com.bibliotech.security.service.impl;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.Token;
 import com.bibliotech.security.entity.TokenType;
@@ -136,4 +137,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
     }
+
+    public Boolean hasPrivilegeOf(String privilegeName) {
+        User userAuthenticated = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userAuthenticated.getRoles().stream().flatMap(
+                role -> role.getPrivileges().stream().map(
+                        Privilege::getName
+                )
+        ).filter(
+                privilegeName::equals
+        ).findAny().isPresent();
+
+    }
+
 }
