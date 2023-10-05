@@ -151,4 +151,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
 
+    public Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName) {
+        User userAuthenticated = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return userAuthenticated.getRoles().stream().flatMap(
+                role -> role.getPrivileges().stream()
+        ).filter(
+                privilege -> resourceName.equals(privilege.getResource().getName())
+        ).anyMatch(
+                privilege -> privilege.getActions().stream().anyMatch(action -> actionName.equals(action.name()))
+        );
+
+    }
+
 }
