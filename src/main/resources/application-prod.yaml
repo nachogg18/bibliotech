@@ -13,3 +13,5 @@ spring:
 token:
   signing:
     key: ${JWT_KEY}
+  expiration:
+    time: ${TOKEN_EXPIRATION_TIME}

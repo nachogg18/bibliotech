@@ -1,8 +1,11 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.service.CategoriaService;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -26,8 +29,8 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public Categoria post(@RequestBody Categoria categoria) {
-        return categoriaService.save(categoria);
+    public ResponseEntity<MostrarCategoriaDTO> post(@RequestBody CrearCategoriaDTO categoriaDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoriaService.save(categoriaDTO));
     }
 
     @PutMapping("/{id}")

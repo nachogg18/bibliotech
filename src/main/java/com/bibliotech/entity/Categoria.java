@@ -1,9 +1,6 @@
 package com.bibliotech.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,15 +19,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Categoria extends Base {
 
-    @Column(name = "nombre")
+    @Column
     private String nombre;
 
-    @Column(name = "fechaAlta")
+    @Column
     private Instant fechaAlta = Instant.now();
 
-    @Column(name = "fechaBaja")
+    @Column
     private Instant fechaBaja;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<CategoriaValor> categoriaValorList = new ArrayList<>();
 }
