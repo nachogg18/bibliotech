@@ -24,7 +24,7 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public List<Categoria> findAll() {
+    public List<MostrarCategoriaDTO> findAll() {
         return categoriaService.findAll();
     }
 
