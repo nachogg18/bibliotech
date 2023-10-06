@@ -29,15 +29,18 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final EditorialRepository editorialRepository;
 
     private final TipoPublicacionService tipoPublicacionService;
+
+    private final LinkService linkService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
-    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
+    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, LinkService linkService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
         this.publicacionRepository = publicacionRepository;
         this.categoriaPublicacionRepository = categoriaPublicacionRepository;
         this.autorRepository = autorRepository;
         this.editorialRepository = editorialRepository;
         this.tipoPublicacionService = tipoPublicacionService;
+        this.linkService = linkService;
         this.pageUtil = pageUtil;
         this.listToPageDTOMapper = listToPageDTOMapper;
     }
@@ -156,7 +159,10 @@ public class PublicacionServiceImpl implements PublicacionService {
                         idAutor ->
                             autorRepository
                                 .findById(idAutor)
-                                .orElseThrow(() -> new ValidationException(String.format("no existe autor con id: %s", idAutor))))
+                                .orElseThrow(
+                                    () ->
+                                        new ValidationException(
+                                            String.format("no existe autor con id: %s", idAutor))))
                     .collect(Collectors.toList()))
             .editoriales(
                 request.getValidatedIdsEditoriales().stream()
@@ -164,12 +170,26 @@ public class PublicacionServiceImpl implements PublicacionService {
                         idEditorial ->
                             editorialRepository
                                 .findById(idEditorial)
-                                .orElseThrow(() -> new ValidationException(String.format("no existe editorial con id: %s", idEditorial))))
+                                .orElseThrow(
+                                    () ->
+                                        new ValidationException(
+                                            String.format(
+                                                "no existe editorial con id: %s", idEditorial))))
                     .collect(Collectors.toList()))
             .tipoPublicacion(
                 tipoPublicacionService
                     .findByIdAndFechaBajaNull(request.idTipo())
-                    .orElseThrow(() -> new ValidationException(String.format("no existe tipo publicacion con id: %s", request.idTipo()))))
+                    .orElseThrow(
+                        () ->
+                            new ValidationException(
+                                String.format(
+                                    "no existe tipo publicacion con id: %s", request.idTipo()))))
+            .edicion(null)
+            .link(linkService.findByIdAndFechaBajaNull(request.idLink()).orElseThrow(
+                    () -> new ValidationException(
+                            String.format(
+                                    "no existe link con id: %s", request.idLink())
+            )))
             .titulo(request.tituloPublicacion())
             .nroPaginas(request.nroPaginas())
             .anio(request.anioPublicacion())
