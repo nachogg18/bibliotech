@@ -1,3 +1,35 @@
+POST http://localhost:8080/api/v1/publicaciones
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBzdXBlcmFkbWluIiwiaWF0IjoxNjk2NTY0NzA2LCJleHAiOjE2OTY1NjYxNDZ9.dyg0wF_ZD7jQyTNt7Gmk5P4rouakoMBF9hv2VUFQsmI
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.7)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-06T010110.400.json
+
+###
+
+POST http://localhost:8080/api/v1/publicaciones
+Authorization: Bearer {{eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBzdXBlcmFkbWluIiwiaWF0IjoxNjk2NTY0NzA2LCJleHAiOjE2OTY1NjYxNDZ9.dyg0wF_ZD7jQyTNt7Gmk5P4rouakoMBF9hv2VUFQsmI}}
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.7)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-06T010050.500.json
+
+###
+
+POST http://localhost:8080/api/v1/publicaciones
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.7)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2023-10-06T005948.403.json
+
+###
+
 GET http://localhost:8080/api/v1/prestamos
 Accept: application/json
 Connection: Keep-Alive
@@ -633,42 +665,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2023-09-22T180517.200.json
-
-###
-
-POST http://localhost:8080/api/v1/usuarios
-Content-Type: application/json
-Content-Length: 47
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "email" : "test@test.com",
-  "pwd": "123"
-}
-
-<> 2023-09-22T180458.200.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T174617.200.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T174603.200.json
 
 ###
 

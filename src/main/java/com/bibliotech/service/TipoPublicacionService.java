@@ -12,4 +12,6 @@ public interface TipoPublicacionService {
     TipoPublicacion edit(TipoPublicacion tipoPublicacion, Long id);
 
     Optional<TipoPublicacion> delete(Long id);
+
+    Optional<TipoPublicacion> findByIdAndFechaBajaNull(Long id);
 }

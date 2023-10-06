@@ -6,6 +6,8 @@ import com.bibliotech.mapper.ListToPageDTOMapper;
 import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
 import com.bibliotech.utils.PageUtil;
+import jakarta.validation.ValidationException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,14 +27,17 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
     private final AutorRepository autorRepository;
     private final EditorialRepository editorialRepository;
+
+    private final TipoPublicacionService tipoPublicacionService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
-    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
+    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
         this.publicacionRepository = publicacionRepository;
         this.categoriaPublicacionRepository = categoriaPublicacionRepository;
         this.autorRepository = autorRepository;
         this.editorialRepository = editorialRepository;
+        this.tipoPublicacionService = tipoPublicacionService;
         this.pageUtil = pageUtil;
         this.listToPageDTOMapper = listToPageDTOMapper;
     }
@@ -140,6 +145,44 @@ public class PublicacionServiceImpl implements PublicacionService {
         return listToPageDTOMapper.toPageDTO(page, categoryPage, publicacionesDTOList);
     }
 
+    @Override
+    public Publicacion create(CreatePublicacionRequestDTO request) {
+
+    return publicacionRepository.save(
+        Publicacion.builder()
+            .autores(
+                request.getValidatedIdsAutores().stream()
+                    .map(
+                        idAutor ->
+                            autorRepository
+                                .findById(idAutor)
+                                .orElseThrow(() -> new ValidationException(String.format("no existe autor con id: %s", idAutor))))
+                    .collect(Collectors.toList()))
+            .editoriales(
+                request.getValidatedIdsEditoriales().stream()
+                    .map(
+                        idEditorial ->
+                            editorialRepository
+                                .findById(idEditorial)
+                                .orElseThrow(() -> new ValidationException(String.format("no existe editorial con id: %s", idEditorial))))
+                    .collect(Collectors.toList()))
+            .tipoPublicacion(
+                tipoPublicacionService
+                    .findByIdAndFechaBajaNull(request.idTipo())
+                    .orElseThrow(() -> new ValidationException(String.format("no existe tipo publicacion con id: %s", request.idTipo()))))
+            .titulo(request.tituloPublicacion())
+            .nroPaginas(request.nroPaginas())
+            .anio(request.anioPublicacion())
+            .isbn(request.isbnPublicacion())
+            .fechaAlta(Instant.now())
+            .fechaBaja(null)
+            .build());
+    }
+
+    @Override
+    public Publicacion save(Publicacion publicacion) {
+        return publicacionRepository.save(publicacion);
+    }
 
 
 }

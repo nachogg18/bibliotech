@@ -14,4 +14,9 @@ public interface PublicacionService {
     DetallePublicacionDTO getDetallePublicacion(Long id);
 
     PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page);
+
+
+    Publicacion create(CreatePublicacionRequestDTO request);
+
+    Publicacion save(Publicacion publicacion);
 }

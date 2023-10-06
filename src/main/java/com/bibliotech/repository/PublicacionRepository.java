@@ -16,6 +16,8 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
 
     Page<Publicacion> findAllByFechaBajaIsNull(Pageable pageable);
 
+    Publicacion save(Publicacion publicacion);
+
 //    Page<Publicacion> findAllByFechaBajaIsNullAndAutoresIdInAndEditorialesIdInAndAnioAndTituloAndEdicionNombre
 //            (Pageable pageable, Collection<Long> autores_id, Collection<Long> editoriales_id, Integer anio, String titulo, String edicion_nombre);
 
