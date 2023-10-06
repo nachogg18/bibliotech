@@ -3,6 +3,8 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.service.PlataformaService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,6 +31,11 @@ public class PlataformaController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         plataformaService.delete(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<Plataforma> post(@RequestBody Plataforma plataforma) {
+        return ResponseEntity.status(HttpStatus.OK).body(plataformaService.save(plataforma));
     }
 
 }

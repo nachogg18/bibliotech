@@ -1,6 +1,8 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
@@ -9,6 +11,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,9 +20,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
+    private final ModelMapper modelMapper;
 
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository) {
+    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, ModelMapper modelMapper) {
         this.categoriaRepository = categoriaRepository;
+        this.modelMapper = modelMapper;
     }
 
 
@@ -28,10 +33,20 @@ public class CategoriaServiceImpl implements CategoriaService {
         return categoriaRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<Categoria> findOne(Long id) {
+        Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
+        Optional<Categoria> categoria = Optional.empty();
+        if (categoriaOptional.isPresent())
+            categoria = categoriaOptional;
+        return categoria;
+    }
+
 
     @Override
-    public Categoria save(Categoria categoria) {
-        return categoriaRepository.save(categoria);
+    public MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO) {
+        Categoria categoria = categoriaRepository.save(modelMapper.map(categoriaDTO, Categoria.class));
+        return modelMapper.map(categoria, MostrarCategoriaDTO.class);
     }
 
     @Override

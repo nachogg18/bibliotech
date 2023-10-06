@@ -3,6 +3,7 @@ package com.bibliotech.security.initializer;
 import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.security.dao.request.SignUpRequest;
+import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.entity.Action;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Resource;
@@ -173,7 +174,7 @@ public class LocalDataInitializer implements ApplicationRunner {
     
     private void createSuperAdminUser(Role superAdminRole) {
         //crea
-        authenticationService.signup(
+        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signup(
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",
@@ -182,6 +183,9 @@ public class LocalDataInitializer implements ApplicationRunner {
                         superAdminRole.getId()
                 )
         );
+
+        logger.info(String.format("token: %s, \n refresh_token: %s",
+                jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
 
     }
 
