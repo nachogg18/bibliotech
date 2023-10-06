@@ -4,6 +4,7 @@ import com.bibliotech.entity.Ubicacion;
 import com.bibliotech.service.UbicacionService;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/ubicaciones")
+@SecurityRequirement(name = "bearer-key")
 public class UbicacionController {
 
     private final UbicacionService ubicacionService;

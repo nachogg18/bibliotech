@@ -3,6 +3,8 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.service.PlataformaService;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/v1/plataformas")
 @CrossOrigin(origins = "*")
+@SecurityRequirement(name = "bearer-key")
 public class PlataformaController {
 
     private final PlataformaService plataformaService;
