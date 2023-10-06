@@ -20,4 +20,7 @@ spring:
 token:
   signing:
     key: test1352675ghjt7789798578455855seserewgweew
+  expiration:
+    time: 5000
+
 
