@@ -3,6 +3,7 @@ package com.bibliotech.controller;
 import com.bibliotech.entity.Autor;
 import com.bibliotech.service.AutorService;
 import java.util.List;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/autores")
+@SecurityRequirement(name = "bearer-key")
 public class AutorController {
 
     private final AutorService autorService;

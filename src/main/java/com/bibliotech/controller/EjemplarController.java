@@ -3,6 +3,7 @@ package com.bibliotech.controller;
 import com.bibliotech.dto.CrearEjemplarDTO;
 import com.bibliotech.entity.Ejemplar;
 import com.bibliotech.service.EjemplarService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/v1/ejemplares")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearer-key")
 public class EjemplarController {
 
     private final EjemplarService ejemplarService;

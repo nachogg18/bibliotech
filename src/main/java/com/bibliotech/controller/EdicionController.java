@@ -4,6 +4,7 @@ import com.bibliotech.entity.Edicion;
 import com.bibliotech.service.EdicionService;
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/ediciones")
+@SecurityRequirement(name = "bearer-key")
 @Log4j2
 public class EdicionController {
 

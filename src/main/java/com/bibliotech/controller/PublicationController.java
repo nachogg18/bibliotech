@@ -7,6 +7,7 @@ import com.bibliotech.mapper.SearchRequestMapper;
 import com.bibliotech.repository.PublicationRepository;
 import com.bibliotech.repository.specifications.EspecificationFilter;
 import com.bibliotech.service.PublicationServiceImpl;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.ValidationException;
 import java.util.*;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "api/v1/publications")
+@SecurityRequirement(name = "bearer-key")
 public class PublicationController extends BaseControllerImpl<Publication, PublicationServiceImpl> {
     
     @Autowired
