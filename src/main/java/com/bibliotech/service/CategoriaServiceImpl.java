@@ -3,6 +3,7 @@ package com.bibliotech.service;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
@@ -29,8 +30,22 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 
     @Override
-    public List<Categoria> findAll() {
-        return categoriaRepository.findByFechaBajaNull();
+    public List<MostrarCategoriaDTO> findAll() {
+        return categoriaRepository.findByFechaBajaNull()
+                .stream().map(c -> {
+                    MostrarCategoriaDTO categoriaDTO = new MostrarCategoriaDTO();
+                    categoriaDTO.setNombre(c.getNombre());
+                    List<MostrarCategoriaValorDTO> valores = c.getValores().stream().map(
+                            v -> {
+                                MostrarCategoriaValorDTO valorDTO = new MostrarCategoriaValorDTO();
+                                valorDTO.setNombre(v.getNombre());
+                                return valorDTO;
+                            }
+                    ).toList();
+                    categoriaDTO.setNombre(c.getNombre());
+                    categoriaDTO.setValores(valores);
+                    return categoriaDTO;
+                }).toList();
     }
 
     @Override
@@ -50,10 +65,11 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public Categoria edit(Categoria categoria, Long id) {
+    public MostrarCategoriaValorDTO edit(Categoria categoria, Long id) {
         if (categoriaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
-        return categoriaRepository.save(categoria);
+        categoria = categoriaRepository.save(categoria);
+        return modelMapper.map(categoria, MostrarCategoriaValorDTO.class);
     }
 
     @Override

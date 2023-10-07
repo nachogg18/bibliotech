@@ -7,6 +7,7 @@ import com.bibliotech.service.CategoriaValorService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/categoria-valores")
+@SecurityRequirement(name = "bearer-key")
 public class CategoriaValorController {
 
     private final CategoriaValorService categoriaValorService;

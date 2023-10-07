@@ -5,6 +5,7 @@ import com.bibliotech.service.FacultadService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/facultades")
+@SecurityRequirement(name = "bearer-key")
 public class FacultadController {
 
     private final FacultadService facultadService;

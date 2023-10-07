@@ -3,11 +3,13 @@ package com.bibliotech.controller;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.service.CategoriaService;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(path = "/api/v1/categorias")
+@SecurityRequirement(name = "bearer-key")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
@@ -24,7 +27,7 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public List<Categoria> findAll() {
+    public List<MostrarCategoriaDTO> findAll() {
         return categoriaService.findAll();
     }
 
@@ -34,7 +37,7 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public Categoria edit(@RequestBody Categoria categoria, @PathVariable Long id) {
+    public MostrarCategoriaValorDTO edit(@RequestBody Categoria categoria, @PathVariable Long id) {
         return categoriaService.edit(categoria, id);
     }
 

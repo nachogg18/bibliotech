@@ -5,6 +5,8 @@ import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "api/v1/publicaciones")
 @Log4j2
+@SecurityRequirement(name = "bearer-key")
 public class PublicacionController {
 
     private final PublicacionService publicacionService;
