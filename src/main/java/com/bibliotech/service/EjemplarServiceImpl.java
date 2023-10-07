@@ -2,9 +2,13 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
 import com.bibliotech.entity.Ejemplar;
+import com.bibliotech.entity.EjemplarEstado;
+import com.bibliotech.entity.EstadoEjemplar;
 import com.bibliotech.entity.Publicacion;
+import com.bibliotech.repository.EjemplarEstadoRepository;
 import com.bibliotech.repository.EjemplarRepository;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ public class EjemplarServiceImpl implements EjemplarService {
     private final EjemplarRepository ejemplarRepository;
     
     private final PublicacionService publicacionService;
+    private final EjemplarEstadoRepository ejemplarEstadoRepository;
     
 
     @Override
@@ -33,7 +38,16 @@ public class EjemplarServiceImpl implements EjemplarService {
             throw new RuntimeException(String.format("No existe publicacion con id %s", request.getIdPublicacion()));
         }
 
+        EjemplarEstado estado = EjemplarEstado.builder()
+                .estadoEjemplar(EstadoEjemplar.DISPONIBLE)
+                .fechaInicio(Instant.now())
+                .build();
+        List<EjemplarEstado> estadoList = new ArrayList<>();
+        estadoList.add(estado);
+        ejemplarEstadoRepository.save(estado);
+
         Ejemplar ejemplar = Ejemplar.builder()
+                .ejemplarEstadoList(estadoList)
                 .fechaAlta(Instant.now())
                 .publicacion(publicacion.get())
                 .build();
@@ -65,5 +79,10 @@ public class EjemplarServiceImpl implements EjemplarService {
     @Override
     public Optional<Ejemplar> findById(Long id) {
         return ejemplarRepository.findById(id);
+    }
+
+    @Override
+    public boolean exists(Long id) {
+        return ejemplarRepository.existsById(id);
     }
 }

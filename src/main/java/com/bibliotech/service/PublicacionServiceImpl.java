@@ -37,6 +37,10 @@ public class PublicacionServiceImpl implements PublicacionService {
         this.listToPageDTOMapper = listToPageDTOMapper;
     }
 
+    public Publicacion save(Publicacion publicacion) {
+        return publicacionRepository.save(publicacion);
+    }
+
     @Override
     public List<Publicacion> findAll() {
         return publicacionRepository.findAll();
@@ -44,7 +48,7 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     public Optional<Publicacion> findById(Long id) {
         return publicacionRepository.findById(id);
-    };
+    }
 
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {

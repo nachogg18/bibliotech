@@ -30,6 +30,11 @@ public class PublicacionController {
         return publicacionService.findAllPublicacionDTO(parametro, contenido, busquedaPublicacion);
     }
 
+    @PostMapping("")
+    public Publicacion save(@RequestBody Publicacion publicacion){
+            return publicacionService.save(publicacion);
+    }
+
     @GetMapping
     public List<Publicacion> findAll(){
         return publicacionService.findAll();

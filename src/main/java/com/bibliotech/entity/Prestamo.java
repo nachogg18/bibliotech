@@ -1,13 +1,10 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.time.Instant;
 import java.util.*;
 
 @Entity
@@ -16,37 +13,38 @@ import java.util.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Prestamo extends Base {
 
     @Column
-    private Date fechaAlta = new Date();
+    private Instant fechaAlta = Instant.now();
 
     @Column
-    private Date fechaFinEstimada;
+    private Instant fechaFinEstimada;
 
     @Column
-    private Date fechaInicioEstimada;
+    private Instant fechaInicioEstimada;
 
     @Column
-    private Date fechaBaja;
+    private Instant fechaBaja;
 
-    @ElementCollection(targetClass = Date.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Instant.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "fechasRenovacionesPrestamo", joinColumns = @JoinColumn(name = "fechaRenovacion_id"))
     @Column
-    private List<Date> fechasRenovaciones = new ArrayList<>();
-    //añadir tag @Transactional al método que vaya acceder a la lista
+    private List<Instant> fechasRenovaciones = new ArrayList<>();
+    //añadir tag @Transactional al método que vaya a acceder a la lista
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "usuario_id")
     private User usuario;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "ejemplar_id")
     private Ejemplar ejemplar;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name = "estado_prestamo")
-    private List<PrestamoEstado> estado = new ArrayList<PrestamoEstado>();
+    private List<PrestamoEstado> estado = new ArrayList<>();
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "multa_id")

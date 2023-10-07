@@ -1,3 +1,185 @@
+POST http://localhost:8080/api/v1/publications
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc1OTY4LCJleHAiOjE2OTU4Nzc0MDh9.ZGID4VM1g3GtVY4uALIhOZhLrE2KYQBvqeE5f1dTh4E
+Content-Length: 3
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+}
+
+<> 2023-09-28T013952.200.json
+
+###
+
+POST http://localhost:8080/api/v1/publications
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 3
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+}
+
+<> 2023-09-28T013652.500.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 70
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123,
+  "idInventario": "123",
+  "idPublicacion": 1
+}
+
+<> 2023-09-28T011029.500.json
+
+###
+
+POST http://localhost:8080/api/v1/publications
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 3
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+}
+
+<> 2023-09-28T011019.200.json
+
+###
+
+POST http://localhost:8080/api/v1/publications/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 3
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+}
+
+<> 2023-09-28T010912.404.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 72
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123,
+  "idInventario": "123",
+  "idPublicacion": 123
+}
+
+<> 2023-09-28T010745.500.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODc0MDQ1LCJleHAiOjE2OTU4NzU0ODV9.r_4T-e2JkzZjbAE56jxmHA23BzF_AkuZfEYLopu-_i8
+Content-Length: 73
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123,
+  "idInventario": "123",
+  "idPublicacion": 123,
+}
+
+<> 2023-09-28T010738.400.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODcyNDYxLCJleHAiOjE2OTU4NzM5MDF9.8Fi1wi1X5FOqs2MdFmVc3mUXgYNUJ7kzsfAFLJwe-cI
+Content-Length: 73
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123,
+  "idInventario": "123",
+  "idPublicacion": 123,
+}
+
+<> 2023-09-28T010637.500.json
+
+###
+
+POST http://localhost:8080/api/v1/ejemplares
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODcyNDYxLCJleHAiOjE2OTU4NzM5MDF9.8Fi1wi1X5FOqs2MdFmVc3mUXgYNUJ7kzsfAFLJwe-cI
+Content-Length: 23
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "serialNFC" : 123
+}
+
+<> 2023-09-28T005009.400.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODcyNDYxLCJleHAiOjE2OTU4NzM5MDF9.8Fi1wi1X5FOqs2MdFmVc3mUXgYNUJ7kzsfAFLJwe-cI
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-28T004928.404.json
+
+###
+
+POST http://localhost:8080/api/v1/usuarios
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c3VhcmlvQHRlc3QuY29tIiwiaWF0IjoxNjk1ODcyNDYxLCJleHAiOjE2OTU4NzM5MDF9.8Fi1wi1X5FOqs2MdFmVc3mUXgYNUJ7kzsfAFLJwe-cI
+Content-Length: 47
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "email" : "test@test.com",
+  "pwd": "123"
+}
+
+<> 2023-09-28T004914.404.json
+
+###
+
 GET http://localhost:8080/api/v1/prestamos
 Accept: application/json
 Connection: Keep-Alive
@@ -545,130 +727,6 @@ User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
 Accept-Encoding: br,deflate,gzip,x-gzip
 
 <> 2023-09-22T204859.500.json
-
-###
-
-GET http://localhost:8080/api/v1/prestamos
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180902.500.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180856.200.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios/
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180852.404.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180848.200.json
-
-###
-
-GET http://localhost:8080/api/v1/prestamos
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180752.500.json
-
-###
-
-GET http://localhost:8080/api/v1/prestamos/
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180746.404.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T180738.200.json
-
-###
-
-POST http://localhost:8080/api/v1/prestamosDTO
-Content-Type: application/json
-Content-Length: 114
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "usuarioID": 1,
-  "ejemplarID": 1,
-  "fechaFinEstimada": "2023-09-26",
-  "fechaInicioEstimada": "2023-09-19"
-}
-
-<> 2023-09-22T180517.200.json
-
-###
-
-POST http://localhost:8080/api/v1/usuarios
-Content-Type: application/json
-Content-Length: 47
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-  "email" : "test@test.com",
-  "pwd": "123"
-}
-
-<> 2023-09-22T180458.200.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T174617.200.json
-
-###
-
-GET http://localhost:8080/api/v1/usuarios
-Accept: application/json
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-<> 2023-09-22T174603.200.json
 
 ###
 

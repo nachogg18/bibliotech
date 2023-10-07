@@ -17,4 +17,6 @@ public interface EjemplarService {
 
     void delete(Long id);
     Optional<Ejemplar> findById(Long id);
+
+    boolean exists(Long id);
 }
