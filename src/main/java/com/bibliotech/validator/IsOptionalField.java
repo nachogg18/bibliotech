@@ -10,13 +10,15 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+//TODO
+// ver si remover este validator que no funciona
+
 @Constraint(validatedBy = IsOptionalFieldValidator.class)
-@Target({ METHOD, CONSTRUCTOR })
+@Target({METHOD, CONSTRUCTOR })
 @Retention(RUNTIME)
 @Documented
 public @interface IsOptionalField {
-    String message() default "End date must be after begin date "
-            + "and both must be in the future, room number must be bigger than 0";
+    String message() default "El campo es opcional";
 
     Class<?>[] groups() default {};
 

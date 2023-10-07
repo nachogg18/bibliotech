@@ -5,14 +5,19 @@ import com.bibliotech.entity.*;
 import com.bibliotech.mapper.ListToPageDTOMapper;
 import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
+import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
+import jakarta.validation.ValidationException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,20 +30,22 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
     private final AutorRepository autorRepository;
     private final EditorialRepository editorialRepository;
+
+    private final TipoPublicacionService tipoPublicacionService;
+
+    private final LinkService linkService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
-    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
+    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, LinkService linkService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
         this.publicacionRepository = publicacionRepository;
         this.categoriaPublicacionRepository = categoriaPublicacionRepository;
         this.autorRepository = autorRepository;
         this.editorialRepository = editorialRepository;
+        this.tipoPublicacionService = tipoPublicacionService;
+        this.linkService = linkService;
         this.pageUtil = pageUtil;
         this.listToPageDTOMapper = listToPageDTOMapper;
-    }
-
-    public Publicacion save(Publicacion publicacion) {
-        return publicacionRepository.save(publicacion);
     }
 
     @Override
@@ -144,6 +151,88 @@ public class PublicacionServiceImpl implements PublicacionService {
         return listToPageDTOMapper.toPageDTO(page, categoryPage, publicacionesDTOList);
     }
 
+    @Override
+    public Publicacion create(CreatePublicacionRequestDTO request) {
+
+    return publicacionRepository.save(
+        Publicacion.builder()
+            .autores(
+                request.getValidatedIdsAutores().stream()
+                    .map(
+                        idAutor ->
+                            autorRepository
+                                .findById(idAutor)
+                                .orElseThrow(
+                                    () ->
+                                        new ValidationException(
+                                            String.format("no existe autor con id: %s", idAutor))))
+                    .collect(Collectors.toList()))
+            .editoriales(
+                request.getValidatedIdsEditoriales().stream()
+                    .map(
+                        idEditorial ->
+                            editorialRepository
+                                .findById(idEditorial)
+                                .orElseThrow(
+                                    () ->
+                                        new ValidationException(
+                                            String.format(
+                                                "no existe editorial con id: %s", idEditorial))))
+                    .collect(Collectors.toList()))
+            .tipoPublicacion(
+                tipoPublicacionService
+                    .findByIdAndFechaBajaNull(request.idTipo())
+                    .orElseThrow(
+                        () ->
+                            new ValidationException(
+                                String.format(
+                                    "no existe tipo publicacion con id: %s", request.idTipo()))))
+            .edicion(null)
+            .link(linkService.findByIdAndFechaBajaNull(request.idLink()).orElseThrow(
+                    () -> new ValidationException(
+                            String.format(
+                                    "no existe link con id: %s", request.idLink())
+            )))
+            .titulo(request.tituloPublicacion())
+            .nroPaginas(request.nroPaginas())
+            .anio(request.anioPublicacion())
+            .isbn(request.isbnPublicacion())
+            .fechaAlta(Instant.now())
+            .fechaBaja(null)
+            .build());
+    }
+
+
+    public List<Publicacion> findByParams(FindPublicacionesByParamsDTO request) {
+        Specification<Publicacion> spec = PublicacionSpecifications.empty();
+
+        String titulo = request.titulo();
+        if (StringUtils.isNotBlank(titulo)) {
+            spec = spec.and(PublicacionSpecifications.hasTituloLike(titulo));
+        }
+
+        String isbn = request.isbn();
+        if (StringUtils.isNotBlank(isbn)) {
+            spec = spec.and(PublicacionSpecifications.hasIsbn(isbn));
+        }
+
+        String anio = request.anio();
+        if (StringUtils.isNotBlank(anio)) {
+            spec = spec.and(PublicacionSpecifications.hasAnio(anio));
+        }
+
+        String autor = request.autor();
+        if (StringUtils.isNotBlank(autor)) {
+            spec = spec.and(PublicacionSpecifications.hasAutorWithFirstOrLastName(autor));
+        }
+
+        return publicacionRepository.findAll(spec);
+    }
+
+    @Override
+    public Publicacion save(Publicacion publicacion) {
+        return publicacionRepository.save(publicacion);
+    }
 
 
 }

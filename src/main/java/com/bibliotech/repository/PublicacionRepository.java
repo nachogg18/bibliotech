@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface PublicacionRepository extends JpaRepository<Publicacion, Long> {
+public interface PublicacionRepository extends JpaRepository<Publicacion, Long>, JpaSpecificationExecutor<Publicacion> {
     List<Publicacion> findByCategoriaPublicacionListIdIn(Collection<Long> categoriaPublicacionList_id);
 
     List<Publicacion> findByCategoriaPublicacionListIdInAndAutoresIdIn(Collection<Long> categoriaPublicacionList_id, Collection<Long> autores_id);
@@ -15,6 +16,8 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     List<Publicacion> findByCategoriaPublicacionListIdInAndTituloContainingIgnoreCase(Collection<Long> categoriaPublicacionList_id, String titulo);
 
     Page<Publicacion> findAllByFechaBajaIsNull(Pageable pageable);
+
+    Publicacion save(Publicacion publicacion);
 
 //    Page<Publicacion> findAllByFechaBajaIsNullAndAutoresIdInAndEditorialesIdInAndAnioAndTituloAndEdicionNombre
 //            (Pageable pageable, Collection<Long> autores_id, Collection<Long> editoriales_id, Integer anio, String titulo, String edicion_nombre);
