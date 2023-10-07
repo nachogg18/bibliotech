@@ -24,24 +24,25 @@ public class CategoriaValorController {
         this.categoriaValorService = categoriaValorService;
     }
 
-    @GetMapping
-    public List<CategoriaValor> findAll() {
-        return categoriaValorService.findAll();
-    }
+//    @GetMapping
+//    public List<CategoriaValor> findAll() {
+//        return categoriaValorService.findAll();
+//    }
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<MostrarCategoriaValorDTO> post(@RequestBody CrearValorDTO valorDTO) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaValorService.save(valorDTO));
     }
 
     @PutMapping("/{id}")
-    public CategoriaValor edit(@RequestBody CategoriaValor categoriaValor, @PathVariable Long id) {
-        return categoriaValorService.edit(categoriaValor, id);
+    public ResponseEntity<MostrarCategoriaValorDTO> edit(@RequestBody CrearValorDTO categoriaValor, @PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoriaValorService.edit(categoriaValor, id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoriaValor> delete(@PathVariable Long id) {
+    public ResponseEntity<MostrarCategoriaValorDTO> delete(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaValorService.delete(id)
                         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")));

@@ -1,9 +1,6 @@
 package com.bibliotech.controller;
 
-import com.bibliotech.dto.CrearCategoriaDTO;
-import com.bibliotech.dto.FiltroCategoriaDTO;
-import com.bibliotech.dto.MostrarCategoriaDTO;
-import com.bibliotech.dto.MostrarCategoriaValorDTO;
+import com.bibliotech.dto.*;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.service.CategoriaService;
 
