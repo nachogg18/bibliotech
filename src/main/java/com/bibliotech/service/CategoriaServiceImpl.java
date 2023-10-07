@@ -12,12 +12,14 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Log4j2
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
@@ -32,20 +34,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public List<MostrarCategoriaDTO> findAll() {
         return categoriaRepository.findByFechaBajaNull()
-                .stream().map(c -> {
-                    MostrarCategoriaDTO categoriaDTO = new MostrarCategoriaDTO();
-                    categoriaDTO.setNombre(c.getNombre());
-                    List<MostrarCategoriaValorDTO> valores = c.getValores().stream().map(
-                            v -> {
-                                MostrarCategoriaValorDTO valorDTO = new MostrarCategoriaValorDTO();
-                                valorDTO.setNombre(v.getNombre());
-                                return valorDTO;
-                            }
-                    ).toList();
-                    categoriaDTO.setNombre(c.getNombre());
-                    categoriaDTO.setValores(valores);
-                    return categoriaDTO;
-                }).toList();
+                .stream().map(c -> modelMapper.map(c, MostrarCategoriaDTO.class)).toList();
     }
 
     @Override
@@ -61,6 +50,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO) {
         Categoria categoria = categoriaRepository.save(modelMapper.map(categoriaDTO, Categoria.class));
+        log.info(categoria);
         return modelMapper.map(categoria, MostrarCategoriaDTO.class);
     }
 
