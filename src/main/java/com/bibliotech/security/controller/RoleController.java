@@ -56,7 +56,7 @@ public class RoleController {
   }
 
   @PutMapping("/update")
-  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'UBICACION')")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'ROLE')")
   public ResponseEntity<CreateRoleResponse> update(@RequestBody @Valid UpdateRoleRequest request) {
     return ResponseEntity.ok(roleService.update(request));
   }
