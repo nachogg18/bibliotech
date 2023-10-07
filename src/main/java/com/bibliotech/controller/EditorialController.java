@@ -2,11 +2,11 @@ package com.bibliotech.controller;
 
 import com.bibliotech.entity.Editorial;
 import com.bibliotech.service.EditorialService;
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,21 +22,25 @@ public class EditorialController {
     }
 
     @GetMapping
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EDITORIAL')")
     public List<Editorial> findAll() {
         return editorialService.findAll();
     }
 
     @PostMapping
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'EDITORIAL')")
     public Editorial post(@RequestBody Editorial editorial) {
         return editorialService.save(editorial);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EDITORIAL')")
     public Editorial edit(@RequestBody Editorial editorial, @PathVariable Long id) {
         return editorialService.edit(editorial, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'EDITORIAL')")
     public ResponseEntity<Editorial> delete(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(editorialService.delete(id)
