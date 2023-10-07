@@ -18,6 +18,7 @@ public enum ResourceNames {
     PLATAFORMA,
     PUBLICACION,
     PRESTAMO,
+    PRIVILEGE,
     ROLE,
     TIPO_EVENTO,
     TIPO_CATEGORIA,
