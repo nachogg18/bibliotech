@@ -18,7 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Collection<User> users;
 
     @ManyToMany(fetch = FetchType.EAGER)
