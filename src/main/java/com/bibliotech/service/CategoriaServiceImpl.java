@@ -65,10 +65,11 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
-    public Categoria edit(Categoria categoria, Long id) {
+    public MostrarCategoriaValorDTO edit(Categoria categoria, Long id) {
         if (categoriaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
-        return categoriaRepository.save(categoria);
+        categoria = categoriaRepository.save(categoria);
+        return modelMapper.map(categoria, MostrarCategoriaValorDTO.class);
     }
 
     @Override
