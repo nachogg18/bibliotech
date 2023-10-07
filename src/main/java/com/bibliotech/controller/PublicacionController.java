@@ -35,11 +35,6 @@ public class PublicacionController {
         return publicacionService.create(request);
     }
 
-    @PostMapping("")
-    public Publicacion save(@RequestBody Publicacion publicacion){
-            return publicacionService.save(publicacion);
-    }
-
     @GetMapping
     public List<Publicacion> findAll(){
         return publicacionService.findAll();
