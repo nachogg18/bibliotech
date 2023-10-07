@@ -1,22 +1,22 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 
-@Entity
-@Table(name = "publicacion")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "publicacion")
 public class Publicacion extends Base {
 
     @Column
-    private short anio;
+    private Integer anio;
 
     @Column
     private String isbn;
@@ -25,7 +25,7 @@ public class Publicacion extends Base {
     private String titulo;
 
     @Column
-    private int nroPaginas;
+    private Integer nroPaginas;
 
     @Column
     private Instant fechaAlta = Instant.now();

@@ -2,12 +2,9 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.TipoPublicacion;
 import com.bibliotech.repository.TipoPublicacionRepository;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,6 +48,14 @@ public class TipoPublicacionServiceImpl implements TipoPublicacionService {
                 tipoPublicacionOptional = Optional.of(tipoPublicacionRepository.save(tipoPublicacion));
             }
         }
+        return tipoPublicacionOptional;
+    }
+
+    @Override
+    public Optional<TipoPublicacion> findByIdAndFechaBajaNull(Long id) {
+        Optional<TipoPublicacion> tipoPublicacionOptional = tipoPublicacionRepository.findByIdAndFechaBajaNull(id);
+        
+        
         return tipoPublicacionOptional;
     }
 }
