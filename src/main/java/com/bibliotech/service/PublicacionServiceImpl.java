@@ -5,6 +5,7 @@ import com.bibliotech.entity.*;
 import com.bibliotech.mapper.ListToPageDTOMapper;
 import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
+import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
@@ -14,7 +15,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -197,6 +200,33 @@ public class PublicacionServiceImpl implements PublicacionService {
             .fechaAlta(Instant.now())
             .fechaBaja(null)
             .build());
+    }
+
+
+    public List<Publicacion> findByParams(FindPublicacionesByParamsDTO request) {
+        Specification<Publicacion> spec = PublicacionSpecifications.empty();
+
+        String titulo = request.titulo();
+        if (StringUtils.isNotBlank(titulo)) {
+            spec = spec.and(PublicacionSpecifications.hasTituloLike(titulo));
+        }
+
+        String isbn = request.isbn();
+        if (StringUtils.isNotBlank(isbn)) {
+            spec = spec.and(PublicacionSpecifications.hasIsbn(isbn));
+        }
+
+        String anio = request.anio();
+        if (StringUtils.isNotBlank(anio)) {
+            spec = spec.and(PublicacionSpecifications.hasAnio(anio));
+        }
+
+        String autor = request.autor();
+        if (StringUtils.isNotBlank(autor)) {
+            spec = spec.and(PublicacionSpecifications.hasAutorWithFirstOrLastName(autor));
+        }
+
+        return publicacionRepository.findAll(spec);
     }
 
     @Override

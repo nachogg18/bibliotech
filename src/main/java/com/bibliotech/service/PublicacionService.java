@@ -11,6 +11,8 @@ public interface PublicacionService {
     Optional<Publicacion> findById(Long id);
     List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
 
+    List<Publicacion> findByParams(FindPublicacionesByParamsDTO request);
+
     DetallePublicacionDTO getDetallePublicacion(Long id);
 
     PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page);

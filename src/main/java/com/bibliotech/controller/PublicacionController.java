@@ -22,13 +22,11 @@ public class PublicacionController {
     }
 
     @PostMapping(path = "/findByParams")
-    public List<PublicacionResponseDTO> findAll(
-            @RequestParam String parametro,
-            @RequestParam(required = false) String contenido,
-            @RequestBody List<BusquedaPublicacionCategoriaDTO> busquedaPublicacion
-            ) {
-        log.debug("(POST) Request to get PublicacionResponseDTO list");
-        return publicacionService.findAllPublicacionDTO(parametro, contenido, busquedaPublicacion);
+    public List<Publicacion> findByParams(@RequestBody FindPublicacionesByParamsDTO request) {
+
+        request.validate();
+
+        return publicacionService.findByParams(request);
     }
 
     @PostMapping(path = "")
