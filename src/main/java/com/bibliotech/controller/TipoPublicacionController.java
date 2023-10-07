@@ -4,6 +4,7 @@ import com.bibliotech.entity.TipoPublicacion;
 import com.bibliotech.service.TipoPublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,13 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(path = "/api/v1/tipo-publicaciones")
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class TipoPublicacionController {
 
     private final TipoPublicacionService tipoPublicacionService;
-
-    public TipoPublicacionController(TipoPublicacionService tipoPublicacionService) {
-        this.tipoPublicacionService = tipoPublicacionService;
-    }
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'TIPO_PUBLICACION')")

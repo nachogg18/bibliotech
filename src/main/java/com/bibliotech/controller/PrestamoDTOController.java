@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "api/v1/crearPrestamo")
 @Log4j2
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class PrestamoDTOController {
 
     @Autowired

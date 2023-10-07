@@ -1,16 +1,14 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearValorDTO;
-import com.bibliotech.dto.MostrarCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.entity.CategoriaValor;
 import com.bibliotech.repository.CategoriaValorRepository;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -18,18 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class CategoriaValorServiceImpl implements CategoriaValorService {
 
     private final CategoriaValorRepository categoriaValorRepository;
     private final CategoriaService categoriaService;
     private final ModelMapper modelMapper;
-
-    public CategoriaValorServiceImpl(CategoriaValorRepository categoriaValorRepository, CategoriaService categoriaService, ModelMapper modelMapper) {
-        this.categoriaValorRepository = categoriaValorRepository;
-        this.categoriaService = categoriaService;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public List<CategoriaValor> findAll() {

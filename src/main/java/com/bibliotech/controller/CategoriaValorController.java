@@ -6,6 +6,7 @@ import com.bibliotech.entity.CategoriaValor;
 import com.bibliotech.service.CategoriaValorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,13 +16,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(path = "/api/v1/categoria-valores")
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class CategoriaValorController {
 
     private final CategoriaValorService categoriaValorService;
-
-    public CategoriaValorController(CategoriaValorService categoriaValorService) {
-        this.categoriaValorService = categoriaValorService;
-    }
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'CATEGORIA_VALOR')")

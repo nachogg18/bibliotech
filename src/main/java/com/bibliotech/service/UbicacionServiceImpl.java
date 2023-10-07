@@ -2,24 +2,19 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Ubicacion;
 import com.bibliotech.repository.UbicacionRepository;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionRepository ubicacionRepository;
-
-    public UbicacionServiceImpl(UbicacionRepository ubicacionRepository) {
-        this.ubicacionRepository = ubicacionRepository;
-    }
 
     @Override
     public List<Ubicacion> findAll() {
