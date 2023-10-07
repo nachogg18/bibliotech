@@ -1,7 +1,7 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.PrestamoRequest;
-import com.bibliotech.service.PrestamoService
+import com.bibliotech.service.PrestamoService;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
