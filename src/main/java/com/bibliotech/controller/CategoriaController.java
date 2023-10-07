@@ -3,6 +3,7 @@ package com.bibliotech.controller;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.service.CategoriaService;
 
@@ -36,7 +37,7 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public Categoria edit(@RequestBody Categoria categoria, @PathVariable Long id) {
+    public MostrarCategoriaValorDTO edit(@RequestBody Categoria categoria, @PathVariable Long id) {
         return categoriaService.edit(categoria, id);
     }
 

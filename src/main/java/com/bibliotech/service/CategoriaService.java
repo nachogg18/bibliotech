@@ -3,6 +3,7 @@ package com.bibliotech.service;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface CategoriaService {
 
     MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO);
 
-    Categoria edit(Categoria categoria, Long id);
+    MostrarCategoriaValorDTO edit(Categoria categoria, Long id);
 
     Optional<Categoria> delete(Long id);
 
