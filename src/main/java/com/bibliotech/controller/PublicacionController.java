@@ -6,6 +6,7 @@ import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "api/v1/publicaciones")
 @Log4j2
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class PublicacionController {
-
     private final PublicacionService publicacionService;
-
-    public PublicacionController(PublicacionService publicacionService) {
-        this.publicacionService = publicacionService;
-    }
 
     @PostMapping(path = "/findByParams")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")

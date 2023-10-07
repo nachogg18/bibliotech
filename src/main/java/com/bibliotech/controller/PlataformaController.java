@@ -4,6 +4,7 @@ import com.bibliotech.entity.Plataforma;
 import com.bibliotech.service.PlataformaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,13 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api/v1/plataformas")
 @CrossOrigin(origins = "*")
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class PlataformaController {
 
     private final PlataformaService plataformaService;
-
-    public PlataformaController(PlataformaService plataformaService) {
-        this.plataformaService = plataformaService;
-    }
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PLATAFORMA')")

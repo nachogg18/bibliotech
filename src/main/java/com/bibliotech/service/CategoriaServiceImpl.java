@@ -7,11 +7,10 @@ import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -19,17 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final ModelMapper modelMapper;
-
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, ModelMapper modelMapper) {
-        this.categoriaRepository = categoriaRepository;
-        this.modelMapper = modelMapper;
-    }
-
 
     @Override
     public List<MostrarCategoriaDTO> findAll() {

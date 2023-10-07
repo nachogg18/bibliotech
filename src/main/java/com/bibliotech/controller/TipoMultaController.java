@@ -4,6 +4,7 @@ import com.bibliotech.entity.TipoMulta;
 import com.bibliotech.service.TipoMultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,13 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(path = "/api/v1/tipo-multas")
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class TipoMultaController {
 
     private final TipoMultaService tipoMultaService;
-
-    public TipoMultaController(TipoMultaService tipoMultaService) {
-        this.tipoMultaService = tipoMultaService;
-    }
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'TIPO_MULTA')")

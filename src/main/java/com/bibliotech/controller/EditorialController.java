@@ -4,6 +4,7 @@ import com.bibliotech.entity.Editorial;
 import com.bibliotech.service.EditorialService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,13 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(path = "/api/v1/editoriales")
 @SecurityRequirement(name = "bearer-key")
+@RequiredArgsConstructor
 public class EditorialController {
 
     private final EditorialService editorialService;
-
-    public EditorialController(EditorialService editorialService) {
-        this.editorialService = editorialService;
-    }
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EDITORIAL')")

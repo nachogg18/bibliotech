@@ -2,24 +2,19 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.TipoMulta;
 import com.bibliotech.repository.TipoMultaRepository;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class TipoMultaServiceImpl implements TipoMultaService {
 
     private final TipoMultaRepository tipoMultaRepository;
-
-    public TipoMultaServiceImpl(TipoMultaRepository tipoMultaRepository) {
-        this.tipoMultaRepository = tipoMultaRepository;
-    }
 
     @Override
     public List<TipoMulta> findAll() {
