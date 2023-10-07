@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoriaService {
-    List<Categoria> findAll();
+    List<MostrarCategoriaDTO> findAll();
     Optional<Categoria> findOne(Long id);
 
     MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO);

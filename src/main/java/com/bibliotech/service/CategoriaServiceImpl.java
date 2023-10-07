@@ -3,6 +3,7 @@ package com.bibliotech.service;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
@@ -29,8 +30,22 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 
     @Override
-    public List<Categoria> findAll() {
-        return categoriaRepository.findByFechaBajaNull();
+    public List<MostrarCategoriaDTO> findAll() {
+        return categoriaRepository.findByFechaBajaNull()
+                .stream().map(c -> {
+                    MostrarCategoriaDTO categoriaDTO = new MostrarCategoriaDTO();
+                    categoriaDTO.setNombre(c.getNombre());
+                    List<MostrarCategoriaValorDTO> valores = c.getValores().stream().map(
+                            v -> {
+                                MostrarCategoriaValorDTO valorDTO = new MostrarCategoriaValorDTO();
+                                valorDTO.setNombre(v.getNombre());
+                                return valorDTO;
+                            }
+                    ).toList();
+                    categoriaDTO.setNombre(c.getNombre());
+                    categoriaDTO.setValores(valores);
+                    return categoriaDTO;
+                }).toList();
     }
 
     @Override
