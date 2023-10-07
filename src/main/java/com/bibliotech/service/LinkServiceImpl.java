@@ -1,16 +1,14 @@
 package com.bibliotech.service;
 
 import com.bibliotech.entity.Link;
-import com.bibliotech.entity.Plataforma;
 import com.bibliotech.repository.LinkRepository;
-import com.bibliotech.repository.PlataformaRepository;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Instant;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +19,11 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public List<Link> findAll() {
         return linkRepository.findByFechaBajaNull();
+    }
+
+    @Override
+    public Optional<Link> findByIdAndFechaBajaNull(Long id) {
+        return linkRepository.findByIdAndAndFechaBajaNull(id);
     }
 
     @Override

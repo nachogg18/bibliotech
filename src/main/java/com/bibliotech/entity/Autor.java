@@ -1,13 +1,12 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
-
 import lombok.*;
 
 @Entity
 @Table(name = "autor")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
