@@ -15,7 +15,7 @@ public abstract class BaseControllerImpl<E extends Base, S extends BaseServiceIm
     @Autowired
     protected S service;
 
-    private static final Logger logger = LoggerFactory.getLogger(PublicationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseControllerImpl.class);
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
