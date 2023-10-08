@@ -23,7 +23,7 @@ public class Ejemplar extends Base {
     @Column(name = "fechaBaja")
     private Instant fechaBaja;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<EjemplarEstado> ejemplarEstadoList = new ArrayList<>();
 
     @ManyToMany

@@ -1,8 +1,7 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
-import com.bibliotech.entity.Ejemplar;
-import com.bibliotech.entity.Publicacion;
+import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
 import java.time.Instant;
 import java.util.List;
@@ -19,6 +18,8 @@ public class EjemplarServiceImpl implements EjemplarService {
     
     private final PublicacionService publicacionService;
 
+    private final UbicacionService ubicacionService;
+
     @Override
     public List<Ejemplar> findAll() {
         return ejemplarRepository.findByFechaBajaNull();
@@ -32,9 +33,17 @@ public class EjemplarServiceImpl implements EjemplarService {
             throw new RuntimeException(String.format("No existe publicacion con id %s", request.getIdPublicacion()));
         }
 
+        Ubicacion ubicacion = ubicacionService.findById(request.getIdUbicacion())
+                .orElseThrow(() -> new RuntimeException(String.format("No existe ubicacion con id %s", request.getIdPublicacion())));
+
+        EjemplarEstado ejemplarEstado = new EjemplarEstado();
+        ejemplarEstado.setEstadoEjemplar(EstadoEjemplar.DISPONIBLE);
+
         Ejemplar ejemplar = Ejemplar.builder()
                 .fechaAlta(Instant.now())
                 .publicacion(publicacion.get())
+                .ubicacion(ubicacion)
+                .ejemplarEstadoList(List.of(ejemplarEstado))
                 .build();
 
         return ejemplarRepository.save(ejemplar);
