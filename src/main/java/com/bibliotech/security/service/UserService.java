@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface UserService {
     UserDetailsService userDetailsService();
     Optional<User> findById(Long id);
+
+    User save(User user);
 }
