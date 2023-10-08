@@ -21,5 +21,8 @@ public interface RoleService  {
     Optional<Role> findById(Long roleId);
     Optional<Role> findByName(String RoleName);
     Role assignUserToRol(Long roleId, User user);
+    Role removeUserToRol(Long roleId, User user);
     Role assignPrivilegeToRole(Long roleId, Privilege privilege);
+
+
 }

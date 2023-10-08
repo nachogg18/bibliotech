@@ -10,6 +10,7 @@ import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,20 @@ public class RoleServiceImpl implements RoleService {
             throw new RuntimeException("El rol no existe");
         }
         role.get().getUsers().add(user);
+        return roleRepository.save(role.get());
+    }
+
+    @Override
+    public Role removeUserToRol(Long roleId, User user) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        if (role.isEmpty()) {
+            throw new RuntimeException("El rol no existe");
+        }
+        Boolean isRemoved = role.get().getUsers().remove(user);
+        
+        if (!isRemoved) {
+            throw new ValidationException("hubo un problema removiendo al usuario del rol");
+        }
         return roleRepository.save(role.get());
     }
 
