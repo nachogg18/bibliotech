@@ -25,21 +25,22 @@ public class UserController {
   @PreAuthorize("@authenticationService.authentication.authenticated")
   @GetMapping("/get-active-user-info")
   public ResponseEntity<GetUserInfoResponse> getActiveUserInfo() {
-    
-            User user = authenticationService.getActiveUser();
+
+    User user = authenticationService.getActiveUser();
 
     return ResponseEntity.ok(
         GetUserInfoResponse.builder()
             .userName(user.getUsername())
             .email(user.getEmail())
             .userId(user.getId())
-            .roles(user.getRoles().stream()
-                    .map(role -> RoleDto.builder()
-                            .roleId(role.getId())
-                            .roleName(role.getName())
-                            .build()
-                    ).collect(Collectors.toList()))
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .roles(
+                user.getRoles().stream()
+                    .map(
+                        role ->
+                            RoleDto.builder().roleId(role.getId()).roleName(role.getName()).build())
+                    .collect(Collectors.toList()))
             .build());
   }
-
 }

@@ -18,7 +18,6 @@ public class EjemplarServiceImpl implements EjemplarService {
     private final EjemplarRepository ejemplarRepository;
     
     private final PublicacionService publicacionService;
-    
 
     @Override
     public List<Ejemplar> findAll() {

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class PublicacionServiceImpl implements PublicacionService {
 
@@ -30,23 +32,10 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
     private final AutorRepository autorRepository;
     private final EditorialRepository editorialRepository;
-
     private final TipoPublicacionService tipoPublicacionService;
-
     private final LinkService linkService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
-
-    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, LinkService linkService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
-        this.publicacionRepository = publicacionRepository;
-        this.categoriaPublicacionRepository = categoriaPublicacionRepository;
-        this.autorRepository = autorRepository;
-        this.editorialRepository = editorialRepository;
-        this.tipoPublicacionService = tipoPublicacionService;
-        this.linkService = linkService;
-        this.pageUtil = pageUtil;
-        this.listToPageDTOMapper = listToPageDTOMapper;
-    }
 
     @Override
     public List<Publicacion> findAll() {
