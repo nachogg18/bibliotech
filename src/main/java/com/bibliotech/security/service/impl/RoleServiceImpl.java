@@ -11,6 +11,7 @@ import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -141,5 +142,13 @@ public class RoleServiceImpl implements RoleService {
         }
         role.get().getPrivileges().add(privilege);
         return roleRepository.save(role.get());
+    }
+
+    @Override
+    public CreateRoleResponse delete(Long roleId) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        role.get().setEndDate(Instant.now());
+        roleRepository.save(role.get());
+        return new CreateRoleResponse(role.get().getId().toString(), role.get().getName(), role.get().getStartDate().toString(), role.get().getEndDate().toString());
     }
 }

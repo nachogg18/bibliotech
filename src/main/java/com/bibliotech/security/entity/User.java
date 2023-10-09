@@ -1,6 +1,7 @@
 package com.bibliotech.security.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    private Instant startDate;
+    private String endDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
