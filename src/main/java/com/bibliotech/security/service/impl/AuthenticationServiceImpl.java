@@ -135,7 +135,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .stream()
         .filter(role -> role.getEndDate() == null)
         .flatMap(role -> role.getPrivileges().stream())
-        .filter(privilege -> privilege.getEndDate() != null)
+        .filter(privilege -> privilege.getEndDate() == null)
         .filter(privilege -> resourceName.equals(privilege.getResource().getName()))
         .anyMatch(
             privilege ->
