@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public CreateRoleResponse create(CreateRoleRequest createRolerequest) {
-        if (!roleRepository.findByName(createRolerequest.name()).isEmpty()) {
+        if (!roleRepository.findByNameAndEndDateNull(createRolerequest.name()).isEmpty()) {
             throw  new RuntimeException("El rol ya existe");
         }
 
@@ -103,6 +103,16 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Optional<Role> findById(Long roleId) {
         return roleRepository.findById(roleId);
+    }
+
+    @Override
+    public Optional<Role> findByIdAndEndDateNull(Long roleId) {
+        return roleRepository.findByIdAndEndDateNull(roleId);
+    }
+
+    @Override
+    public Optional<Role> findByNameAndEndDateNull(String roleName) {
+        return roleRepository.findByNameAndEndDateNull(roleName);
     }
 
     @Override
