@@ -14,39 +14,38 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Log4j2
+@AllArgsConstructor
 public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
     private final AutorRepository autorRepository;
     private final EditorialRepository editorialRepository;
+    private final EdicionRepository edicionRepository;
+    private final LinkRepository linkRepository;
+    private final TipoPublicacionRepository tipoPublicacionRepository;
 
+    private final ModelMapper modelMapper;
     private final TipoPublicacionService tipoPublicacionService;
 
     private final LinkService linkService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
-    public PublicacionServiceImpl(PublicacionRepository publicacionRepository, CategoriaPublicacionRepository categoriaPublicacionRepository, AutorRepository autorRepository, EditorialRepository editorialRepository, TipoPublicacionService tipoPublicacionService, LinkService linkService, PageUtil pageUtil, ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper) {
-        this.publicacionRepository = publicacionRepository;
-        this.categoriaPublicacionRepository = categoriaPublicacionRepository;
-        this.autorRepository = autorRepository;
-        this.editorialRepository = editorialRepository;
-        this.tipoPublicacionService = tipoPublicacionService;
-        this.linkService = linkService;
-        this.pageUtil = pageUtil;
-        this.listToPageDTOMapper = listToPageDTOMapper;
-    }
 
     @Override
     public List<Publicacion> findAll() {
@@ -232,6 +231,40 @@ public class PublicacionServiceImpl implements PublicacionService {
     @Override
     public Publicacion save(Publicacion publicacion) {
         return publicacionRepository.save(publicacion);
+    }
+
+    public Long updatePublicacion(ModificarPublicacionDTO req, Long id) {
+        Publicacion publicacionExistente = publicacionRepository.getById(id);
+        Publicacion nuevaPublicacion = mapDtoToEntity(req, publicacionExistente);
+
+        publicacionRepository.save(nuevaPublicacion);
+        return nuevaPublicacion.getId();
+    }
+
+    private Publicacion mapDtoToEntity(ModificarPublicacionDTO req, Publicacion publicacion) {
+        if (req.getAnio() != null) publicacion.setAnio(req.getAnio());
+        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
+        if (req.getTitulo() != null) publicacion.setTitulo(req.getTitulo());
+        if (req.getNroPaginas() != null) publicacion.setNroPaginas(req.getNroPaginas());
+        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
+
+        if(req.getAutoresIDs() != null) {
+            publicacion.setAutores(autorRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getEditorialesIDs() != null) {
+            publicacion.setEditoriales(editorialRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getCategoriasIDs() != null) {
+            publicacion.setCategoriaPublicacionList(categoriaPublicacionRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getEdicionID()!=null) publicacion.setEdicion(edicionRepository.findById(req.getEdicionID()).get());
+        if(req.getLinkID()!=null) publicacion.setLink((linkRepository.findById(req.getLinkID())).get());
+        if(req.getTipoPublicacionID()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getTipoPublicacionID()).get());
+
+        return publicacion;
     }
 
 
