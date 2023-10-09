@@ -52,11 +52,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       if (request.roleIds() == null || request.roleIds().isEmpty() ) {
           
       logger.error("sin role id en la request, asignando role por defecto");
-       var basicRole = roleService.findByName(RoleUtils.DEFAULT_ROLE_USER).orElseThrow(() -> new ValidationException(String.format("no existe role con nombre %s", RoleUtils.DEFAULT_ROLE_USER)));
+       var basicRole = roleService.findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER).orElseThrow(() -> new ValidationException(String.format("no existen roles activos con ese nombre %s", RoleUtils.DEFAULT_ROLE_USER)));
        roles.add(basicRole);
       } else {
           request.roleIds().stream().map(
-                  roleId -> roleService.findById(roleId).orElseThrow(() -> new ValidationException(String.format("no existe role con id %s", roleId)))
+                  roleId -> roleService.findByIdAndEndDateNull(roleId).orElseThrow(() -> new ValidationException(String.format("no existen roles activos con id %s", roleId)))
           ).forEach( role -> roles.add(role));
       }
 
