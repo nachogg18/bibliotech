@@ -24,5 +24,7 @@ public interface RoleService  {
     Role removeUserToRol(Long roleId, User user);
     Role assignPrivilegeToRole(Long roleId, Privilege privilege);
 
+    CreateRoleResponse delete(Long roleId);
+
 
 }
