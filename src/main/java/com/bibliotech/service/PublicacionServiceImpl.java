@@ -31,11 +31,14 @@ import org.springframework.web.server.ResponseStatusException;
 public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
+    private final TipoPublicacionRepository tipoPublicacionRepository;
+    private final LinkRepository linkRepository;
+    private final EditorialRepository editorialRepository;
+    private final EdicionRepository edicionRepository;
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
     private final CategoriaService categoriaService;
     private final CategoriaValorService categoriaValorService;
     private final AutorRepository autorRepository;
-    private final EditorialRepository editorialRepository;
     private final EditorialService editorialService;
     private final TipoPublicacionService tipoPublicacionService;
     private final PlataformaService plataformaService;
@@ -261,5 +264,46 @@ public class PublicacionServiceImpl implements PublicacionService {
         return publicacionRepository.save(publicacion);
     }
 
+    @Override
+    public ModificarPublicacionResponse updatePublicacion(ModificarPublicacionDTO req, Long id) {
+        Publicacion publicacionExistente = publicacionRepository.getById(id);
+        Publicacion nuevaPublicacion = mapDtoToEntity(req, publicacionExistente);
+
+        publicacionRepository.save(nuevaPublicacion);
+
+        ModificarPublicacionResponse res = ModificarPublicacionResponse
+                .builder()
+                .id(nuevaPublicacion.getId())
+                .isbn(nuevaPublicacion.getIsbn())
+                .titulo(nuevaPublicacion.getTitulo())
+                .build();
+        return res;
+    }
+
+    private Publicacion mapDtoToEntity(ModificarPublicacionDTO req, Publicacion publicacion) {
+        if (req.getAnio() != null) publicacion.setAnio(req.getAnio());
+        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
+        if (req.getTitulo() != null) publicacion.setTitulo(req.getTitulo());
+        if (req.getNroPaginas() != null) publicacion.setNroPaginas(req.getNroPaginas());
+        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
+
+        if(req.getAutoresIDs() != null) {
+            publicacion.setAutores(autorRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getEditorialesIDs() != null) {
+            publicacion.setEditoriales(editorialRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getCategoriasIDs() != null) {
+            publicacion.setCategoriaPublicacionList(categoriaPublicacionRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        }
+
+        if(req.getEdicionID()!=null) publicacion.setEdicion(edicionRepository.findById(req.getEdicionID()).get());
+        if(req.getLinkID()!=null) publicacion.setLink((linkRepository.findById(req.getLinkID())).get());
+        if(req.getTipoPublicacionID()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getTipoPublicacionID()).get());
+
+        return publicacion;
+    }
 
 }

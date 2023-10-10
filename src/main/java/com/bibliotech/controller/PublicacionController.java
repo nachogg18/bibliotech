@@ -57,4 +57,9 @@ public class PublicacionController {
         return ResponseEntity.status(HttpStatus.OK).body(publicacionService.getDetallePublicacion(id));
     }
 
+    @PatchMapping(path= "/{id}")
+    public ResponseEntity<?> updatePublicacion(@RequestBody ModificarPublicacionDTO req, @PathVariable Long id) {
+        return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
+    }
+
 }
