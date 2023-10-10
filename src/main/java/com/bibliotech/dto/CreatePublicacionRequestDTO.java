@@ -3,50 +3,33 @@ package com.bibliotech.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public record CreatePublicacionRequestDTO(
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreatePublicacionRequestDTO {
     @Positive
-    Integer anioPublicacion,
+    private Integer anioPublicacion;
     @NotEmpty
-    String isbnPublicacion,
+    private String isbnPublicacion;
     @NotEmpty
-    String tituloPublicacion,
+    private String tituloPublicacion;
     @Positive
-    Integer nroPaginas,
+    private Integer nroPaginas;
     @NotEmpty
-    List<String> idsAutores,
+    private List<Long> idsAutores = new ArrayList<>();
     @NotNull
-    Long idEdicion,
+    private Long idEdicion;
+    private LinkRequestDTO link;
+    private List<CategoriaDTO> categorias = new ArrayList<>();
     @NotNull
-    Long idLink,
+    private Long idTipoPublicacion;
     @NotEmpty
-    List<String> idsCategorias,
-    @NotNull
-    Long idTipo,
-
-    @NotEmpty
-    List<String> idsEditoriales
-    )
-{
-
-
-    public List<Long> getValidatedIdsAutores() {
-        return this.idsAutores.stream().map(
-                idAutor -> Long.valueOf(idAutor)
-        ).collect(Collectors.toList());
-    }
-
-    public List<Long> getValidatedIdsCategorias() {
-        return this.idsCategorias.stream().map(
-                idCategoria -> Long.valueOf(idCategoria)
-        ).collect(Collectors.toList());
-    }
-
-    public List<Long> getValidatedIdsEditoriales() {
-        return this.idsEditoriales.stream().map(
-                idEditorial -> Long.valueOf(idEditorial)
-        ).collect(Collectors.toList());
-    }
+    List<Long> idsEditoriales = new ArrayList<>();
 }

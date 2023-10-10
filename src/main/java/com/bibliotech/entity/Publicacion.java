@@ -39,7 +39,7 @@ public class Publicacion extends Base {
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<CategoriaPublicacion> categoriaPublicacionList = new ArrayList<>();
 
     @ManyToMany
@@ -66,7 +66,7 @@ public class Publicacion extends Base {
     @ManyToOne
     private TipoPublicacion tipoPublicacion;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private Link link;
 
 }

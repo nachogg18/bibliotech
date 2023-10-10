@@ -30,6 +30,11 @@ public class CategoriaValorServiceImpl implements CategoriaValorService {
     }
 
     @Override
+    public Optional<CategoriaValor> findById(Long id) {
+        return categoriaValorRepository.findById(id);
+    }
+
+    @Override
     public MostrarCategoriaValorDTO save(CrearValorDTO valorDTO) {
         Categoria categoria = categoriaService.findOne(valorDTO.getIdCategoria())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
