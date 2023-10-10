@@ -8,12 +8,14 @@ import com.bibliotech.repository.*;
 import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
 import jakarta.validation.ValidationException;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -30,10 +32,14 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
+    private final CategoriaService categoriaService;
+    private final CategoriaValorService categoriaValorService;
     private final AutorRepository autorRepository;
     private final EditorialRepository editorialRepository;
+    private final EditorialService editorialService;
     private final TipoPublicacionService tipoPublicacionService;
-    private final LinkService linkService;
+    private final PlataformaService plataformaService;
+    private final EdicionService edicionService;
     private final PageUtil pageUtil;
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
@@ -44,7 +50,9 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     public Optional<Publicacion> findById(Long id) {
         return publicacionRepository.findById(id);
-    };
+    }
+
+    ;
 
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
@@ -141,54 +149,84 @@ public class PublicacionServiceImpl implements PublicacionService {
     }
 
     @Override
-    public Publicacion create(CreatePublicacionRequestDTO request) {
+    public PublicacionResponseDTO create(CreatePublicacionRequestDTO request) {
 
-    return publicacionRepository.save(
-        Publicacion.builder()
-            .autores(
-                request.getValidatedIdsAutores().stream()
-                    .map(
-                        idAutor ->
-                            autorRepository
-                                .findById(idAutor)
-                                .orElseThrow(
-                                    () ->
-                                        new ValidationException(
-                                            String.format("no existe autor con id: %s", idAutor))))
-                    .collect(Collectors.toList()))
-            .editoriales(
-                request.getValidatedIdsEditoriales().stream()
-                    .map(
-                        idEditorial ->
-                            editorialRepository
-                                .findById(idEditorial)
-                                .orElseThrow(
-                                    () ->
-                                        new ValidationException(
-                                            String.format(
-                                                "no existe editorial con id: %s", idEditorial))))
-                    .collect(Collectors.toList()))
-            .tipoPublicacion(
-                tipoPublicacionService
-                    .findByIdAndFechaBajaNull(request.idTipo())
-                    .orElseThrow(
-                        () ->
-                            new ValidationException(
-                                String.format(
-                                    "no existe tipo publicacion con id: %s", request.idTipo()))))
-            .edicion(null)
-            .link(linkService.findByIdAndFechaBajaNull(request.idLink()).orElseThrow(
-                    () -> new ValidationException(
-                            String.format(
-                                    "no existe link con id: %s", request.idLink())
-            )))
-            .titulo(request.tituloPublicacion())
-            .nroPaginas(request.nroPaginas())
-            .anio(request.anioPublicacion())
-            .isbn(request.isbnPublicacion())
-            .fechaAlta(Instant.now())
-            .fechaBaja(null)
-            .build());
+        Publicacion publicacion = publicacionRepository.save(
+                Publicacion.builder()
+                        .anio(request.getAnioPublicacion())
+                        .isbn(request.getIsbnPublicacion())
+                        .titulo(request.getTituloPublicacion())
+                        .nroPaginas(request.getNroPaginas())
+                        .autores(
+                                request.getIdsAutores().stream()
+                                        .map(
+                                                idAutor ->
+                                                        autorRepository
+                                                                .findById(idAutor)
+                                                                .orElseThrow(
+                                                                        () ->
+                                                                                new ValidationException(
+                                                                                        String.format("no existe autor con id: %s", idAutor))))
+                                        .toList())
+
+                        .edicion(
+                                edicionService.findById(request.getIdEdicion()).orElseThrow(
+                                        () ->
+                                                new ValidationException(
+                                                        String.format("no existe edicion con id: %s", request.getIdEdicion())))
+                        )
+                        .link(
+                                Link.builder()
+                                        .url(request.getLink().getUrl())
+                                        .plataforma(
+                                                plataformaService.findById(request.getLink().getPlataformaId())
+                                                        .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", request.getLink().getPlataformaId())))
+                                        )
+                                        .estadoLink(EstadoLink.valueOf(request.getLink().getEstado()))
+                                        .build()
+                        )
+                        .categoriaPublicacionList(
+                                request.getCategorias().stream().map(
+                                        dto -> CategoriaPublicacion
+                                                .builder()
+                                                .categoria(
+                                                        categoriaService.findOne(dto.idCategoria())
+                                                                .orElseThrow(() -> new ValidationException(String.format("no existe categoria con id: %s", dto.idCategoria())))
+                                                )
+                                                .categoriaValorList(
+                                                        dto.idValores().stream().map(
+                                                                v -> categoriaValorService.findById(v)
+                                                                        .orElseThrow(() -> new ValidationException(String.format("no existe valor con id: %s", v)))
+                                                        ).toList()
+                                                )
+                                                .build()
+                                ).toList()
+                        )
+                        .tipoPublicacion(
+                                tipoPublicacionService.findByIdAndFechaBajaNull(request.getIdTipoPublicacion())
+                                        .orElseThrow(() -> new ValidationException(String.format("no existe tipo publicacion con id: %s", request.getIdTipoPublicacion())))
+
+                        )
+                        .editoriales(
+                                request.getIdsEditoriales().stream().map(
+                                        id -> editorialService.findById(id)
+                                                .orElseThrow(() -> new ValidationException(String.format("no existe editorial con id: %s", id)))
+                                ).toList()
+                        )
+                        .fechaAlta(Instant.now())
+                        .fechaBaja(null)
+                        .build());
+
+        PublicacionResponseDTO responseDTO = new PublicacionResponseDTO();
+        responseDTO.setTituloPublicacion(publicacion.getTitulo());
+        responseDTO.setAnioPublicacion(publicacion.getAnio());
+        responseDTO.setNombreEdicion(publicacion.getEdicion().getNombre());
+        responseDTO.setNombreEditorial(publicacion.getEditoriales().get(0).getNombre());
+        responseDTO.setId(publicacion.getId());
+        responseDTO.setNombreAutores(
+                publicacion.getAutores().stream().map(a -> a.getApellido() + ", " + a.getNombre()).toList()
+        );
+        return responseDTO;
     }
 
 

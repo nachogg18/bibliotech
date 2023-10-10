@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface EditorialService {
     List<Editorial> findAll();
 
+    Optional<Editorial> findById(Long id);
+
     Editorial save(Editorial editorial);
 
     Editorial edit(Editorial editorial, Long id);

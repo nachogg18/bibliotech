@@ -4,6 +4,8 @@ import com.bibliotech.entity.Plataforma;
 import com.bibliotech.repository.PlataformaRepository;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,11 @@ public class PlataformaServiceImpl implements PlataformaService {
     @Override
     public List<Plataforma> findAll() {
         return plataformaRepository.findByFechaBajaNull();
+    }
+
+    @Override
+    public Optional<Plataforma> findById(Long id) {
+        return plataformaRepository.findById(id);
     }
 
     @Override

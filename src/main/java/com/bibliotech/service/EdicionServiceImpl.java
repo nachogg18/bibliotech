@@ -21,6 +21,11 @@ public class EdicionServiceImpl implements EdicionService {
         return edicionRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<Edicion> findById(Long id) {
+        return edicionRepository.findById(id);
+    }
+
 
     @Override
     public Edicion save(Edicion edicion) {
