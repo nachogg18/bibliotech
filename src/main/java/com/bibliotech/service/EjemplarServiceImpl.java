@@ -44,6 +44,7 @@ public class EjemplarServiceImpl implements EjemplarService {
                 .publicacion(publicacion.get())
                 .ubicacion(ubicacion)
                 .ejemplarEstadoList(List.of(ejemplarEstado))
+                .serialNFC(request.getSerialNFC())
                 .build();
 
         return ejemplarRepository.save(ejemplar);
