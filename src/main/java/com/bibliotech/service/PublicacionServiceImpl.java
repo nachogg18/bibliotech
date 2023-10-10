@@ -287,21 +287,33 @@ public class PublicacionServiceImpl implements PublicacionService {
         if (req.getNroPaginas() != null) publicacion.setNroPaginas(req.getNroPaginas());
         if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
 
-        if(req.getAutoresIDs() != null) {
-            publicacion.setAutores(autorRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        if(req.getIdsAutores() != null) {
+            publicacion.setAutores(autorRepository.findByIdIn(req.getIdsAutores().toArray(new Long[0])));
         }
 
-        if(req.getEditorialesIDs() != null) {
-            publicacion.setEditoriales(editorialRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        if(req.getIdsEditoriales() != null) {
+            publicacion.setEditoriales(editorialRepository.findByIdIn(req.getIdsEditoriales().toArray(new Long[0])));
         }
 
-        if(req.getCategoriasIDs() != null) {
-            publicacion.setCategoriaPublicacionList(categoriaPublicacionRepository.findByIdIn(req.getAutoresIDs().toArray(new Long[0])));
+        if(req.getIdsCategorias() != null) {
+            publicacion.setCategoriaPublicacionList(categoriaPublicacionRepository.findByIdIn(req.getIdsCategorias().toArray(new Long[0])));
         }
 
-        if(req.getEdicionID()!=null) publicacion.setEdicion(edicionRepository.findById(req.getEdicionID()).get());
-        if(req.getLinkID()!=null) publicacion.setLink((linkRepository.findById(req.getLinkID())).get());
-        if(req.getTipoPublicacionID()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getTipoPublicacionID()).get());
+        if(req.getLink()!=null){
+            Link linkNuevo = Link
+                    .builder()
+                    .url(req.getLink().url())
+                    .plataforma(
+                    plataformaService.findById(req.getLink().plataformaId())
+                            .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", req.getLink().plataformaId())))
+                    )
+                    .estadoLink(EstadoLink.valueOf(req.getLink().estado()))
+                    .build();
+            publicacion.setLink(linkNuevo);
+        }
+
+        if(req.getIdEdicion()!=null) publicacion.setEdicion(edicionRepository.findById(req.getIdEdicion()).get());
+        if(req.getIdTipoPublicacion()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getIdTipoPublicacion()).get());
 
         return publicacion;
     }
