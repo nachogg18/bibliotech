@@ -12,5 +12,6 @@ public class CrearEjemplarDTO {
     @NotNull
     private Long idPublicacion;
     @NotNull
-    private String idInventario;
+    private Long idUbicacion;
+    private String serialNFC;
 }
