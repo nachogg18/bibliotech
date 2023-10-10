@@ -21,6 +21,11 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<Ubicacion> findById(Long id) {
+        return ubicacionRepository.findById(id);
+    }
+
 
     @Override
     public Ubicacion save(Ubicacion ubicacion) {

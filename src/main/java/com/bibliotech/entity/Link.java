@@ -1,8 +1,6 @@
 package com.bibliotech.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +21,8 @@ public class Link extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
+    @ManyToOne
+    private Plataforma plataforma;
+    @Enumerated(EnumType.ORDINAL)
+    private EstadoLink estadoLink;
 }

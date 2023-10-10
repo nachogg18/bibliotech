@@ -21,6 +21,11 @@ public class EditorialServiceImpl implements EditorialService {
         return editorialRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<Editorial> findById(Long id) {
+        return editorialRepository.findById(id);
+    }
+
 
     @Override
     public Editorial save(Editorial editorial) {

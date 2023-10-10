@@ -32,9 +32,11 @@ public class PublicacionController {
 
     @PostMapping(path = "")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'PUBLICACION')")
-    public Publicacion create(@RequestBody @Valid CreatePublicacionRequestDTO request) {
-        
-        return publicacionService.create(request);
+    public ResponseEntity<PublicacionResponseDTO> create(@RequestBody @Valid CreatePublicacionRequestDTO request) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(publicacionService.create(request));
+
     }
 
     @GetMapping

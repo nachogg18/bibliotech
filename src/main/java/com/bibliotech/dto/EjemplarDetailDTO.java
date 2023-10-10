@@ -1,6 +1,5 @@
 package com.bibliotech.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CrearEjemplarDTO {
-    @NotNull
-    private Long idPublicacion;
-    @NotNull
-    private Long idUbicacion;
+public class EjemplarDetailDTO {
+    private Long id;
+    private String nombrePublicacion;
+    private String nombreUbicacion;
     private String serialNFC;
 }
