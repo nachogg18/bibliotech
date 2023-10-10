@@ -1,4 +1,4 @@
-apackage com.bibliotech.mapper;
+package com.bibliotech.mapper;
 
 import com.bibliotech.dto.PublicacionResponseDTO;
 import com.bibliotech.entity.Publicacion;
