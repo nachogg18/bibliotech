@@ -36,7 +36,7 @@ public class PublicacionController {
         .map(
             publicacion ->
 PublicacionResponseDTO.builder().id(publicacion.getId())
-          .tituloPublicacion(publicacion.getTitulo)
+          .tituloPublicacion(publicacion.getTitulo())
           .autores(
             publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList()
             )
