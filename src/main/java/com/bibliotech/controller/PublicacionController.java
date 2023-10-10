@@ -27,7 +27,7 @@ public class PublicacionController {
 
   @PostMapping(path = "/findByParams")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<PublicacionByParamsDTO> findByParams(
+  public List<PublicacionResponseDTO> findByParams(
       @RequestBody FindPublicacionesByParamsDTO request) {
 
     request.validate();
@@ -35,31 +35,15 @@ public class PublicacionController {
     return publicacionService.findByParams(request).stream()
         .map(
             publicacion ->
-                PublicacionByParamsDTO.builder()
-                    .id(publicacion.getId())
-                    .editoriales(
-                        publicacion.getEditoriales().stream()
-                            .map(
-                                editorial ->
-                                    Editorial.builder().nombre(editorial.getNombre()).build())
-                            .collect(Collectors.toList()))
-                    .anioPublicacion(publicacion.getAnio().intValue())
-                    .autores(
-                        publicacion.getAutores().stream()
-                            .map(
-                                autor ->
-                                    Autor.builder()
-                                        .nombre(autor.getNombre())
-                                        .apellido(autor.getApellido())
-                                        .nacionalidad(autor.getNacionalidad())
-                                        .biografia(autor.getBiografia())
-                                        .build())
-                            .collect(Collectors.toList()))
-                    .edicion(Edicion.builder().nombre(publicacion.getEdicion().getNombre()).build())
-                    .tituloPublicacion(publicacion.getTitulo())
-                    .anioPublicacion(publicacion.getAnio())
-                    .build())
-        .collect(Collectors.toList());
+PublicacionResponseDTO.builder().id(publicacion.getId())
+          .tituloPublicacion(publicacion.getTitulo)
+          .autores(
+            publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList()
+            )
+          .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
+          .anioPublicacion(publicacion.getAnio().intValue())
+          .nombreEdicion(publicacion.getEdicion().getNombre())
+          .build()).toList();
   }
 
   @PostMapping(path = "")
