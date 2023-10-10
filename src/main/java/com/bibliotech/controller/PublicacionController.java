@@ -36,13 +36,13 @@ public class PublicacionController {
         .map(
             publicacion ->
 PublicacionResponseDTO.builder().id(publicacion.getId())
-          .tituloPublicacion(publicacion.getTitulo())
-          .nombreAutores(
+          .titulo(publicacion.getTitulo())
+          .autores(
             publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList()
             )
-          .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
-          .anioPublicacion(publicacion.getAnio().intValue())
-          .nombreEdicion(publicacion.getEdicion().getNombre())
+          .editoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList())
+          .anio(publicacion.getAnio().intValue())
+          .edicion(publicacion.getEdicion().getNombre())
           .build()).toList();
   }
 
