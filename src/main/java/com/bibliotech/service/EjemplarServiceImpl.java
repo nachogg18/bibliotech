@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
 
+import com.bibliotech.dto.EditEjemplarDTO;
 import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.*;
@@ -86,9 +87,24 @@ public class EjemplarServiceImpl implements EjemplarService {
     }
 
     @Override
-    public Ejemplar edit(Ejemplar ejemplar, Long id) {
-        if (ejemplarRepository.findById(id).isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+    public Ejemplar edit(EditEjemplarDTO request, Long id) {
+        Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
+
+        if (request.getSerialNFC() != null)
+            ejemplar.setSerialNFC(request.getSerialNFC());
+        if(request.getIdUbicacion() != null) {
+            Ubicacion ubicacion = ubicacionService.findById(request.getIdUbicacion())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
+            ejemplar.setUbicacion(ubicacion);
+        }
+        if(request.getEstadoEjemplar() != null) {
+            EjemplarEstado estadoEjemplar = new EjemplarEstado();
+            estadoEjemplar.setEstadoEjemplar(EstadoEjemplar.valueOf(request.getEstadoEjemplar().toUpperCase()));
+            estadoEjemplar.setFechaInicio(Instant.now());
+            // TODO: setear la fechaBaja en estados anteriores
+            ejemplar.getEjemplarEstadoList().add(estadoEjemplar);
+        }
         return ejemplarRepository.save(ejemplar);
     }
 
