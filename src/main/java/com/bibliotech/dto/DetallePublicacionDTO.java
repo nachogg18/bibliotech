@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bibliotech.entity.Autor;
+import com.bibliotech.entity.Edicion;
 import com.bibliotech.entity.Editorial;
 import com.bibliotech.entity.Link;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class DetallePublicacionDTO {
     private Integer nroPaginas;
     private Integer anioPblicacion;
     private List<Autor> autores = new ArrayList<>();
-    private String edicion;
+    private Edicion edicion;
     private List<Editorial> editoriales = new ArrayList<>();
     private List<DetalleCategoriaDTO> categorias = new ArrayList<>();
     //private List<DetalleEjemplarDTO> ejemplares = new ArrayList<>();

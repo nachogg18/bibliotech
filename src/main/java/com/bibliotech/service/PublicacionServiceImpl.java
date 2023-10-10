@@ -119,7 +119,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         detallePublicacionDTO.setId(publicacion.getId());
         detallePublicacionDTO.setIsbnPublicacion(publicacion.getIsbn());
         detallePublicacionDTO.setAutores(publicacion.getAutores());
-        detallePublicacionDTO.setEdicion(publicacion.getEdicion().getNombre());
+        detallePublicacionDTO.setEdicion(publicacion.getEdicion());
         detallePublicacionDTO.setTituloPublicacion(publicacion.getTitulo());
         //detallePublicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
         detallePublicacionDTO.setEditoriales(publicacion.getEditoriales());
@@ -131,8 +131,9 @@ public class PublicacionServiceImpl implements PublicacionService {
 
         publicacion.getCategoriaPublicacionList().forEach(cp -> {
             DetalleCategoriaDTO detalleCategoriaDTO = new DetalleCategoriaDTO();
+            detalleCategoriaDTO.setId(cp.getId());
             detalleCategoriaDTO.setNombre(cp.getCategoria().getNombre());
-            detalleCategoriaDTO.setValores(cp.getCategoriaValorList().stream().map(CategoriaValor::getNombre).toList());
+            detalleCategoriaDTO.setValores(cp.getCategoriaValorList()/*.stream().map(CategoriaValor::getNombre).toList()*/);
             detalleCategoriaDTOList.add(detalleCategoriaDTO);
         });
 
