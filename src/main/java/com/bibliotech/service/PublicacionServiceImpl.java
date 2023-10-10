@@ -51,10 +51,6 @@ public class PublicacionServiceImpl implements PublicacionService {
         //return publicacionRepository.findAll();
         List<Publicacion> publicaciones = publicacionRepository.findAll();
 
-        List<String> nombreAutores = publicaciones.stream().flatMap(publicacion -> publicacion.getAutores().stream()
-                .map(Autor::getNombre))
-                .collect(Collectors.toList());
-
 //        List<String> nombresEditoriales = publicaciones.stream().flatMap(publicacion -> publicacion.getEditoriales().stream()
 //                        .map(Editorial::getNombre))
 //                .collect(Collectors.toList());
@@ -66,7 +62,9 @@ public class PublicacionServiceImpl implements PublicacionService {
                    .tituloPublicacion(publicacion.getTitulo())
                    .nombreEdicion(publicacion.getEdicion().getNombre())
                    .id(publicacion.getId())
-                   .nombreAutores(nombreAutores)
+                   .nombreAutores(publicaciones.stream().flatMap(p -> p.getAutores().stream()
+                                   .map(Autor::getNombre))
+                           .collect(Collectors.toList()))
                    .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
                    .build();
            return res;
