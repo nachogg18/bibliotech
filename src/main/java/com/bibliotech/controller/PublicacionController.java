@@ -2,6 +2,8 @@ package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.Autor;
+import com.bibliotech.entity.Edicion;
+import com.bibliotech.entity.Editorial;
 import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,7 +27,7 @@ public class PublicacionController {
 
   @PostMapping(path = "/findByParams")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<PublicacionResponseDTO> findByParams(
+  public List<PublicacionByParamsDTO> findByParams(
       @RequestBody FindPublicacionesByParamsDTO request) {
 
     request.validate();
@@ -33,13 +35,27 @@ public class PublicacionController {
     return publicacionService.findByParams(request).stream()
         .map(
             publicacion ->
-                PublicacionResponseDTO.builder()
-                    .anioPublicacion(publicacion.getAnio().intValue())
-                    .nombreAutores(
-                        publicacion.getAutores().stream()
-                            .map(Autor::getApellido)
+                PublicacionByParamsDTO.builder()
+                    .id(publicacion.getId())
+                    .editoriales(
+                        publicacion.getEditoriales().stream()
+                            .map(
+                                editorial ->
+                                    Editorial.builder().nombre(editorial.getNombre()).build())
                             .collect(Collectors.toList()))
-                    .nombreEdicion(publicacion.getEdicion().getNombre())
+                    .anioPublicacion(publicacion.getAnio().intValue())
+                    .autores(
+                        publicacion.getAutores().stream()
+                            .map(
+                                autor ->
+                                    Autor.builder()
+                                        .nombre(autor.getNombre())
+                                        .apellido(autor.getApellido())
+                                        .nacionalidad(autor.getNacionalidad())
+                                        .biografia(autor.getBiografia())
+                                        .build())
+                            .collect(Collectors.toList()))
+                    .edicion(Edicion.builder().nombre(publicacion.getEdicion().getNombre()).build())
                     .tituloPublicacion(publicacion.getTitulo())
                     .anioPublicacion(publicacion.getAnio())
                     .build())

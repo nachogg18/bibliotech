@@ -4,7 +4,7 @@ public enum Action {
     CREATE,
     READ,
     WRITE,
-    UPDATE,
+    EDIT,
     DELETE
 
 }
