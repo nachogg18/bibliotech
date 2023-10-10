@@ -6,6 +6,8 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Locale;
+
 public class PublicacionSpecifications {
 
     public static Specification<Publicacion> empty() {
@@ -20,7 +22,7 @@ public class PublicacionSpecifications {
 
     public static Specification<Publicacion> hasTituloLike(String titulo) {
         return ((root,query,criteriaBuilder) ->
-                criteriaBuilder.like(root.get("titulo"), "%"+titulo+"%")
+                criteriaBuilder.like(root.get("titulo"), "%"+titulo.toLowerCase(Locale.ROOT)+"%")
         );
     }
 
