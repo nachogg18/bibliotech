@@ -105,6 +105,7 @@ public class EjemplarServiceImpl implements EjemplarService {
             // TODO: setear la fechaBaja en estados anteriores
             ejemplar.getEjemplarEstadoList().add(estadoEjemplar);
         }
+        ejemplar.setId(id);
         return ejemplarRepository.save(ejemplar);
     }
 
@@ -113,6 +114,7 @@ public class EjemplarServiceImpl implements EjemplarService {
         Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
+        ejemplar.setId(id);
         ejemplar.setFechaBaja(Instant.now());
         ejemplarRepository.save(ejemplar);
     }

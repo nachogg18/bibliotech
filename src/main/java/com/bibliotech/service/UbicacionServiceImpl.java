@@ -36,6 +36,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     public Ubicacion edit(Ubicacion ubicacion, Long id) {
         if (ubicacionRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        ubicacion.setId(id);
         return ubicacionRepository.save(ubicacion);
     }
 
@@ -47,6 +48,7 @@ public class UbicacionServiceImpl implements UbicacionService {
             if (ubicacion.getFechaBaja() != null)
                 ubicacionOptional = Optional.empty();
             else {
+                ubicacion.setId(id);
                 ubicacion.setFechaBaja(Instant.now());
                 ubicacionOptional = Optional.of(ubicacionRepository.save(ubicacion));
             }
