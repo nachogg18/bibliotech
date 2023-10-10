@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -233,12 +232,20 @@ public class PublicacionServiceImpl implements PublicacionService {
         return publicacionRepository.save(publicacion);
     }
 
-    public Long updatePublicacion(ModificarPublicacionDTO req, Long id) {
+    @Override
+    public ModificarPublicacionResponse updatePublicacion(ModificarPublicacionDTO req, Long id) {
         Publicacion publicacionExistente = publicacionRepository.getById(id);
         Publicacion nuevaPublicacion = mapDtoToEntity(req, publicacionExistente);
 
         publicacionRepository.save(nuevaPublicacion);
-        return nuevaPublicacion.getId();
+
+        ModificarPublicacionResponse res = ModificarPublicacionResponse
+                .builder()
+                .id(nuevaPublicacion.getId())
+                .isbn(nuevaPublicacion.getIsbn())
+                .titulo(nuevaPublicacion.getTitulo())
+                .build();
+        return res;
     }
 
     private Publicacion mapDtoToEntity(ModificarPublicacionDTO req, Publicacion publicacion) {

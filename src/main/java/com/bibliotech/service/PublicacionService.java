@@ -21,4 +21,6 @@ public interface PublicacionService {
     Publicacion create(CreatePublicacionRequestDTO request);
 
     Publicacion save(Publicacion publicacion);
+
+    ModificarPublicacionResponse updatePublicacion(ModificarPublicacionDTO req, Long id);
 }

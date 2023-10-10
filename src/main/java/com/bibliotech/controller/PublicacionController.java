@@ -57,7 +57,7 @@ public class PublicacionController {
 
     @PatchMapping(path= "/{id}")
     public ResponseEntity<?> updatePublicacion(@RequestBody ModificarPublicacionDTO req, @PathVariable Long id) {
-        return ResponseEntity.ok().body(updatePublicacion(req, id));
+        return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
     }
 
 }
