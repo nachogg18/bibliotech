@@ -179,7 +179,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         "SUPERADMIN",
                         "email@superadmin",
                         "password",
-                        superAdminRole.getId()
+                        List.of(superAdminRole.getId())
                 )
         );
 

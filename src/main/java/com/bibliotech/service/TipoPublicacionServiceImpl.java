@@ -5,18 +5,16 @@ import com.bibliotech.repository.TipoPublicacionRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class TipoPublicacionServiceImpl implements TipoPublicacionService {
 
     private final TipoPublicacionRepository tipoPublicacionRepository;
-
-    public TipoPublicacionServiceImpl(TipoPublicacionRepository tipoPublicacionRepository) {
-        this.tipoPublicacionRepository = tipoPublicacionRepository;
-    }
 
     @Override
     public List<TipoPublicacion> findAll() {

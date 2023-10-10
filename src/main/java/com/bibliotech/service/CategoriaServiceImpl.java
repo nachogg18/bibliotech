@@ -3,34 +3,32 @@ package com.bibliotech.service;
 import com.bibliotech.dto.CrearCategoriaDTO;
 import com.bibliotech.dto.FiltroCategoriaDTO;
 import com.bibliotech.dto.MostrarCategoriaDTO;
+import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
+@Log4j2
 public class CategoriaServiceImpl implements CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final ModelMapper modelMapper;
 
-    public CategoriaServiceImpl(CategoriaRepository categoriaRepository, ModelMapper modelMapper) {
-        this.categoriaRepository = categoriaRepository;
-        this.modelMapper = modelMapper;
-    }
-
-
     @Override
-    public List<Categoria> findAll() {
-        return categoriaRepository.findByFechaBajaNull();
+    public List<MostrarCategoriaDTO> findAll() {
+        return categoriaRepository.findByFechaBajaNull()
+                .stream().map(c -> modelMapper.map(c, MostrarCategoriaDTO.class)).toList();
     }
 
     @Override
@@ -46,14 +44,16 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO) {
         Categoria categoria = categoriaRepository.save(modelMapper.map(categoriaDTO, Categoria.class));
+        log.info(categoria);
         return modelMapper.map(categoria, MostrarCategoriaDTO.class);
     }
 
     @Override
-    public Categoria edit(Categoria categoria, Long id) {
+    public MostrarCategoriaValorDTO edit(Categoria categoria, Long id) {
         if (categoriaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
-        return categoriaRepository.save(categoria);
+        categoria = categoriaRepository.save(categoria);
+        return modelMapper.map(categoria, MostrarCategoriaValorDTO.class);
     }
 
     @Override

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
@@ -29,6 +30,10 @@ public class Privilege {
     private Collection<Role> roles;
 
     private Set<Action> actions;
+
+    private Instant startDate;
+
+    private Instant endDate;
 
     public Long getId() {
         return id;
@@ -56,6 +61,22 @@ public class Privilege {
 
     public Resource getResource() {
         return resource;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
     }
 
     public void setResource(final Resource resource) {

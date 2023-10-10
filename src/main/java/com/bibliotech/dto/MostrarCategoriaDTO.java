@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MostrarCategoriaDTO {
+    private Long id;
     private String nombre;
     private List<MostrarCategoriaValorDTO> valores = new ArrayList<>();
 }
