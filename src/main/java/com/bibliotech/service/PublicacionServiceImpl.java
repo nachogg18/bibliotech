@@ -221,12 +221,12 @@ public class PublicacionServiceImpl implements PublicacionService {
                         .build());
 
         PublicacionResponseDTO responseDTO = new PublicacionResponseDTO();
-        responseDTO.setTituloPublicacion(publicacion.getTitulo());
-        responseDTO.setAnioPublicacion(publicacion.getAnio());
-        responseDTO.setNombreEdicion(publicacion.getEdicion().getNombre());
-        responseDTO.setNombreEditorial(publicacion.getEditoriales().get(0).getNombre());
+        responseDTO.setTitulo(publicacion.getTitulo());
+        responseDTO.setAnio(publicacion.getAnio());
+        responseDTO.setEdicion(publicacion.getEdicion().getNombre());
+        responseDTO.Editoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
         responseDTO.setId(publicacion.getId());
-        responseDTO.setNombreAutores(
+        responseDTO.setAutores(
                 publicacion.getAutores().stream().map(a -> a.getApellido() + ", " + a.getNombre()).toList()
         );
         return responseDTO;
