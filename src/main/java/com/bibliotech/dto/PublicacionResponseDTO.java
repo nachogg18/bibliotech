@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PublicacionResponseDTO {
     private Long id;
     private String tituloPublicacion;
