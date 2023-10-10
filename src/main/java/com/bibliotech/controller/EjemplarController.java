@@ -1,7 +1,9 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
+
 import com.bibliotech.dto.EjemplarDetailDTO;
+import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.Ejemplar;
 import com.bibliotech.service.EjemplarService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,7 +33,7 @@ public class EjemplarController {
 
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EJEMPLAR')")
-    public List<Ejemplar> findAll() {
+    public List<EjemplarResponseDTO> findAll() {
         return ejemplarService.findAll();
     }
 
