@@ -19,7 +19,7 @@ public class DetallePublicacionDTO {
     private String isbnPublicacion;
     private Integer nroPaginas;
     private Integer anioPblicacion;
-    private List<Autor> autores = new ArrayList<>();
+    private List<AutorDTO> autores = new ArrayList<>();
     private Edicion edicion;
     private List<Editorial> editoriales = new ArrayList<>();
     private List<DetalleCategoriaDTO> categorias = new ArrayList<>();
