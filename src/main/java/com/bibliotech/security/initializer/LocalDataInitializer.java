@@ -189,8 +189,8 @@ public class LocalDataInitializer implements ApplicationRunner {
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",
-                        "email@superadmin",
-                        "password",
+                        "email@superadmin.com",
+                        "Password123",
                         List.of(superAdminRole.getId())
                 )
         );
@@ -213,21 +213,22 @@ public class LocalDataInitializer implements ApplicationRunner {
                         .fechaAlta(Instant.now())
                         .links(enabledLinks)
                         .nombre("plataforma")
+                        .instrucciones("Instrucciones de prueba")
                         .build()
         );
     }
 
     private void createPublicacion(List<Autor> autores) {
 
-        publicacionService.save(
-                Publicacion.builder()
-                        .fechaAlta(Instant.now())
-                        .titulo("Cien años de soledad")
-                        .autores(autores)
-                        .isbn("9788497592208")
-                        .anio(2003)
-                        .build()
-        );
+//        publicacionService.save(
+//                Publicacion.builder()
+//                        .fechaAlta(Instant.now())
+//                        .titulo("Cien años de soledad")
+//                        .autores(autores)
+//                        .isbn("9788497592208")
+//                        .anio(2003)
+//                        .build()
+//        );
     }
 
     private Autor createAutor() {
@@ -235,8 +236,11 @@ public class LocalDataInitializer implements ApplicationRunner {
         return autorService.save(
                 Autor.builder()
                         .fechaAlta(Instant.now())
+                        .fechaNacimiento(Instant.now())
+                        .biografia("Biografia test")
                         .apellido("García Márquez")
                         .nombre("Gabriel")
+                        .nacionalidad("Argentino")
                         .build()
         );
     }

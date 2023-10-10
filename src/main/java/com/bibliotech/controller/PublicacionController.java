@@ -56,7 +56,7 @@ public class PublicacionController {
 
   @GetMapping
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<Publicacion> findAll() {
+  public List<PublicacionResponseDTO> findAll() {
     return publicacionService.findAll();
   }
 

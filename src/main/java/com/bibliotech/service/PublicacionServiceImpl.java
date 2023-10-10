@@ -47,8 +47,31 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
     @Override
-    public List<Publicacion> findAll() {
-        return publicacionRepository.findAll();
+    public List<PublicacionResponseDTO> findAll() {
+        //return publicacionRepository.findAll();
+        List<Publicacion> publicaciones = publicacionRepository.findAll();
+
+        List<String> nombreAutores = publicaciones.stream().flatMap(publicacion -> publicacion.getAutores().stream()
+                .map(Autor::getNombre))
+                .collect(Collectors.toList());
+
+//        List<String> nombresEditoriales = publicaciones.stream().flatMap(publicacion -> publicacion.getEditoriales().stream()
+//                        .map(Editorial::getNombre))
+//                .collect(Collectors.toList());
+
+        return publicaciones.stream().map(publicacion -> {
+           PublicacionResponseDTO res = PublicacionResponseDTO
+                   .builder()
+                   .anioPublicacion(publicacion.getAnio())
+                   .tituloPublicacion(publicacion.getTitulo())
+                   .nombreEdicion(publicacion.getEdicion().getNombre())
+                   .id(publicacion.getId())
+                   .nombreAutores(nombreAutores)
+                   .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
+                   .build();
+           return res;
+            })
+                .collect(Collectors.toList());
     }
 
     public Optional<Publicacion> findById(Long id) {
