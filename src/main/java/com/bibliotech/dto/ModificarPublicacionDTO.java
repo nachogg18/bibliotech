@@ -10,10 +10,10 @@ public class ModificarPublicacionDTO {
     private String isbn;
     private String titulo;
     private Integer nroPaginas;
-    private Long edicionID;
-    private Long linkID;
-    private List<Long> categoriasIDs;
-    private List<Long> autoresIDs;
-    private List<Long> editorialesIDs;
-    private Long tipoPublicacionID;
+    private Long idEdicion;
+    private LinkDTO link;
+    private List<Long> idsCategorias;
+    private List<Long> idsAutores;
+    private List<Long> idsEditoriales;
+    private Long idTipoPublicacion;
 }
