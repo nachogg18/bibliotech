@@ -60,4 +60,10 @@ public class RoleController {
   public ResponseEntity<CreateRoleResponse> update(@RequestBody @Valid UpdateRoleRequest request) {
     return ResponseEntity.ok(roleService.update(request));
   }
+
+  @DeleteMapping("/delete/{roleId}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'ROLE')")
+  public ResponseEntity<CreateRoleResponse> delete(@PathVariable Long roleId) {
+    return ResponseEntity.ok(roleService.delete(roleId));
+  }
 }

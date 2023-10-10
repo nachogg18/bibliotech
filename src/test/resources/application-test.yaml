@@ -13,10 +13,10 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
   mail:
-    host: ${EMAIL_HOST}
-    port: ${EMAIL_PORT}
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
+    host: EMAIL_HOST
+    port: 1234
+    username: EMAIL_USERNAME
+    password: EMAIL_PASSWORD
   h2:
     console:
       enabled: true
