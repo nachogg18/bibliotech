@@ -1,11 +1,14 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
+import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,14 +18,26 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class EjemplarServiceImpl implements EjemplarService {
     private final EjemplarRepository ejemplarRepository;
-    
+
     private final PublicacionService publicacionService;
 
     private final UbicacionService ubicacionService;
 
     @Override
-    public List<Ejemplar> findAll() {
-        return ejemplarRepository.findByFechaBajaNull();
+    public List<EjemplarResponseDTO> findAll() {
+        return ejemplarRepository.findByFechaBajaNull()
+                .stream().map(
+                        e -> {
+                            EjemplarResponseDTO response = new EjemplarResponseDTO();
+                            response.setId(e.getId());
+                            double valoracion = e.getComentarios().size() == 0
+                                    ? 0
+                                    : e.getComentarios().stream().mapToDouble(Comentario::getCalificacion).sum() / e.getComentarios().size();
+                            response.setValoracion(valoracion);
+                            return response;
+                        }
+
+                ).toList();
     }
 
     @Override
