@@ -1,5 +1,7 @@
 package com.bibliotech.service;
 
+
+import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.Ejemplar;
 import com.bibliotech.dto.CrearEjemplarDTO;
@@ -9,6 +11,8 @@ import java.util.Optional;
 
 public interface EjemplarService {
     List<EjemplarResponseDTO> findAll();
+
+    EjemplarDetailDTO findOne(Long id);
 
     Ejemplar createEjemplar(CrearEjemplarDTO request) throws Exception;
 

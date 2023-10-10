@@ -1,6 +1,8 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
+
+import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
@@ -38,6 +40,19 @@ public class EjemplarServiceImpl implements EjemplarService {
                         }
 
                 ).toList();
+    }
+
+    @Override
+    public EjemplarDetailDTO findOne(Long id) {
+        Ejemplar ejemplar = ejemplarRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(String.format("No existe ejemplar con id %s", id)));
+        EjemplarDetailDTO dto = new EjemplarDetailDTO();
+        dto.setId(ejemplar.getId());
+        dto.setNombrePublicacion(ejemplar.getPublicacion().getTitulo());
+        dto.setNombreUbicacion(ejemplar.getUbicacion().getBiblioteca().getNombre());
+        dto.setSerialNFC(ejemplar.getSerialNFC());
+
+        return dto;
     }
 
     @Override

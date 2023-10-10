@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 public class Biblioteca extends Base {
     @NotNull
     private String nombre;
+    private String ubicacion;
+    private String contacto;
     @NotNull
     private Instant fechaAlta = Instant.now();
     private Instant fechaBaja;
