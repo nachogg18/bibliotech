@@ -1,6 +1,7 @@
 package com.bibliotech.service;
 
 
+import com.bibliotech.dto.EditEjemplarDTO;
 import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.Ejemplar;
@@ -18,7 +19,7 @@ public interface EjemplarService {
 
     Ejemplar save(Ejemplar ejemplar);
 
-    Ejemplar edit(Ejemplar ejemplar, Long id);
+    Ejemplar edit(EditEjemplarDTO ejemplar, Long id);
 
     void delete(Long id);
     Optional<Ejemplar> findById(Long id);

@@ -2,6 +2,7 @@ package com.bibliotech.controller;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
 
+import com.bibliotech.dto.EditEjemplarDTO;
 import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.Ejemplar;
@@ -46,9 +47,9 @@ public class EjemplarController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
-    public Ejemplar edit(@RequestBody Ejemplar ejemplar, @PathVariable Long id) {
-        return ejemplarService.edit(ejemplar, id);
+//    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
+    public Ejemplar edit(@RequestBody EditEjemplarDTO request, @PathVariable Long id) {
+        return ejemplarService.edit(request, id);
     }
 
     @DeleteMapping("/{id}")
