@@ -19,6 +19,4 @@ public class CategoriaValor extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
-    @ManyToOne
-    private Categoria categoria;
 }

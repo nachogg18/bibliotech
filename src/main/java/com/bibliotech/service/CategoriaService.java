@@ -15,6 +15,8 @@ public interface CategoriaService {
 
     MostrarCategoriaDTO save(CrearCategoriaDTO categoriaDTO);
 
+    Categoria save(Categoria categoria);
+
     MostrarCategoriaValorDTO edit(Categoria categoria, Long id);
 
     Optional<Categoria> delete(Long id);

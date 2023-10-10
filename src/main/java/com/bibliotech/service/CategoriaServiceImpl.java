@@ -49,6 +49,11 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    public Categoria save(Categoria categoria) {
+        return categoriaRepository.save(categoria);
+    }
+
+    @Override
     public MostrarCategoriaValorDTO edit(Categoria categoria, Long id) {
         if (categoriaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
