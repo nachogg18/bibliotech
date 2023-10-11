@@ -2,7 +2,6 @@ package com.bibliotech.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +16,7 @@ public class PublicacionResponseDTO {
     private String titulo;
     private List<String> autores = new ArrayList<>();
     private List<String> editoriales = new ArrayList<>();
+    private String tipoPublicacion;
     private int anio;
     private String edicion;
 }

@@ -1,14 +1,12 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
-import com.bibliotech.entity.Autor;
-import com.bibliotech.entity.Edicion;
-import com.bibliotech.entity.Editorial;
 import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,15 +33,41 @@ public class PublicacionController {
     return publicacionService.findByParams(request).stream()
         .map(
             publicacion ->
-PublicacionResponseDTO.builder().id(publicacion.getId())
-          .titulo(publicacion.getTitulo())
-          .autores(
-            publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList()
-            )
-          .editoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList())
-          .anio(publicacion.getAnio().intValue())
-          .edicion(publicacion.getEdicion().getNombre())
-          .build()).toList();
+                PublicacionResponseDTO.builder()
+                    .id(publicacion.getId())
+                    .titulo(publicacion.getTitulo())
+                    .autores(
+                        (Objects.nonNull(publicacion.getAutores()))
+                            ? publicacion.getAutores().stream()
+                                .map(
+                                    autor ->
+                                        String.format(
+                                            "%s - %s %s",
+                                            autor.getId(), autor.getNombre(), autor.getApellido()))
+                                .toList()
+                            : List.of())
+                    .editoriales(
+                        (Objects.nonNull(publicacion.getEditoriales()))
+                            ? publicacion.getEditoriales().stream()
+                                .map(
+                                    editorial ->
+                                        String.format(
+                                            "%s-%s", editorial.getId(), editorial.getNombre()))
+                                .collect(Collectors.toList())
+                            : List.of())
+                    .tipoPublicacion(
+                            (Objects.nonNull(publicacion.getTipoPublicacion())) ? String.format("%s-%s",publicacion.getTipoPublicacion().getId(), publicacion.getTipoPublicacion().getNombre()) : ""
+                    )
+                    .anio(
+                        (Objects.nonNull(publicacion.getAnio()))
+                            ? publicacion.getAnio()
+                            : 0)
+                    .edicion(
+                        (Objects.nonNull(publicacion.getEdicion()))
+                            ? publicacion.getEdicion().getNombre()
+                            : "")
+                    .build())
+        .collect(Collectors.toList());
   }
 
   @PostMapping(path = "")
