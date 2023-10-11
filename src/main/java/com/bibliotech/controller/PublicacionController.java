@@ -42,8 +42,8 @@ public class PublicacionController {
                                 .map(
                                     autor ->
                                         String.format(
-                                            "%s - %s %s",
-                                            autor.getId(), autor.getNombre(), autor.getApellido()))
+                                            "%s %s",
+                                             autor.getNombre(), autor.getApellido()))
                                 .toList()
                             : List.of())
                     .editoriales(
@@ -52,7 +52,7 @@ public class PublicacionController {
                                 .map(
                                     editorial ->
                                         String.format(
-                                            "%s-%s", editorial.getId(), editorial.getNombre()))
+                                            "%s", editorial.getNombre()))
                                 .collect(Collectors.toList())
                             : List.of())
                     .tipoPublicacion(

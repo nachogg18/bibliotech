@@ -189,8 +189,8 @@ public class LocalDataInitializer implements ApplicationRunner {
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",
-                        "email@superadmin",
-                        "password",
+                        "email@superadmin.com",
+                        "password1234",
                         List.of(superAdminRole.getId())
                 )
         );
