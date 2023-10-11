@@ -36,6 +36,7 @@ public class PlataformaServiceImpl implements PlataformaService {
     public Plataforma edit(Plataforma plataforma, Long id) {
         if (plataformaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        plataforma.setId(id);
         return plataformaRepository.save(plataforma);
     }
 
@@ -45,6 +46,7 @@ public class PlataformaServiceImpl implements PlataformaService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
 
+        plataforma.setId(id);
         plataforma.setFechaBaja(Instant.now());
 
         plataformaRepository.save(plataforma);

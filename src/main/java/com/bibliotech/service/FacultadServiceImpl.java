@@ -31,6 +31,7 @@ public class FacultadServiceImpl implements FacultadService {
     public Facultad edit(Facultad facultad, Long id) {
         if (facultadRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        facultad.setId(id);
         return facultadRepository.save(facultad);
     }
 
@@ -42,6 +43,7 @@ public class FacultadServiceImpl implements FacultadService {
             if (facultad.getFechaBaja() != null)
                 facultadOptional = Optional.empty();
             else {
+                facultad.setId(id);
                 facultad.setFechaBaja(Instant.now());
                 facultadOptional = Optional.of(facultadRepository.save(facultad));
             }

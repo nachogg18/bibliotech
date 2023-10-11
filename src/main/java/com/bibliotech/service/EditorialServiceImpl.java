@@ -36,6 +36,7 @@ public class EditorialServiceImpl implements EditorialService {
     public Editorial edit(Editorial editorial, Long id) {
         if (editorialRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        editorial.setId(id);
         return editorialRepository.save(editorial);
     }
 
@@ -48,6 +49,7 @@ public class EditorialServiceImpl implements EditorialService {
                 editorialOptional = Optional.empty();
             else {
                 editorial.setFechaBaja(Instant.now());
+                editorial.setId(id);
                 editorialOptional = Optional.of(editorialRepository.save(editorial));
             }
         }

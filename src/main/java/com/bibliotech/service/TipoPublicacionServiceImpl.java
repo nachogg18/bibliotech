@@ -31,6 +31,7 @@ public class TipoPublicacionServiceImpl implements TipoPublicacionService {
     public TipoPublicacion edit(TipoPublicacion tipoPublicacion, Long id) {
         if (tipoPublicacionRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        tipoPublicacion.setId(id);
         return tipoPublicacionRepository.save(tipoPublicacion);
     }
 
@@ -42,6 +43,7 @@ public class TipoPublicacionServiceImpl implements TipoPublicacionService {
             if(tipoPublicacion.getFechaBaja() != null)
                 tipoPublicacionOptional = Optional.empty();
             else {
+                tipoPublicacion.setId(id);
                 tipoPublicacion.setFechaBaja(Instant.now());
                 tipoPublicacionOptional = Optional.of(tipoPublicacionRepository.save(tipoPublicacion));
             }

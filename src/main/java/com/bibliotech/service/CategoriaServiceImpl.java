@@ -52,6 +52,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     public MostrarCategoriaValorDTO edit(Categoria categoria, Long id) {
         if (categoriaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        categoria.setId(id);
         categoria = categoriaRepository.save(categoria);
         return modelMapper.map(categoria, MostrarCategoriaValorDTO.class);
     }
@@ -65,6 +66,7 @@ public class CategoriaServiceImpl implements CategoriaService {
                 categoriaOptional = Optional.empty();
             else {
                 categoria.setFechaBaja(Instant.now());
+                categoria.setId(id);
                 categoriaOptional = Optional.of(categoriaRepository.save(categoria));
             }
         }
