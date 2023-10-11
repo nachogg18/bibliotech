@@ -8,14 +8,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PublicacionResponseDTO {
     private Long id;
-    private String tituloPublicacion;
-    private List<String> nombreAutores = new ArrayList<>();
-    private String nombreEditorial;
-    private int anioPublicacion;
-    private String nombreEdicion;
+    private String titulo;
+    private List<String> autores = new ArrayList<>();
+    private List<String> editoriales = new ArrayList<>();
+    private int anio;
+    private String edicion;
 }
