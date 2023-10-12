@@ -94,33 +94,63 @@ public class PublicacionServiceImpl implements PublicacionService {
         Publicacion publicacion = publicacionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
 
-        detallePublicacionDTO.setAutores(publicacion.getAutores().stream().map(autor -> autor.getApellido().toUpperCase() + ", " + autor.getNombre()).toList());
-        detallePublicacionDTO.setEdicion(publicacion.getEdicion().getNombre());
-        detallePublicacionDTO.setTitulo(publicacion.getTitulo());
-        detallePublicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
+        detallePublicacionDTO.setTituloPublicacion(publicacion.getTitulo());
+        detallePublicacionDTO.setId(publicacion.getId());
+        detallePublicacionDTO.setIsbnPublicacion(publicacion.getIsbn());
+        detallePublicacionDTO.setAnioPublicacion(publicacion.getAnio());
+        detallePublicacionDTO.setNroPaginas(publicacion.getNroPaginas());
+
+        detallePublicacionDTO.setAutores(publicacion.getAutores().stream().map(autor -> {
+            AutorDTO nuevoAutor = new AutorDTO();
+            nuevoAutor.setNombre(autor.getNombre() + autor.getApellido());
+            nuevoAutor.setBiografia(autor.getBiografia());
+            nuevoAutor.setId(autor.getId());
+            nuevoAutor.setFechaNacimiento(autor.getFechaNacimiento());
+            return nuevoAutor;
+        }).collect(Collectors.toList()));
+
+        detallePublicacionDTO.setEdicion(EdicionDTO.builder()
+                        .nombre(publicacion.getEdicion().getNombre())
+                        .id(publicacion.getEdicion().getId())
+                        .build());
+
+        detallePublicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(editorial -> {
+            EditorialDTO nuevaEditorial = new EditorialDTO();
+            nuevaEditorial.setNombre(editorial.getNombre());
+            nuevaEditorial.setId(editorial.getId());
+            return nuevaEditorial;
+        }).collect(Collectors.toList()));
 
         List<DetalleCategoriaDTO> detalleCategoriaDTOList = new ArrayList<>();
-
         publicacion.getCategoriaPublicacionList().forEach(cp -> {
             DetalleCategoriaDTO detalleCategoriaDTO = new DetalleCategoriaDTO();
             detalleCategoriaDTO.setNombre(cp.getCategoria().getNombre());
             detalleCategoriaDTO.setValores(cp.getCategoriaValorList().stream().map(CategoriaValor::getNombre).toList());
             detalleCategoriaDTOList.add(detalleCategoriaDTO);
         });
-
         detallePublicacionDTO.setCategorias(detalleCategoriaDTOList);
 
-        List<DetalleEjemplarDTO> detalleEjemplarDTOList = new ArrayList<>();
+        detallePublicacionDTO.setTipo(TipoPublicacionDTO.builder()
+                .id(publicacion.getTipoPublicacion().getId())
+                .nombre(publicacion.getTipoPublicacion().getNombre())
+                .build());
 
-        publicacion.getEjemplares().forEach(e -> {
-            DetalleEjemplarDTO detalleEjemplarDTO = new DetalleEjemplarDTO();
-            detalleEjemplarDTO.setId(e.getId());
-            detalleEjemplarDTO.setValoracion(e.getComentarios().stream().mapToDouble(Comentario::getCalificacion).sum() / (long) e.getComentarios().size());
-            detalleEjemplarDTO.setDisponibilidad(e.getEjemplarEstadoList().stream().filter(ee -> ee.getFechaFin() == null)
-                    .map(ee -> Objects.equals(ee.getEstadoEjemplar().toString(), "DISPONIBLE")).toList().get(0));
-            detalleEjemplarDTOList.add(detalleEjemplarDTO);
-        });
-        detallePublicacionDTO.setEjemplares(detalleEjemplarDTOList);
+        detallePublicacionDTO.setLink(LinkPlataformaDTO.builder()
+                        .id(publicacion.getLink().getId())
+                        .estado(publicacion.getLink().getEstadoLink().name())
+                        .url(publicacion.getLink().getUrl())
+                        .plataforma(publicacion.getLink().getPlataforma())
+                .build());
+
+//        List<DetalleEjemplarDTO> detalleEjemplarDTOList = new ArrayList<>();
+//        publicacion.getEjemplares().forEach(e -> {
+//            DetalleEjemplarDTO detalleEjemplarDTO = new DetalleEjemplarDTO();
+//            detalleEjemplarDTO.setId(e.getId());
+//            detalleEjemplarDTO.setValoracion(e.getComentarios().stream().mapToDouble(Comentario::getCalificacion).sum() / (long) e.getComentarios().size());
+//            detalleEjemplarDTO.setDisponibilidad(e.getEjemplarEstadoList().stream().filter(ee -> ee.getFechaFin() == null)
+//                    .map(ee -> Objects.equals(ee.getEstadoEjemplar().toString(), "DISPONIBLE")).toList().get(0));
+//            detalleEjemplarDTOList.add(detalleEjemplarDTO);
+//        });
 
         return detallePublicacionDTO;
     }

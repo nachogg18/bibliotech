@@ -2,15 +2,21 @@ package com.bibliotech.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.bibliotech.entity.TipoPublicacion;
 import lombok.Data;
 
 @Data
 public class DetallePublicacionDTO {
-    private String titulo;
-    private List<String> autores = new ArrayList<>();
-    private String descripcion;
-    private String edicion;
-    private List<String> editoriales = new ArrayList<>();
+    private Long id;
+    private String tituloPublicacion;
+    private String isbnPublicacion;
+    private Integer anioPublicacion;
+    private Integer nroPaginas;
+    private List<AutorDTO> autores = new ArrayList<>();
+    private EdicionDTO edicion;
+    private List<EditorialDTO> editoriales = new ArrayList<>();
     private List<DetalleCategoriaDTO> categorias = new ArrayList<>();
-    private List<DetalleEjemplarDTO> ejemplares = new ArrayList<>();
+    private TipoPublicacionDTO tipo;
+    private LinkPlataformaDTO Link;
 }
