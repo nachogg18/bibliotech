@@ -36,11 +36,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"local","dockerlocal"})
+@Profile({"local", "dockerlocal"})
 public class LocalDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
-    
+
     @Autowired
     private PrivilegeService privilegeService;
 
@@ -68,28 +68,28 @@ public class LocalDataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        List<Link> enabledLinks = List.of(createLink());
+//        List<Link> enabledLinks = List.of(createLink());
 
-        createPlataformas(enabledLinks);
+//        createPlataformas(enabledLinks);
 
-        Set<Resource> resources = createResources();
-        
-        Set<Privilege> privileges = createBasicPrivileges(resources);
+//        Set<Resource> resources = createResources();
+//
+//        Set<Privilege> privileges = createBasicPrivileges(resources);
+//
+//        Role superAdminRole = createSuperAdminRole(privileges);
+//
+//        createUserRole(privileges);
+//
+//        createBibliotecarioRole(privileges);
+//
+//        createSuperAdminUser(superAdminRole);
 
-        Role superAdminRole = createSuperAdminRole(privileges);
+//        Autor autor = createAutor();
 
-        createUserRole(privileges);
-        
-        createBibliotecarioRole(privileges);
-        
-        createSuperAdminUser(superAdminRole);
-
-        Autor autor = createAutor();
-
-        createPublicacion(List.of(autor));
+//        createPublicacion(List.of(autor));
 
 
-        
+
     }
 
     private Set<Resource> createResources() {
@@ -100,7 +100,7 @@ public class LocalDataInitializer implements ApplicationRunner {
                                 .build()
                 )).collect(Collectors.toSet());
     }
-    
+
     private Set<Privilege> createBasicPrivileges(Set<Resource> resources) {
         logger.info("creating basic privileges");
 
@@ -119,11 +119,11 @@ public class LocalDataInitializer implements ApplicationRunner {
                     privilegeService.savePrivilege(privilege);
                 })
                 .collect(Collectors.toSet());
-        
+
     }
     private Role createSuperAdminRole(Set<Privilege> privileges) {
         //get admin privilege
-        
+
         // crea default rol super admin user
         return roleService.create(
                 Role.builder()
@@ -142,17 +142,17 @@ public class LocalDataInitializer implements ApplicationRunner {
         // obtiene privilegios de lectura para todas las entidades
         var privilegiosLectura = privileges.stream()
                 .filter(privilege -> privilege.getName().contains(PrivilegeUtils.DEFAULT_PRIVILEGE)
-        );
+                );
 
 
 
-    return roleService.create(
-        Role.builder()
-            .startDate(Instant.now())
-            .endDate(null)
-            .name(RoleUtils.DEFAULT_ROLE_USER)
-            .privileges(privilegiosLectura.collect(Collectors.toSet()))
-            .build());
+        return roleService.create(
+                Role.builder()
+                        .startDate(Instant.now())
+                        .endDate(null)
+                        .name(RoleUtils.DEFAULT_ROLE_USER)
+                        .privileges(privilegiosLectura.collect(Collectors.toSet()))
+                        .build());
     }
 
     private Role createBibliotecarioRole(Set<Privilege> privileges) {
@@ -168,7 +168,7 @@ public class LocalDataInitializer implements ApplicationRunner {
         var privilegiosBibliotecario = recursosAdministradasPorBibliotecario.stream()
                 .flatMap(
                         resourceName ->
-                        privileges.stream().filter(privilege -> privilege.getResource().getName().equals(resourceName.name()))
+                                privileges.stream().filter(privilege -> privilege.getResource().getName().equals(resourceName.name()))
                 );
 
 
@@ -182,7 +182,7 @@ public class LocalDataInitializer implements ApplicationRunner {
                         .build());
     }
 
-    
+
     private void createSuperAdminUser(Role superAdminRole) {
         //crea
         JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signup(
@@ -195,27 +195,37 @@ public class LocalDataInitializer implements ApplicationRunner {
                 )
         );
 
-    logger.info(
-        String.format(
-            "\ntoken: %s, \nrefresh_token: %s",
-            jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
+        logger.info(
+                String.format(
+                        "\ntoken: %s, \nrefresh_token: %s",
+                        jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
     }
 
 
-    private Link createLink() {
-        return linkService.save( Link.builder()
-                                .url("hola").build());
-    }
-    private void createPlataformas(List<Link> enabledLinks) {
+//    private Link createLink() {
+//        return linkService.save( Link.builder()
+//                                .url("hola").build());
+//    }
+//    private void createPlataformas(List<Link> enabledLinks) {
+//
+//        plataformaService.save(
+//                Plataforma.builder()
+//                        .fechaAlta(Instant.now())
+//                        .links(enabledLinks)
+//                        .nombre("plataforma")
+//                        .build()
+//        );
+//    }
 
-        plataformaService.save(
-                Plataforma.builder()
-                        .fechaAlta(Instant.now())
-                        .links(enabledLinks)
-                        .nombre("plataforma")
-                        .build()
-        );
-    }
+//        plataformaService.save(
+//                Plataforma.builder()
+//                        .fechaAlta(Instant.now())
+//                        .links(enabledLinks)
+//                        .nombre("plataforma")
+//                        .instrucciones("Instrucciones de prueba")
+//                        .build()
+//        );
+//    }
 
     private void createPublicacion(List<Autor> autores) {
 

@@ -28,21 +28,21 @@ public class CategoriaValorController {
 //    }
 
     @PostMapping("")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'CATEGORIA_VALOR')")
+//    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'CATEGORIA_VALOR')")
     public ResponseEntity<MostrarCategoriaValorDTO> post(@RequestBody CrearValorDTO valorDTO) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaValorService.save(valorDTO));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'CATEGORIA_VALOR')")
+//    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'CATEGORIA_VALOR')")
     public ResponseEntity<MostrarCategoriaValorDTO> edit(@RequestBody CrearValorDTO categoriaValor, @PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaValorService.edit(categoriaValor, id));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'CATEGORIA_VALOR')")
+//    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'CATEGORIA_VALOR')")
     public ResponseEntity<MostrarCategoriaValorDTO> delete(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaValorService.delete(id)
