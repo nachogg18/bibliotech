@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -44,36 +45,58 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
+    checkExistentUserWithRequestEmail(request.email());
 
+    List<Role> roles = new ArrayList<>();
 
-      List<Role> roles = new ArrayList<>();
-      
-      
-      if (request.roleIds() == null || request.roleIds().isEmpty() ) {
-          
+    if (request.roleIds() == null || request.roleIds().isEmpty()) {
+
       logger.error("sin role id en la request, asignando role por defecto");
-       var basicRole = roleService.findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER).orElseThrow(() -> new ValidationException(String.format("no existen roles activos con ese nombre %s", RoleUtils.DEFAULT_ROLE_USER)));
-       roles.add(basicRole);
-      } else {
-          request.roleIds().stream().map(
-                  roleId -> roleService.findByIdAndEndDateNull(roleId).orElseThrow(() -> new ValidationException(String.format("no existen roles activos con id %s", roleId)))
-          ).forEach( role -> roles.add(role));
-      }
+      var basicRole =
+          roleService
+              .findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER)
+              .orElseThrow(
+                  () ->
+                      new ValidationException(
+                          String.format(
+                              "no existen roles activos con ese nombre %s",
+                              RoleUtils.DEFAULT_ROLE_USER)));
+      roles.add(basicRole);
+    } else {
+      request.roleIds().stream()
+          .map(
+              roleId ->
+                  roleService
+                      .findByIdAndEndDateNull(roleId)
+                      .orElseThrow(
+                          () ->
+                              new ValidationException(
+                                  String.format("no existen roles activos con id %s", roleId))))
+          .forEach(role -> roles.add(role));
+    }
 
-
-    User savedUser = userRepository.save(User.builder()
-            .firstName(request.firstName())
-            .lastName(request.lastName())
-            .email(request.email())
-            .password(passwordEncoder.encode(request.password()))
-            .roles(roles)
-            .build());
+    User savedUser =
+        userRepository.save(
+            User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .roles(roles)
+                .build());
     roles.stream().forEach(role -> roleService.assignUserToRol(role.getId(), savedUser));
     var jwtToken = jwtService.generateToken(savedUser);
     var refreshToken = jwtService.generateRefreshToken(savedUser);
     revokeAllUserTokens(savedUser);
     saveUserToken(savedUser, jwtToken);
     return JwtAuthenticationResponse.builder().token(jwtToken).refreshToken(refreshToken).build();
+  }
+
+  private void checkExistentUserWithRequestEmail(String email) {
+    Optional<User> user = userRepository.findByEmail(email);
+    if (user.isPresent()) {
+      throw new ValidationException("el mail registrado ya existe");
+    }
   }
 
   private void saveUserToken(User user, String jwtToken) {
