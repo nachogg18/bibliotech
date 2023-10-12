@@ -62,7 +62,7 @@ public class PublicacionController {
         .collect(Collectors.toList());
   }
 
-  @PostMapping(path = "")
+  @PostMapping
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'PUBLICACION')")
   public ResponseEntity<PublicacionResponseDTO> create(
       @RequestBody @Valid CreatePublicacionRequestDTO request) {
