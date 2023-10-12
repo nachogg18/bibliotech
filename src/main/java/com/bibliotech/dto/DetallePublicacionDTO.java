@@ -3,10 +3,7 @@ package com.bibliotech.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bibliotech.entity.Autor;
-import com.bibliotech.entity.Edicion;
-import com.bibliotech.entity.Editorial;
-import com.bibliotech.entity.Link;
+import com.bibliotech.entity.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,4 +22,5 @@ public class DetallePublicacionDTO {
     private List<DetalleCategoriaDTO> categorias = new ArrayList<>();
     //private List<DetalleEjemplarDTO> ejemplares = new ArrayList<>();
     private Link link;
+    private Plataforma plataforma;
 }
