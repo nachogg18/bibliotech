@@ -31,6 +31,7 @@ public class TipoMultaServiceImpl implements TipoMultaService {
     public TipoMulta edit(TipoMulta tipoMulta, Long id) {
         if (tipoMultaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        tipoMulta.setId(id);
         return tipoMultaRepository.save(tipoMulta);
     }
 
@@ -42,6 +43,7 @@ public class TipoMultaServiceImpl implements TipoMultaService {
             if(tipoMulta.getFechaBaja() != null)
                 tipoMultaOptional = Optional.empty();
             else {
+                tipoMulta.setId(id);
                 tipoMulta.setFechaBaja(Instant.now());
                 tipoMultaOptional = Optional.of(tipoMultaRepository.save(tipoMulta));
             }

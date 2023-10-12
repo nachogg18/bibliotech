@@ -36,6 +36,7 @@ public class EdicionServiceImpl implements EdicionService {
     public Edicion edit(Edicion edicion, Long id) {
         if (edicionRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        edicion.setId(id);
         return edicionRepository.save(edicion);
     }
 
@@ -48,6 +49,7 @@ public class EdicionServiceImpl implements EdicionService {
                 edicionOptional = Optional.empty();
             else {
                 edicion.setFechaBaja(Instant.now());
+                edicion.setId(id);
                 edicionOptional = Optional.of(edicionRepository.save(edicion));
             }
         }

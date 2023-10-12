@@ -29,6 +29,7 @@ public class AutorServiceImpl implements AutorService {
     public Autor edit(Autor autor, Long id) {
         if (autorRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        autor.setId(id);
         return autorRepository.save(autor);
     }
 
@@ -40,6 +41,7 @@ public class AutorServiceImpl implements AutorService {
             if(autor.getFechaBaja() != null)
                 autorOptional = Optional.empty();
             else {
+                autor.setId(id);
                 autor.setFechaBaja(Instant.now());
                 autorOptional = Optional.of(autorRepository.save(autor));
             }
