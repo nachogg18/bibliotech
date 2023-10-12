@@ -3,12 +3,16 @@ package com.bibliotech.security.controller;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.GetUserInfoResponse;
 import com.bibliotech.security.dao.response.RoleDto;
+import com.bibliotech.security.dao.response.UserDetailDto;
+import com.bibliotech.security.dao.response.UserDto;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.security.service.UserService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -92,4 +96,34 @@ public class UserController {
                     })
                 .collect(Collectors.toList())));
   }
+
+
+    @GetMapping("")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAll().stream().map(
+            user -> UserDto.builder()
+                    .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
+                    .nombre(user.getFirstName() + user.getLastName())
+                    .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of())).build()
+                            
+        ).collect(Collectors.toList()));
+    }
+
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+    public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                userService.findById(id).map(
+                        user -> UserDetailDto.builder()
+                                .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
+                                .nombre(user.getFirstName())
+                                .apellido(user.getLastName())
+                                .email((Objects.nonNull(user.getEmail())) ? user.getEmail() : "")
+                                .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of()))
+                                .build()
+                ).get()
+        );
+    }
 }
