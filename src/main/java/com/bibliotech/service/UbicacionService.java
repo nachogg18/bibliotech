@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface UbicacionService {
     List<Ubicacion> findAll();
 
+    Optional<Ubicacion> findById(Long id);
+
     Ubicacion save(Ubicacion ubicacion);
 
     Ubicacion edit(Ubicacion ubicacion, Long id);

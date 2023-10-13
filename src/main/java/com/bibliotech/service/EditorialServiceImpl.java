@@ -2,28 +2,28 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Editorial;
 import com.bibliotech.repository.EditorialRepository;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class EditorialServiceImpl implements EditorialService {
 
     private final EditorialRepository editorialRepository;
 
-    public EditorialServiceImpl(EditorialRepository editorialRepository) {
-        this.editorialRepository = editorialRepository;
-    }
-
     @Override
     public List<Editorial> findAll() {
         return editorialRepository.findByFechaBajaNull();
+    }
+
+    @Override
+    public Optional<Editorial> findById(Long id) {
+        return editorialRepository.findById(id);
     }
 
 
@@ -36,6 +36,7 @@ public class EditorialServiceImpl implements EditorialService {
     public Editorial edit(Editorial editorial, Long id) {
         if (editorialRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        editorial.setId(id);
         return editorialRepository.save(editorial);
     }
 
@@ -48,6 +49,7 @@ public class EditorialServiceImpl implements EditorialService {
                 editorialOptional = Optional.empty();
             else {
                 editorial.setFechaBaja(Instant.now());
+                editorial.setId(id);
                 editorialOptional = Optional.of(editorialRepository.save(editorial));
             }
         }

@@ -12,7 +12,7 @@ public class FiltroCategoriaDTOMapper {
                     FiltroCategoriaDTO categoriaDTO = new FiltroCategoriaDTO();
                     categoriaDTO.setIdCategoria(categoria.getId());
                     categoriaDTO.setNombreCategoria(categoria.getNombre());
-                    categoria.getCategoriaValorList().forEach(cv -> {
+                    categoria.getValores().forEach(cv -> {
                         FiltroCategoriaValorDTO valorDTO = new FiltroCategoriaValorDTO();
                         valorDTO.setIdValor(cv.getId());
                         valorDTO.setNombreValor(cv.getNombre());

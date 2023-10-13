@@ -1,16 +1,14 @@
 package com.bibliotech.service;
 
 import com.bibliotech.entity.Link;
-import com.bibliotech.entity.Plataforma;
 import com.bibliotech.repository.LinkRepository;
-import com.bibliotech.repository.PlataformaRepository;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Instant;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +22,11 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    public Optional<Link> findByIdAndFechaBajaNull(Long id) {
+        return linkRepository.findByIdAndAndFechaBajaNull(id);
+    }
+
+    @Override
     public Link save(Link link) {
         return linkRepository.save(link);
     }
@@ -32,6 +35,7 @@ public class LinkServiceImpl implements LinkService {
     public Link edit(Link link, Long id) {
         if (linkRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        link.setId(id);
         return linkRepository.save(link);
     }
 
@@ -41,6 +45,7 @@ public class LinkServiceImpl implements LinkService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
 
+        link.setId(id);
         link.setFechaBaja(Instant.now());
 
         linkRepository.save(link);

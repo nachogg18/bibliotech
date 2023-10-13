@@ -1,22 +1,22 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 
-@Entity
-@Table(name = "publicacion")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "publicacion")
 public class Publicacion extends Base {
 
     @Column
-    private short anio;
+    private Integer anio;
 
     @Column
     private String isbn;
@@ -25,7 +25,7 @@ public class Publicacion extends Base {
     private String titulo;
 
     @Column
-    private int nroPaginas;
+    private Integer nroPaginas;
 
     @Column
     private Instant fechaAlta = Instant.now();
@@ -39,7 +39,7 @@ public class Publicacion extends Base {
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<CategoriaPublicacion> categoriaPublicacionList = new ArrayList<>();
 
     @ManyToMany
@@ -66,7 +66,7 @@ public class Publicacion extends Base {
     @ManyToOne
     private TipoPublicacion tipoPublicacion;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private Link link;
 
 }

@@ -3,10 +3,8 @@ package com.bibliotech.entity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -14,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CategoriaPublicacion extends Base {
     @ManyToOne
     private Categoria categoria;

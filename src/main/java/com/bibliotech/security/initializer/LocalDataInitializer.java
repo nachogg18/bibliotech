@@ -1,7 +1,9 @@
 package com.bibliotech.security.initializer;
 
+import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Plataforma;
+import com.bibliotech.entity.Publicacion;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.entity.Action;
@@ -12,8 +14,10 @@ import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.ResourceService;
 import com.bibliotech.security.service.RoleService;
+import com.bibliotech.service.AutorService;
 import com.bibliotech.service.LinkService;
 import com.bibliotech.service.PlataformaService;
+import com.bibliotech.service.PublicacionService;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.ResourceNames;
 import com.bibliotech.utils.ResourceUtils;
@@ -55,8 +59,11 @@ public class LocalDataInitializer implements ApplicationRunner {
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private PublicacionService publicacionService;
 
-
+    @Autowired
+    private AutorService autorService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -76,6 +83,10 @@ public class LocalDataInitializer implements ApplicationRunner {
         createBibliotecarioRole(privileges);
         
         createSuperAdminUser(superAdminRole);
+
+        Autor autor = createAutor();
+
+        createPublicacion(List.of(autor));
 
 
         
@@ -178,15 +189,16 @@ public class LocalDataInitializer implements ApplicationRunner {
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",
-                        "email@superadmin",
-                        "password",
-                        superAdminRole.getId()
+                        "email@superadmin.com",
+                        "password1234",
+                        List.of(superAdminRole.getId())
                 )
         );
 
-        logger.info(String.format("token: %s, \n refresh_token: %s",
-                jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
-
+    logger.info(
+        String.format(
+            "\ntoken: %s, \nrefresh_token: %s",
+            jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
     }
 
 
@@ -201,6 +213,30 @@ public class LocalDataInitializer implements ApplicationRunner {
                         .fechaAlta(Instant.now())
                         .links(enabledLinks)
                         .nombre("plataforma")
+                        .build()
+        );
+    }
+
+    private void createPublicacion(List<Autor> autores) {
+
+        publicacionService.save(
+                Publicacion.builder()
+                        .fechaAlta(Instant.now())
+                        .titulo("Cien años de soledad")
+                        .autores(autores)
+                        .isbn("9788497592208")
+                        .anio(2003)
+                        .build()
+        );
+    }
+
+    private Autor createAutor() {
+
+        return autorService.save(
+                Autor.builder()
+                        .fechaAlta(Instant.now())
+                        .apellido("García Márquez")
+                        .nombre("Gabriel")
                         .build()
         );
     }

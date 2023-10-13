@@ -31,10 +31,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     @Override
     @Transactional
     public Prestamo convertDtoToEntity(PrestamoDTO prestamoDTO) throws Exception {
-//        modelMapper.getConfiguration()
-//                .setMatchingStrategy(MatchingStrategies.LOOSE);
-//        Prestamo prestamo = modelMapper.map(prestamoDTO, Prestamo.class);
-//        return prestamo;
         Prestamo prestamo = new Prestamo();
         prestamo.setUsuario(userService.findById(prestamoDTO.getUsuarioID()).get());
         prestamo.setEjemplar(ejemplarService.findById(prestamoDTO.getEjemplarID()).get());
