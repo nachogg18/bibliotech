@@ -8,6 +8,7 @@ import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.security.service.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     }
     @Override
     @Transactional
-    public PrestamoResponse convertDtoToEntity(PrestamoRequest prestamoRequest) throws Exception{
+    public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
         //verificar que usuario y ejemplar existen
-        if (!userService.exists(prestamoRequest.getUsuarioID())) throw new RuntimeException(String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID()));
-        if (!ejemplarExistsAndEstado(prestamoRequest)) throw new RuntimeException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID()));
+        if (!userService.exists(prestamoRequest.getUsuarioID())) throw new ValidationException(String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID()));
+        if (!ejemplarExistsAndEstado(prestamoRequest)) throw new ValidationException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID()));
         Prestamo prestamo = Prestamo.builder()
                 .estado(new ArrayList<>())
                 .fechaAlta(Instant.now())

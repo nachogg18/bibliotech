@@ -1,10 +1,7 @@
 package com.bibliotech.controller;
 
-import com.bibliotech.dto.PrestamoDTO;
 import com.bibliotech.dto.PrestamoRequest;
 import com.bibliotech.dto.PrestamoResponse;
-import com.bibliotech.entity.Prestamo;
-import com.bibliotech.security.service.UserService;
 import com.bibliotech.service.PrestamoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +23,7 @@ public class PrestamoDTOController {
 
     @PostMapping
     public ResponseEntity<PrestamoResponse> save(@RequestBody PrestamoRequest request) throws Exception {
-        PrestamoResponse response = prestamoService.convertDtoToEntity(request);
+        PrestamoResponse response = prestamoService.crearPrestamo(request);
         System.out.println(response);
         return ResponseEntity.ok().body(response);
     }
