@@ -4,5 +4,5 @@ import com.bibliotech.dto.PrestamoResponse;
 import com.bibliotech.entity.Prestamo;
 
 public interface PrestamoService extends BaseService<Prestamo, Long>{
-    PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) throws Exception;
+    PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest);
 }

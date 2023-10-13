@@ -43,8 +43,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .usuario(userService.findById(prestamoRequest.getUsuarioID()).get())
                 .ejemplar(ejemplarService.findById(prestamoRequest.getEjemplarID()).get())
                 .build();
-        PrestamoEstado prestamoEstado = new PrestamoEstado();
-        prestamoEstado.setEstado(EstadoPrestamo.ACTIVO);
+        PrestamoEstado prestamoEstado = PrestamoEstado.builder().estado(EstadoPrestamo.ACTIVO).build();
         prestamoEstadoRepository.save(prestamoEstado);
         prestamo.getEstado().add(prestamoEstado);
 
