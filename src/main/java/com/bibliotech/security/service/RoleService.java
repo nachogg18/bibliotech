@@ -19,7 +19,16 @@ public interface RoleService  {
     Role create(Role role);
     CreateRoleResponse update(UpdateRoleRequest updateRoleRequest);
     Optional<Role> findById(Long roleId);
+
+    Optional<Role> findByIdAndEndDateNull(Long roleId);
+
+    Optional<Role> findByNameAndEndDateNull(String roleName);
     Optional<Role> findByName(String RoleName);
     Role assignUserToRol(Long roleId, User user);
+    Role removeUserToRol(Long roleId, User user);
     Role assignPrivilegeToRole(Long roleId, Privilege privilege);
+
+    CreateRoleResponse delete(Long roleId);
+
+
 }

@@ -9,9 +9,11 @@ import java.util.Optional;
 public interface CategoriaValorService {
     List<CategoriaValor> findAll();
 
+    Optional<CategoriaValor> findById(Long id);
+
     MostrarCategoriaValorDTO save(CrearValorDTO valorDTO);
 
-    CategoriaValor edit(CategoriaValor categoriaValor, Long id);
+    MostrarCategoriaValorDTO edit(CrearValorDTO valorDTO, Long id);
 
-    Optional<CategoriaValor> delete(Long id);
+    Optional<MostrarCategoriaValorDTO> delete(Long id);
 }

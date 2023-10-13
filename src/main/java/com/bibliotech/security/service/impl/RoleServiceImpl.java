@@ -10,6 +10,8 @@ import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public CreateRoleResponse create(CreateRoleRequest createRolerequest) {
-        if (!roleRepository.findByName(createRolerequest.name()).isEmpty()) {
+        if (!roleRepository.findByNameAndEndDateNull(createRolerequest.name()).isEmpty()) {
             throw  new RuntimeException("El rol ya existe");
         }
 
@@ -104,6 +106,16 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Optional<Role> findByIdAndEndDateNull(Long roleId) {
+        return roleRepository.findByIdAndEndDateNull(roleId);
+    }
+
+    @Override
+    public Optional<Role> findByNameAndEndDateNull(String roleName) {
+        return roleRepository.findByNameAndEndDateNull(roleName);
+    }
+
+    @Override
     public Optional<Role> findByName(String  roleName) {
         return roleRepository.findByName(roleName);
     }
@@ -119,6 +131,20 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Role removeUserToRol(Long roleId, User user) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        if (role.isEmpty()) {
+            throw new RuntimeException("El rol no existe");
+        }
+        Boolean isRemoved = role.get().getUsers().remove(user);
+        
+        if (!isRemoved) {
+            throw new ValidationException("hubo un problema removiendo al usuario del rol");
+        }
+        return roleRepository.save(role.get());
+    }
+
+    @Override
     public Role assignPrivilegeToRole(Long roleId, Privilege privilege) {
         Optional<Role> role = roleRepository.findById(roleId);
         if (role.isEmpty()) {
@@ -126,5 +152,13 @@ public class RoleServiceImpl implements RoleService {
         }
         role.get().getPrivileges().add(privilege);
         return roleRepository.save(role.get());
+    }
+
+    @Override
+    public CreateRoleResponse delete(Long roleId) {
+        Optional<Role> role = roleRepository.findById(roleId);
+        role.get().setEndDate(Instant.now());
+        roleRepository.save(role.get());
+        return new CreateRoleResponse(role.get().getId().toString(), role.get().getName(), role.get().getStartDate().toString(), role.get().getEndDate().toString());
     }
 }

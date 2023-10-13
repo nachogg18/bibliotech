@@ -1,8 +1,11 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.PrestamoDTO;
 import com.bibliotech.dto.PrestamoRequest;
+import com.bibliotech.dto.PrestamoResponse;
+import com.bibliotech.entity.Prestamo;
+import com.bibliotech.security.service.UserService;
 import com.bibliotech.service.PrestamoService;
-import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -22,8 +25,9 @@ public class PrestamoDTOController {
     private final PrestamoService prestamoService;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid PrestamoRequest prestamoRequest) throws Exception {
-            return ResponseEntity.ok().body(prestamoService.convertDtoToEntity(prestamoRequest));
-
+    public ResponseEntity<PrestamoResponse> save(@RequestBody PrestamoRequest request) throws Exception {
+        PrestamoResponse response = prestamoService.convertDtoToEntity(request);
+        System.out.println(response);
+        return ResponseEntity.ok().body(response);
     }
 }

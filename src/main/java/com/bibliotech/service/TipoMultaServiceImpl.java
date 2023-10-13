@@ -2,24 +2,19 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.TipoMulta;
 import com.bibliotech.repository.TipoMultaRepository;
-
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class TipoMultaServiceImpl implements TipoMultaService {
 
     private final TipoMultaRepository tipoMultaRepository;
-
-    public TipoMultaServiceImpl(TipoMultaRepository tipoMultaRepository) {
-        this.tipoMultaRepository = tipoMultaRepository;
-    }
 
     @Override
     public List<TipoMulta> findAll() {
@@ -36,6 +31,7 @@ public class TipoMultaServiceImpl implements TipoMultaService {
     public TipoMulta edit(TipoMulta tipoMulta, Long id) {
         if (tipoMultaRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        tipoMulta.setId(id);
         return tipoMultaRepository.save(tipoMulta);
     }
 
@@ -47,6 +43,7 @@ public class TipoMultaServiceImpl implements TipoMultaService {
             if(tipoMulta.getFechaBaja() != null)
                 tipoMultaOptional = Optional.empty();
             else {
+                tipoMulta.setId(id);
                 tipoMulta.setFechaBaja(Instant.now());
                 tipoMultaOptional = Optional.of(tipoMultaRepository.save(tipoMulta));
             }

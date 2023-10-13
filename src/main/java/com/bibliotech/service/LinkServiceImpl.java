@@ -35,6 +35,7 @@ public class LinkServiceImpl implements LinkService {
     public Link edit(Link link, Long id) {
         if (linkRepository.findById(id).isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        link.setId(id);
         return linkRepository.save(link);
     }
 
@@ -44,6 +45,7 @@ public class LinkServiceImpl implements LinkService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
 
+        link.setId(id);
         link.setFechaBaja(Instant.now());
 
         linkRepository.save(link);

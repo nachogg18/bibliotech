@@ -28,6 +28,6 @@ public class Categoria extends Base {
     @Column
     private Instant fechaBaja;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria", orphanRemoval = true)
     private List<CategoriaValor> valores = new ArrayList<>();
 }

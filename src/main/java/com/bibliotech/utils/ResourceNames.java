@@ -5,6 +5,7 @@ public enum ResourceNames {
     BIBLIOTECA,
     CARRERA,
     CATEGORIA,
+    CATEGORIA_VALOR,
     COMENTARIO,
     EDICION,
     EDITORIAL,
@@ -17,8 +18,12 @@ public enum ResourceNames {
     PLATAFORMA,
     PUBLICACION,
     PRESTAMO,
+    PRIVILEGE,
+    ROLE,
     TIPO_EVENTO,
     TIPO_CATEGORIA,
     TIPO_PUBLICACION,
-    UBICACION
+    UBICACION,
+    USER,
+    TIPO_MULTA,
 }

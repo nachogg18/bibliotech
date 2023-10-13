@@ -23,7 +23,7 @@ public class RoleController {
   @Autowired private final RoleService roleService;
 
   @PostMapping("/get-privileges-for-roles")
-  @PreAuthorize("@authenticationService.hasAdminRole()")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'ROLE')")
   public ResponseEntity<List<GetPrivilegesFromRoleDetailResponse>> getPrivilegesForRoles(
       @RequestBody @Valid GetPrivilegesFromRoleRequest request) {
 
@@ -49,15 +49,21 @@ public class RoleController {
   }
 
   @PostMapping("/create")
-  @PreAuthorize("@authenticationService.hasAdminRole()")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'ROLE')")
   @Secured("SUPERADMIN")
   public ResponseEntity<CreateRoleResponse> create(@RequestBody @Valid CreateRoleRequest request) {
     return ResponseEntity.ok(roleService.create(request));
   }
 
   @PutMapping("/update")
-  @PreAuthorize("@authenticationService.hasAdminRole()")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'ROLE')")
   public ResponseEntity<CreateRoleResponse> update(@RequestBody @Valid UpdateRoleRequest request) {
     return ResponseEntity.ok(roleService.update(request));
+  }
+
+  @DeleteMapping("/delete/{roleId}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'ROLE')")
+  public ResponseEntity<CreateRoleResponse> delete(@PathVariable Long roleId) {
+    return ResponseEntity.ok(roleService.delete(roleId));
   }
 }
