@@ -1,6 +1,7 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -34,5 +35,6 @@ public class Multa extends Base {
     @ManyToOne
     private Prestamo prestamo;
     @ManyToOne
+    @JsonIgnore
     private User user;
 }
