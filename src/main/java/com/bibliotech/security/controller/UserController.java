@@ -11,11 +11,14 @@ import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.security.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.stream.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,5 +128,32 @@ public class UserController {
                                 .build()
                 ).get()
         );
+    }
+
+
+    @PutMapping("{userId}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'USER')")
+    public ResponseEntity<UserDetailDto> editUser(@PathVariable @Valid @NotNull Long userId, @RequestBody @Valid EditUserRequest editUserRequest) {
+
+    if (authenticationService.getActiveUser().getId() == userId) {
+        throw new ValidationException("El usuario no puede modificar sus propios datos");
+    }
+
+
+
+    return ResponseEntity.ok(
+            Streams.of(userService.edit(userId, editUserRequest)).map(
+                    user ->
+                        UserDetailDto.builder()
+                                .id(user.getId())
+                                .nombre(user.getFirstName())
+                                .apellido(user.getLastName())
+                                .email(user.getEmail())
+                                .roles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                                .build()
+            ).findAny().get()
+
+        );
+
     }
 }
