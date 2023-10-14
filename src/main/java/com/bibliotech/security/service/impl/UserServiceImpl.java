@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        user.setLastUpdatedDate(Instant.now());
         return userRepository.save(user);
     }
 
@@ -72,13 +73,15 @@ public class UserServiceImpl implements UserService {
 
                     userUpdated = updateLastName(userUpdated, request.lastName());
 
-                    userUpdated = updateLastName(userUpdated, request.password());
+                    userUpdated = updatePassword(userUpdated, request.password());
 
                     userUpdated = updateEmail(userUpdated, request.email());
 
                     userUpdated = updateRoles(userUpdated, request.roleIds());
 
                     userUpdated = updateEndDate(userUpdated, request.enabled());
+
+                    userUpdated.setLastUpdatedDate(Instant.now());
 
                     return userRepository.save(userUpdated);
 
