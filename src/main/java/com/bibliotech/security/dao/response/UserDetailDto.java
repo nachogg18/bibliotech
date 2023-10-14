@@ -16,4 +16,7 @@ public class UserDetailDto {
     private String apellido;
     private String email;
     private List<String> roles;
+    private String startDate;
+    private String lastUpdatedDate;
+    private String endDate;
 }
