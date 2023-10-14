@@ -5,7 +5,6 @@ import com.bibliotech.dto.MultaItemTablaDTO;
 import com.bibliotech.entity.Multa;
 import com.bibliotech.repository.MultaRepository;
 import com.bibliotech.repository.MultaSpecifications;
-import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -14,17 +13,11 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-@Log4j2
 public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
 
     public MultaServiceImpl(MultaRepository multaRepository) {
         this.multaRepository = multaRepository;
-    }
-
-    @Override
-    public List<Multa> findAll() {
-        return multaRepository.findAll();
     }
 
     @Override
