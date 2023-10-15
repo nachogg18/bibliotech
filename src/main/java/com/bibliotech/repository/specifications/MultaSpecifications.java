@@ -1,4 +1,4 @@
-package com.bibliotech.repository;
+package com.bibliotech.repository.specifications;
 
 import com.bibliotech.entity.Multa;
 import com.bibliotech.entity.Prestamo;

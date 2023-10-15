@@ -30,7 +30,7 @@ public class Multa extends Base {
     private Instant fechaBaja;
     @ManyToOne
     private TipoMulta tipoMulta;
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<MultaEstado> multaEstados = new ArrayList<>();
     @ManyToOne
     private Prestamo prestamo;

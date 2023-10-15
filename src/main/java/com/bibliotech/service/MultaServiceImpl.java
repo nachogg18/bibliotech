@@ -1,10 +1,16 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.CreateMultaDTO;
 import com.bibliotech.dto.FindMultaByParamsDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
+import com.bibliotech.entity.EstadoMulta;
 import com.bibliotech.entity.Multa;
+import com.bibliotech.entity.MultaEstado;
 import com.bibliotech.repository.MultaRepository;
-import com.bibliotech.repository.MultaSpecifications;
+import com.bibliotech.repository.specifications.MultaSpecifications;
+import com.bibliotech.security.service.UserService;
+import jakarta.validation.ValidationException;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -13,12 +19,12 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
-
-    public MultaServiceImpl(MultaRepository multaRepository) {
-        this.multaRepository = multaRepository;
-    }
+    private final UserService userService;
+    private final PrestamoService prestamoService;
+    private final TipoMultaService tipoMultaService;
 
     @Override
     public List<MultaItemTablaDTO> findByParams(FindMultaByParamsDTO request) {
@@ -56,5 +62,35 @@ public class MultaServiceImpl implements MultaService {
                                 .tipo(multa.getTipoMulta() == null ? null : multa.getTipoMulta().getNombre())
                                 .build()
                 ).toList();
+    }
+
+    @Override
+    public boolean createMulta(CreateMultaDTO request) throws Exception {
+        Multa multa = Multa.builder()
+                .prestamo(
+                        prestamoService.findById(request.getIdPrestamo())
+                )
+                .user(
+                        userService.findById(request.getIdUsuario())
+                                .orElseThrow(() -> new ValidationException(String.format("no existe User con id: %s", request.getIdUsuario())))
+                )
+                .tipoMulta(
+                        tipoMultaService.findById(request.getIdMotivoMulta())
+                                .orElseThrow(() -> new ValidationException(String.format("no existe TipoMulta con id: %s", request.getIdMotivoMulta())))
+                )
+                .multaEstados(
+                        List.of(
+                                MultaEstado.builder()
+                                        .fechaInicio(Instant.now())
+                                        .estadoMulta(EstadoMulta.ACTIVA)
+                                        .build())
+                )
+                .build();
+        try {
+            multaRepository.save(multa);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }
