@@ -1,10 +1,7 @@
 package com.bibliotech.security.controller;
 
 import com.bibliotech.security.dao.request.*;
-import com.bibliotech.security.dao.response.GetUserInfoResponse;
-import com.bibliotech.security.dao.response.RoleDto;
-import com.bibliotech.security.dao.response.UserDetailDto;
-import com.bibliotech.security.dao.response.UserDto;
+import com.bibliotech.security.dao.response.*;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
@@ -125,6 +122,9 @@ public class UserController {
                                 .apellido(user.getLastName())
                                 .email((Objects.nonNull(user.getEmail())) ? user.getEmail() : "")
                                 .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of()))
+                                .startDate((Objects.nonNull(user.getStartDate()) ? user.getStartDate().toString() : ""))
+                                .endDate((Objects.nonNull(user.getLastName()) ? user.getLastName().toString() : ""))
+                                .endDate((Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : ""))
                                 .build()
                 ).get()
         );
@@ -150,6 +150,9 @@ public class UserController {
                                 .apellido(user.getLastName())
                                 .email(user.getEmail())
                                 .roles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
+                                .startDate(Objects.nonNull(user.getStartDate()) ? user.getStartDate().toString() : "")
+                                .lastUpdatedDate(Objects.nonNull(user.getLastUpdatedDate()) ? user.getLastUpdatedDate().toString() : "")
+                                .endDate(Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : "")
                                 .build()
             ).findAny().get()
 
