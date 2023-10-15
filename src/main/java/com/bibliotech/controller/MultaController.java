@@ -29,6 +29,7 @@ public class MultaController {
     }
 
     @PostMapping
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'MULTA')")
     public boolean createMulta(@RequestBody CreateMultaDTO request) throws Exception {
         return multaService.createMulta(request);
     }
