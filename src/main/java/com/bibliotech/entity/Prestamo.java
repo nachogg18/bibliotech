@@ -49,4 +49,8 @@ public class Prestamo extends Base {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "multa_id")
 //    private Multa multa;
+
+    public boolean overlapsWith(Instant periodStart, Instant periodEnd) {
+        return !fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(fechaInicioEstimada);
+    }
 }

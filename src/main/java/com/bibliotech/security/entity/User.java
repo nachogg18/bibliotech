@@ -25,7 +25,8 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private Instant startDate;
-    private String endDate;
+    private Instant lastUpdatedDate;
+    private Instant endDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))

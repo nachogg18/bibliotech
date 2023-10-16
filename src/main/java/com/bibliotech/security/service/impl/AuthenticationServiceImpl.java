@@ -16,6 +16,7 @@ import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,6 +83,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .lastName(request.lastName())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .startDate(Instant.now())
+                .endDate(null)
                 .roles(roles)
                 .build());
     roles.stream().forEach(role -> roleService.assignUserToRol(role.getId(), savedUser));
