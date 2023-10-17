@@ -119,7 +119,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         detallePublicacionDTO.setIsbnPublicacion(publicacion.getIsbn());
         detallePublicacionDTO.setTituloPublicacion(publicacion.getTitulo());
         detallePublicacionDTO.setNroPaginas(publicacion.getNroPaginas());
-        detallePublicacionDTO.setAnioPblicacion(publicacion.getAnio());
+        detallePublicacionDTO.setAnioPublicacion(publicacion.getAnio());
         detallePublicacionDTO.setLink(Objects.nonNull(publicacion.getLink()) ? publicacion.getLink() : null);
         detallePublicacionDTO.setEditoriales(Objects.nonNull(publicacion.getEditoriales()) ? publicacion.getEditoriales() : null);
 
@@ -136,6 +136,7 @@ public class PublicacionServiceImpl implements PublicacionService {
                 nuevoAutor.setBiografia(autor.getBiografia());
                 nuevoAutor.setId(autor.getId());
                 nuevoAutor.setFechaNacimiento(autor.getFechaNacimiento());
+                nuevoAutor.setNacionalidad(autor.getNacionalidad());
                 return nuevoAutor;
             }).collect(Collectors.toList());
 
@@ -145,8 +146,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         if(Objects.nonNull(publicacion.getCategoriaPublicacionList())) {
             publicacion.getCategoriaPublicacionList().forEach(cp -> {
                 DetalleCategoriaDTO detalleCategoriaDTO = new DetalleCategoriaDTO();
-                detalleCategoriaDTO.setId(cp.getId());
-                detalleCategoriaDTO.setNombre(cp.getCategoria().getNombre());
+                detalleCategoriaDTO.setCategoria(new CategoriaDetalleDTO(cp.getCategoria().getId(),cp.getCategoria().getNombre()));
                 detalleCategoriaDTO.setValores(cp.getCategoriaValorList()/*.stream().map(CategoriaValor::getNombre).toList()*/);
                 detalleCategoriaDTOList.add(detalleCategoriaDTO);
             });
