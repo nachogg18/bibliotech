@@ -21,6 +21,11 @@ public class TipoMultaServiceImpl implements TipoMultaService {
         return tipoMultaRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<TipoMulta> findById(Long id) {
+        return tipoMultaRepository.findById(id);
+    }
+
 
     @Override
     public TipoMulta save(TipoMulta tipoMulta) {

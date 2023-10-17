@@ -15,6 +15,8 @@ import lombok.*;
 @Builder
 public class TipoMulta extends Base {
     @Column
+    private String nombre;
+    @Column
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;

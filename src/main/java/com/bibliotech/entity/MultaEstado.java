@@ -23,6 +23,4 @@ public class MultaEstado extends Base {
     @Column
     @Enumerated(EnumType.ORDINAL)
     private EstadoMulta estadoMulta;
-    @ManyToOne
-    private Multa multa;
 }
