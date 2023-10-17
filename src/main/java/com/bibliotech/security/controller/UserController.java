@@ -159,4 +159,9 @@ public class UserController {
         );
 
     }
+
+    @GetMapping("/getUsers")
+    public List<FindUserDto> getUsers() {
+      return userService.getUsers();
+    }
 }

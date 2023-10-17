@@ -1,6 +1,7 @@
 package com.bibliotech.security.service.impl;
 
 import com.bibliotech.security.dao.request.EditUserRequest;
+import com.bibliotech.security.dao.response.FindUserDto;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.repository.UserRepository;
@@ -51,6 +52,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll(Sort.by(Sort.Order.desc("startDate")));
+    }
+
+    @Override
+    public List<FindUserDto> getUsers() {
+        return userRepository.findAll()
+                .stream().map(user -> FindUserDto.builder()
+                            .id(user.getId())
+                            .legajo(user.getLegajo())
+                            .nombre(user.getFirstName())
+                            .apellido(user.getLastName())
+                            .build()).toList();
     }
 
     @Override

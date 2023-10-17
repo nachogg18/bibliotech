@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.*;
 
 @Entity
@@ -19,16 +20,16 @@ import java.util.*;
 public class Prestamo extends Base {
 
     @Column
-    private Date fechaAlta = new Date();
+    private Instant fechaAlta = Instant.now();
 
     @Column
-    private Date fechaFinEstimada;
+    private Instant fechaFinEstimada;
 
     @Column
-    private Date fechaInicioEstimada;
+    private Instant fechaInicioEstimada;
 
     @Column
-    private Date fechaBaja;
+    private Instant fechaBaja;
 
     @ElementCollection(targetClass = Date.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "fechasRenovacionesPrestamo", joinColumns = @JoinColumn(name = "fechaRenovacion_id"))
