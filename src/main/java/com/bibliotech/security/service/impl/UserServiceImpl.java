@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
                             .legajo(user.getLegajo())
                             .nombre(user.getFirstName())
                             .apellido(user.getLastName())
+                            .dni(user.getDni())
                             .build()).toList();
     }
 
