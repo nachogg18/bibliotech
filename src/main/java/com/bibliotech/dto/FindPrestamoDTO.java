@@ -14,7 +14,7 @@ import java.time.Instant;
 public class FindPrestamoDTO {
     private Long id;
     private String publicacion;
-    private String ejemplar;
+    private Long ejemplar;
     private String estado;
     private Instant fechaInicio;
 }

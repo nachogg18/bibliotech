@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PrestamoService extends BaseService<Prestamo, Long>{
     Prestamo convertDtoToEntity(PrestamoDTO prestamoDTO) throws Exception;
-    List<FindPrestamoDTO> getPrestamos();
+    List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario);
 }

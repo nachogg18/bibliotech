@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,9 @@ import java.util.List;
 public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoServiceImpl>{
     public final PrestamoService prestamoService;
 
-    public List<FindPrestamoDTO> getPrestamos() {
-        return prestamoService.getPrestamos();
+    @GetMapping("/user/{idUsuario}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
+    public List<FindPrestamoDTO> getPrestamosByUserId(@PathVariable Long idUsuario) {
+        return prestamoService.getPrestamosByUserId(idUsuario);
     }
 }

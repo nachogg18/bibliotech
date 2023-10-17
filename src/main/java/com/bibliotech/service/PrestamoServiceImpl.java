@@ -47,15 +47,15 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     }
 
     @Override
-    public List<FindPrestamoDTO> getPrestamos() {
-        return prestamosRepository.findAll()
+    public List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario) {
+        return prestamosRepository.findPrestamoByUsuarioId(idUsuario)
                 .stream().map(
                         prestamo -> FindPrestamoDTO
                                 .builder()
                                 .id(prestamo.getId())
                                 .publicacion(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getPublicacion().getTitulo())
-                                .ejemplar(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getSerialNFC())
-                                .estado(prestamo.getEstado() == null ? null : prestamo.getEstado().stream().filter(pe -> pe.getFechaFin() == null).toList().get(0).getEstado().name())
+                                .ejemplar(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getId())
+                                .estado(prestamo.getEstado().size() == 0 ? null : prestamo.getEstado().stream().filter(pe -> pe.getFechaFin() == null).toList().get(0).getEstado().name())
                                 .fechaInicio(prestamo.getFechaInicioEstimada())
                                 .build()
                 ).toList();
