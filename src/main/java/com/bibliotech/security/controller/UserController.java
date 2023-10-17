@@ -161,7 +161,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/getUsers")
+    @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
     @SecurityRequirement(name = "bearer-key")
     public List<FindUserDto> getUsers() {
