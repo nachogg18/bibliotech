@@ -49,7 +49,7 @@ public class Prestamo extends Base {
     @JoinColumn(name = "estado_prestamo")
     private List<PrestamoEstado> estado = new ArrayList<PrestamoEstado>();
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "multa_id")
-//    private Multa multa;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "multa_id")
+    private Multa multa;
 }
