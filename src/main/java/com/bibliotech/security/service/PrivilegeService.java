@@ -1,6 +1,7 @@
 package com.bibliotech.security.service;
 
 
+import com.bibliotech.security.dao.request.EditPrivilegeRequest;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Role;
 import java.util.List;
@@ -17,4 +18,6 @@ public interface PrivilegeService {
     Privilege savePrivilege(Privilege privilege);
 
     Privilege addRoleToPrivilege(Long privilegeId, Role role);
+
+    Privilege editPrivilege(EditPrivilegeRequest editPrivilegeRequest);
 }
