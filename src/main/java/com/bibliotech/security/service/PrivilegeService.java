@@ -1,6 +1,7 @@
 package com.bibliotech.security.service;
 
 
+import com.bibliotech.security.dao.request.CreatePrivilegeRequest;
 import com.bibliotech.security.dao.request.EditPrivilegeRequest;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Role;
@@ -14,6 +15,8 @@ public interface PrivilegeService {
     Optional<Privilege> getPrivilegeById(Long id);
 
     Optional<Privilege> getPrivilegeByName(String name);
+
+    Privilege createPrivilege(CreatePrivilegeRequest createPrivilegeRequest);
 
     Privilege savePrivilege(Privilege privilege);
 

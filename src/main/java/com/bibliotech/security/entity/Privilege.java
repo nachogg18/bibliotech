@@ -33,6 +33,8 @@ public class Privilege {
 
     private Instant startDate;
 
+    private Instant lastUpdatedDate;
+
     private Instant endDate;
 
     public Long getId() {
@@ -86,6 +88,14 @@ public class Privilege {
 
     public Set<Action> getActions() {
         return actions;
+    }
+
+    public Instant getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Instant lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
     }
 
     public void setActions(Set<Action> actions) {

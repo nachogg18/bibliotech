@@ -1,7 +1,7 @@
 package com.bibliotech.security.controller;
 
-import com.bibliotech.security.entity.Resource;
-import com.bibliotech.security.service.ResourceService;
+import com.bibliotech.security.entity.Action;
+import com.bibliotech.security.service.ActionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class ActionController {
   private static final Logger logger = LoggerFactory.getLogger(ActionController.class);
 
-  @Autowired private final ResourceService resourceService;
+  @Autowired private final ActionService actionService;
 
     @GetMapping("")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRIVILEGE')")
-    public List<Resource> findAll() {
-         return resourceService.getAllResources();
+    public List<Action> findAll() {
+         return actionService.getAllActions();
     }
 
   

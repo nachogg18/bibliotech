@@ -10,6 +10,7 @@ public record EditPrivilegeRequest(
         @NotNull Long id,
         @Pattern(regexp = PrivilegeUtils.VALID_PRIVILEGE_NAME_FORMAT) String name,
         @NotNull Long resourceId,
-        @NotNull List<String> actions
+        @NotNull List<String> actions,
+        Boolean enabled
 ) {}
 
