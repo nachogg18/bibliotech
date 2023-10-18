@@ -4,8 +4,6 @@ import com.bibliotech.entity.Base;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Collection;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +13,4 @@ import java.util.Collection;
 @Table(name = "resources")
 public class Resource extends Base {
     private String name;
-
-    @OneToMany
-    private Collection<Privilege> privileges;
 }
