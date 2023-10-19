@@ -9,5 +9,5 @@ public record SignUpRequest(
         @NotBlank String lastName,
         @Email String email,
         @Min(5) @Max(30) String password,
-        @NotNull List<Long> roleIds
+        List<Long> roleIds
 ){}
