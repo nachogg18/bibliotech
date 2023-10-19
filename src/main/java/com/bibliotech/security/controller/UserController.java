@@ -40,7 +40,7 @@ public class UserController {
   @GetMapping("/get-active-user-info")
   public ResponseEntity<GetUserInfoResponse> getActiveUserInfo() {
 
-    User user = authenticationService.getActiveUser();
+    User user = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
 
     return ResponseEntity.ok(
         GetUserInfoResponse.builder()
@@ -136,7 +136,7 @@ public class UserController {
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'USER')")
     public ResponseEntity<UserDetailDto> editUser(@PathVariable @Valid @NotNull Long userId, @RequestBody @Valid EditUserRequest editUserRequest) {
 
-    if (authenticationService.getActiveUser().getId() == userId) {
+    if (authenticationService.getActiveUser().get().getId() == userId) {
         throw new ValidationException("El usuario no puede modificar sus propios datos");
     }
 
