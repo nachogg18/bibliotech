@@ -3,10 +3,8 @@ package com.bibliotech.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bibliotech.entity.Edicion;
-import com.bibliotech.entity.Editorial;
-import com.bibliotech.entity.Link;
-import com.bibliotech.entity.Plataforma;
+import com.bibliotech.entity.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,11 +15,12 @@ public class DetallePublicacionDTO {
     private String tituloPublicacion;
     private String isbnPublicacion;
     private Integer nroPaginas;
-    private Integer anioPblicacion;
+    private Integer anioPublicacion;
     private List<AutorDTO> autores = new ArrayList<>();
     private Edicion edicion;
     private List<Editorial> editoriales = new ArrayList<>();
     private List<DetalleCategoriaDTO> categorias = new ArrayList<>();
+    //private List<DetalleEjemplarDTO> ejemplares = new ArrayList<>();
     private Link link;
     private Plataforma plataforma;
 }

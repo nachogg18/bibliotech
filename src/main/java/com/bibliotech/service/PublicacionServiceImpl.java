@@ -47,8 +47,29 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
     @Override
-    public List<Publicacion> findAll() {
-        return publicacionRepository.findAll();
+    public List<PublicacionResponseDTO> findAll() {
+        //return publicacionRepository.findAll();
+        List<Publicacion> publicaciones = publicacionRepository.findAll();
+
+//        List<String> nombresEditoriales = publicaciones.stream().flatMap(publicacion -> publicacion.getEditoriales().stream()
+//                        .map(Editorial::getNombre))
+//                .collect(Collectors.toList());
+
+        return publicaciones.stream().map(publicacion -> {
+           PublicacionResponseDTO res = PublicacionResponseDTO
+                   .builder()
+                   .anioPublicacion(publicacion.getAnio())
+                   .tituloPublicacion(publicacion.getTitulo())
+                   .nombreEdicion(publicacion.getEdicion().getNombre())
+                   .id(publicacion.getId())
+                   .nombreAutores(publicaciones.stream().flatMap(p -> p.getAutores().stream()
+                                   .map(Autor::getNombre))
+                           .collect(Collectors.toList()))
+                   .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
+                   .build();
+           return res;
+            })
+                .collect(Collectors.toList());
     }
 
     public Optional<Publicacion> findById(Long id) {
@@ -98,11 +119,15 @@ public class PublicacionServiceImpl implements PublicacionService {
         detallePublicacionDTO.setIsbnPublicacion(publicacion.getIsbn());
         detallePublicacionDTO.setTituloPublicacion(publicacion.getTitulo());
         detallePublicacionDTO.setNroPaginas(publicacion.getNroPaginas());
-        detallePublicacionDTO.setAnioPblicacion(publicacion.getAnio());
+        detallePublicacionDTO.setAnioPublicacion(publicacion.getAnio());
         detallePublicacionDTO.setLink(Objects.nonNull(publicacion.getLink()) ? publicacion.getLink() : null);
         detallePublicacionDTO.setEditoriales(Objects.nonNull(publicacion.getEditoriales()) ? publicacion.getEditoriales() : null);
-        detallePublicacionDTO.setEdicion(Objects.nonNull(publicacion.getEdicion()) ? publicacion.getEdicion() : null);
+
         detallePublicacionDTO.setPlataforma(Objects.nonNull(publicacion.getLink().getPlataforma()) ? publicacion.getLink().getPlataforma() : null);
+
+        List<DetalleCategoriaDTO> detalleCategoriaDTOList = new ArrayList<>();
+
+        detallePublicacionDTO.setEdicion(publicacion.getEdicion());
 
         if(Objects.nonNull(publicacion.getAutores())) {
             List<AutorDTO> autores = publicacion.getAutores().stream().map(autor -> {
@@ -111,23 +136,22 @@ public class PublicacionServiceImpl implements PublicacionService {
                 nuevoAutor.setBiografia(autor.getBiografia());
                 nuevoAutor.setId(autor.getId());
                 nuevoAutor.setFechaNacimiento(autor.getFechaNacimiento());
+                nuevoAutor.setNacionalidad(autor.getNacionalidad());
                 return nuevoAutor;
             }).collect(Collectors.toList());
-        }
 
-        List<DetalleCategoriaDTO> detalleCategoriaDTOList = new ArrayList<>();
+            detallePublicacionDTO.setAutores(autores);
+        }
 
         if(Objects.nonNull(publicacion.getCategoriaPublicacionList())) {
             publicacion.getCategoriaPublicacionList().forEach(cp -> {
                 DetalleCategoriaDTO detalleCategoriaDTO = new DetalleCategoriaDTO();
-                detalleCategoriaDTO.setId(cp.getId());
-                detalleCategoriaDTO.setNombre(cp.getCategoria().getNombre());
+                detalleCategoriaDTO.setCategoria(new CategoriaDetalleDTO(cp.getCategoria().getId(),cp.getCategoria().getNombre()));
                 detalleCategoriaDTO.setValores(cp.getCategoriaValorList()/*.stream().map(CategoriaValor::getNombre).toList()*/);
                 detalleCategoriaDTOList.add(detalleCategoriaDTO);
             });
         }
-
-            detallePublicacionDTO.setCategorias(detalleCategoriaDTOList);
+        detallePublicacionDTO.setCategorias(detalleCategoriaDTOList);
 
         return detallePublicacionDTO;
     }
@@ -228,12 +252,12 @@ public class PublicacionServiceImpl implements PublicacionService {
                         .build());
 
         PublicacionResponseDTO responseDTO = new PublicacionResponseDTO();
-        responseDTO.setTitulo(publicacion.getTitulo());
-        responseDTO.setAnio(publicacion.getAnio());
-        responseDTO.setEdicion(publicacion.getEdicion().getNombre());
-        responseDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
+        responseDTO.setTituloPublicacion(publicacion.getTitulo());
+        responseDTO.setAnioPublicacion(publicacion.getAnio());
+        responseDTO.setNombreEdicion(publicacion.getEdicion().getNombre());
+        responseDTO.setNombreEditorial(publicacion.getEditoriales().get(0).getNombre());
         responseDTO.setId(publicacion.getId());
-        responseDTO.setAutores(
+        responseDTO.setNombreAutores(
                 publicacion.getAutores().stream().map(a -> a.getApellido() + ", " + a.getNombre()).toList()
         );
         return responseDTO;

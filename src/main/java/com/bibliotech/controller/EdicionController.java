@@ -21,13 +21,13 @@ public class EdicionController {
 
     private final EdicionService edicionService;
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EDICION')")
     public List<Edicion> findAll() {
         return edicionService.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'EDICION')")
     public Edicion post(@RequestBody Edicion edicion) {
         return edicionService.save(edicion);
