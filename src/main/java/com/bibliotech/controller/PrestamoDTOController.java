@@ -23,8 +23,6 @@ public class PrestamoDTOController {
 
     @PostMapping
     public ResponseEntity<PrestamoResponse> save(@RequestBody PrestamoRequest request) throws Exception {
-        PrestamoResponse response = prestamoService.crearPrestamo(request);
-        System.out.println(response);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(prestamoService.crearPrestamo(request));
     }
 }

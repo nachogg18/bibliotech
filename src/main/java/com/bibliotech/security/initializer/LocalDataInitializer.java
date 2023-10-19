@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"local","dockerlocal"})
+@Profile({"local"})
 public class LocalDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);

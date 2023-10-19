@@ -11,12 +11,19 @@ spring:
     password: ${EMAIL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect:  org.hibernate.dialect.MySQLDialect
 token:
   signing:
-    key: ${JWT_KEY}
+    key: test1352675ghjt7789798578455855seserewgweew
   expiration:
-    time: ${TOKEN_EXPIRATION_TIME}
+    time: 5000
+
+
+application:
+  security:
+    jwt:
+      refresh-token:
+        expiration: 604800000

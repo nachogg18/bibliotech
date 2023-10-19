@@ -6,7 +6,6 @@ import com.bibliotech.entity.*;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
-import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
@@ -14,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,8 +34,11 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     @Override
     @Transactional
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
+
         verifyUsuarioYEjemplar(prestamoRequest);
         verifyFechaPrestamos(prestamoRequest);
+
+
 
         Prestamo prestamo = Prestamo.builder()
                 .estado(new ArrayList<>())
@@ -52,7 +54,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         prestamosRepository.save(prestamo);
 
-        PrestamoResponse response = PrestamoResponse
+        return PrestamoResponse
                 .builder()
                 .UsuarioID(userService.findById(prestamoRequest.getUsuarioID()).get().getId())
                 .EjemplarID(ejemplarService.findById(prestamoRequest.getEjemplarID()).get().getId())
@@ -60,7 +62,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
                 .fechaAlta(prestamo.getFechaAlta())
                 .build();
-        return response;
     }
 
     private void verifyUsuarioYEjemplar (PrestamoRequest prestamoRequest){
@@ -80,16 +81,15 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     private void verifyFechaPrestamos (PrestamoRequest prestamoRequest) {
         //comparar con dias maximos parametrizados
-        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) < dias parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) < días parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
 
         Ejemplar ejemplar = ejemplarService.findById(prestamoRequest.getEjemplarID()).get();
-        boolean prestamoOverlap = ejemplar.getPrestamos().stream()
-                .noneMatch(prestamo ->
-                        !prestamo.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada())
-                );
-
-        if(prestamoOverlap) throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes", prestamoRequest.getEjemplarID()));
-
+        if (!ejemplar.getPrestamos().isEmpty()) {
+            boolean prestamoOverlap = ejemplar.getPrestamos().stream()
+                    .anyMatch(subEntity -> subEntity.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada()));
+            if (prestamoOverlap)
+                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes", prestamoRequest.getEjemplarID()));
+        }
     }
 
     private void crearPrestamoActual (PrestamoRequest prestamoRequest) {

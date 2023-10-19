@@ -51,6 +51,6 @@ public class Prestamo extends Base {
 //    private Multa multa;
 
     public boolean overlapsWith(Instant periodStart, Instant periodEnd) {
-        return !fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(fechaInicioEstimada);
+        return !this.fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(this.fechaInicioEstimada);
     }
 }
