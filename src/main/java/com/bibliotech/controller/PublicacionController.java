@@ -1,12 +1,14 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
+import com.bibliotech.entity.Autor;
+import com.bibliotech.entity.Edicion;
+import com.bibliotech.entity.Editorial;
 import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,7 +27,7 @@ public class PublicacionController {
 
   @PostMapping(path = "/findByParams")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<PublicacionResponseDTO> findByParams(
+  public List<PublicacionByParamsDTO> findByParams(
       @RequestBody FindPublicacionesByParamsDTO request) {
 
     request.validate();
@@ -33,39 +35,29 @@ public class PublicacionController {
     return publicacionService.findByParams(request).stream()
         .map(
             publicacion ->
-                PublicacionResponseDTO.builder()
+                PublicacionByParamsDTO.builder()
                     .id(publicacion.getId())
-                    .titulo(publicacion.getTitulo())
-                    .autores(
-                        (Objects.nonNull(publicacion.getAutores()))
-                            ? publicacion.getAutores().stream()
-                                .map(
-                                    autor ->
-                                        String.format(
-                                            "%s %s",
-                                             autor.getNombre(), autor.getApellido()))
-                                .toList()
-                            : List.of())
                     .editoriales(
-                        (Objects.nonNull(publicacion.getEditoriales()))
-                            ? publicacion.getEditoriales().stream()
-                                .map(
-                                    editorial ->
-                                        String.format(
-                                            "%s", editorial.getNombre()))
-                                .collect(Collectors.toList())
-                            : List.of())
-                    .tipoPublicacion(
-                            (Objects.nonNull(publicacion.getTipoPublicacion())) ? String.format("%s-%s",publicacion.getTipoPublicacion().getId(), publicacion.getTipoPublicacion().getNombre()) : ""
-                    )
-                    .anio(
-                        (Objects.nonNull(publicacion.getAnio()))
-                            ? publicacion.getAnio()
-                            : 0)
-                    .edicion(
-                        (Objects.nonNull(publicacion.getEdicion()))
-                            ? publicacion.getEdicion().getNombre()
-                            : "")
+                        publicacion.getEditoriales().stream()
+                            .map(
+                                editorial ->
+                                    Editorial.builder().nombre(editorial.getNombre()).build())
+                            .collect(Collectors.toList()))
+                    .anioPublicacion(publicacion.getAnio().intValue())
+                    .autores(
+                        publicacion.getAutores().stream()
+                            .map(
+                                autor ->
+                                    Autor.builder()
+                                        .nombre(autor.getNombre())
+                                        .apellido(autor.getApellido())
+                                        .nacionalidad(autor.getNacionalidad())
+                                        .biografia(autor.getBiografia())
+                                        .build())
+                            .collect(Collectors.toList()))
+                    .edicion(Edicion.builder().nombre(publicacion.getEdicion().getNombre()).build())
+                    .tituloPublicacion(publicacion.getTitulo())
+                    .anioPublicacion(publicacion.getAnio())
                     .build())
         .collect(Collectors.toList());
   }
@@ -80,7 +72,7 @@ public class PublicacionController {
 
   @GetMapping
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<Publicacion> findAll() {
+  public List<PublicacionResponseDTO> findAll() {
     return publicacionService.findAll();
   }
 

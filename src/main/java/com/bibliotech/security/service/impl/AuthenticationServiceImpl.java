@@ -142,8 +142,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
-  public User getActiveUser() {
-    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public Optional<User> getActiveUser() {
+    var principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (principal instanceof User) {
+      return Optional.of((User) principal);
+    } else {
+      return Optional.empty();
+    }
+
   }
 
   @Override
@@ -153,7 +160,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   public Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName) {
 
-    return Stream.of(getActiveUser())
+    Optional<User> activeUser = getActiveUser();
+
+    if (activeUser.isEmpty()) {
+      return false;
+    }
+
+    return Stream.of(activeUser.get())
         .filter(user -> user.getEndDate() == null)
         .findAny()
         .orElseThrow(() -> new ValidationException("user disabled"))

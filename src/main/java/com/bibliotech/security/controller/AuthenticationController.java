@@ -4,7 +4,9 @@ import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.service.AuthenticationService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/signup")
-    public ResponseEntity<JwtAuthenticationResponse> signup(@RequestBody SignUpRequest request) {
+    public ResponseEntity signup(@RequestBody SignUpRequest request) {
+
+        if (Objects.nonNull(request.roleIds())) {
+            if (!authenticationService.hasPrivilegeOfDoActionForResource("CREATE", "USER")) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+        }
         return ResponseEntity.ok(authenticationService.signup(request));
     }
 

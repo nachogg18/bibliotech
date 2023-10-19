@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class DetalleCategoriaDTO {
-    private Long id;
-    private String nombre;
+    private CategoriaDetalleDTO categoria;
     private List<CategoriaValor> valores = new ArrayList<>();
 }
