@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EjemplarResponseDTO {
     private Long id;
-    private double valoracion;
+    private float valoracion;
 }

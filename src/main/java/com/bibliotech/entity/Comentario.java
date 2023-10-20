@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Comentario extends Base {
     @Column
-    private float calificacion;
+    private int calificacion;
     @Column
     private String comentario;
     @Column
