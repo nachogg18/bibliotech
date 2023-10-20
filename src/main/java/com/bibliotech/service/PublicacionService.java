@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PublicacionService {
-    List<Publicacion> findAll();
+    List<PublicacionResponseDTO> findAll();
     Optional<Publicacion> findById(Long id);
     List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
 

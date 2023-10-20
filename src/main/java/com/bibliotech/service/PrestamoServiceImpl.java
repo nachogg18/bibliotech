@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamoRequest;
 import com.bibliotech.dto.PrestamoResponse;
 import com.bibliotech.entity.*;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
@@ -31,6 +29,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
         super(baseRepository);
     }
+
     @Override
     @Transactional
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
@@ -98,8 +97,18 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         }
     }
 
-    private void crearPrestamoActual (PrestamoRequest prestamoRequest) {
-        //si no hay ningún préstamo pedido
-
+    @Override
+    public List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario) {
+        return prestamosRepository.findPrestamoByUsuarioId(idUsuario)
+                .stream().map(
+                        prestamo -> FindPrestamoDTO
+                                .builder()
+                                .id(prestamo.getId())
+                                .publicacion(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getPublicacion().getTitulo())
+                                .ejemplar(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getId())
+                                .estado(prestamo.getEstado().size() == 0 ? null : prestamo.getEstado().stream().filter(pe -> pe.getFechaFin() == null).toList().get(0).getEstado().name())
+                                .fechaInicio(prestamo.getFechaInicioEstimada())
+                                .build()
+                ).toList();
     }
 }

@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class Link extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
+    @JsonIgnore
     @ManyToOne
     private Plataforma plataforma;
     @Enumerated(EnumType.ORDINAL)

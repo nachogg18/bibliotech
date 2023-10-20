@@ -1,6 +1,7 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,27 +29,27 @@ public class Prestamo extends Base {
     @Column
     private Instant fechaBaja;
 
-    @ElementCollection(targetClass = Instant.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Date.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "fechasRenovacionesPrestamo", joinColumns = @JoinColumn(name = "fechaRenovacion_id"))
     @Column
-    private List<Instant> fechasRenovaciones = new ArrayList<>();
-    //añadir tag @Transactional al método que vaya a acceder a la lista
+    private List<Date> fechasRenovaciones = new ArrayList<>();
+    //añadir tag @Transactional al método que vaya acceder a la lista
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     private User usuario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ejemplar_id")
     private Ejemplar ejemplar;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "estado_prestamo")
-    private List<PrestamoEstado> estado = new ArrayList<>();
+    private List<PrestamoEstado> estado = new ArrayList<PrestamoEstado>();
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "multa_id")
-//    private Multa multa;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "multa_id")
+    private Multa multa;
 
     public boolean overlapsWith(Instant periodStart, Instant periodEnd) {
         return !this.fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(this.fechaInicioEstimada);

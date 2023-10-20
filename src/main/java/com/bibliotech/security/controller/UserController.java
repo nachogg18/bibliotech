@@ -7,6 +7,7 @@ import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.security.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotNull;
@@ -39,7 +40,7 @@ public class UserController {
   @GetMapping("/get-active-user-info")
   public ResponseEntity<GetUserInfoResponse> getActiveUserInfo() {
 
-    User user = authenticationService.getActiveUser();
+    User user = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
 
     return ResponseEntity.ok(
         GetUserInfoResponse.builder()
@@ -135,7 +136,7 @@ public class UserController {
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'USER')")
     public ResponseEntity<UserDetailDto> editUser(@PathVariable @Valid @NotNull Long userId, @RequestBody @Valid EditUserRequest editUserRequest) {
 
-    if (authenticationService.getActiveUser().getId() == userId) {
+    if (authenticationService.getActiveUser().get().getId() == userId) {
         throw new ValidationException("El usuario no puede modificar sus propios datos");
     }
 
@@ -158,5 +159,12 @@ public class UserController {
 
         );
 
+    }
+
+    @GetMapping("/getUsers")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+    @SecurityRequirement(name = "bearer-key")
+    public List<FindUserDto> getUsers() {
+      return userService.getUsers();
     }
 }
