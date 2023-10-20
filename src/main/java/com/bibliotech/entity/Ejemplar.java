@@ -28,7 +28,7 @@ public class Ejemplar extends Base {
 
     @ManyToMany
     @JoinTable(name = "ejemplar_comentario",
-            joinColumns = @JoinColumn(name = "publicacion_id"),
+            joinColumns = @JoinColumn(name = "ejemplar_id"),
             inverseJoinColumns = @JoinColumn(name = "comentario_id"))
     private List<Comentario> comentarios = new ArrayList<>();
 
