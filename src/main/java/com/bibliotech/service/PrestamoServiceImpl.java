@@ -35,10 +35,9 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     @Transactional
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
 
+        if(prestamoRequest.getFechaInicioEstimada().isAfter(prestamoRequest.getFechaFinEstimada())) throw new ValidationException("La fecha inicio debe estar antes de la fecha fin");
         verifyUsuarioYEjemplar(prestamoRequest);
         verifyFechaPrestamos(prestamoRequest);
-
-
 
         Prestamo prestamo = Prestamo.builder()
                 .estado(new ArrayList<>())
@@ -48,10 +47,17 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .usuario(userService.findById(prestamoRequest.getUsuarioID()).get())
                 .ejemplar(ejemplarService.findById(prestamoRequest.getEjemplarID()).get())
                 .build();
-        PrestamoEstado prestamoEstado = PrestamoEstado.builder().estado(EstadoPrestamo.ACTIVO).build();
+
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+
+        if (prestamoRequest.getFechaInicioEstimada().isBefore(Instant.now()) || prestamoRequest.getFechaInicioEstimada().equals(Instant.now())) {
+            prestamoEstado.setEstado(EstadoPrestamo.ACTIVO);
+        } else {
+            prestamoEstado.setEstado(EstadoPrestamo.EN_ESPERA);
+        }
+
         prestamoEstadoRepository.save(prestamoEstado);
         prestamo.getEstado().add(prestamoEstado);
-
         prestamosRepository.save(prestamo);
 
         return PrestamoResponse
