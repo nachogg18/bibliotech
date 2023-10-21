@@ -29,6 +29,7 @@ public class User implements UserDetails {
     private Instant startDate;
     private Instant lastUpdatedDate;
     private Instant endDate;
+    private Instant confirmationDate;
 
     private int legajo;
     private int dni;

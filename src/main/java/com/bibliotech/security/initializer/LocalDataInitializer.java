@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,6 +41,9 @@ import org.springframework.stereotype.Component;
 public class LocalDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
+
+    @Autowired
+    private Environment env;
     
     @Autowired
     private PrivilegeService privilegeService;
@@ -189,7 +193,7 @@ public class LocalDataInitializer implements ApplicationRunner {
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",
-                        "email@superadmin.com",
+                        env.getRequiredProperty("superadmin.email"),
                         "password1234",
                         List.of(superAdminRole.getId())
                 )

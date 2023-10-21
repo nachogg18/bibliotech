@@ -34,3 +34,6 @@ application:
     jwt:
       refresh-token:
         expiration: 604800000
+
+superadmin:
+  email: ${SUPERADMIN_EMAIL}
