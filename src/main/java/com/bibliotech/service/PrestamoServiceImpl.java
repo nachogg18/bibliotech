@@ -85,8 +85,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     }
 
     private void verifyFechaPrestamos (PrestamoRequest prestamoRequest) {
-        //comparar con dias maximos parametrizados
-        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) < días parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        //comparar con dias maximos y minimos parametrizados
+        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) < días min parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+
 
         Ejemplar ejemplar = ejemplarService.findById(prestamoRequest.getEjemplarID()).get();
         if (!ejemplar.getPrestamos().isEmpty()) {
