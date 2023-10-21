@@ -23,6 +23,6 @@ public class Ubicacion extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne
     private Biblioteca biblioteca;
 }

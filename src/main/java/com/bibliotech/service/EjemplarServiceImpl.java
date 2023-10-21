@@ -8,6 +8,7 @@ import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -29,18 +30,7 @@ public class EjemplarServiceImpl implements EjemplarService {
     @Override
     public List<EjemplarResponseDTO> findAll() {
         return ejemplarRepository.findByFechaBajaNull()
-                .stream().map(
-                        e -> {
-                            EjemplarResponseDTO response = new EjemplarResponseDTO();
-                            response.setId(e.getId());
-                            double valoracion = e.getComentarios().size() == 0
-                                    ? 0
-                                    : e.getComentarios().stream().mapToDouble(Comentario::getCalificacion).sum() / e.getComentarios().size();
-                            response.setValoracion(valoracion);
-                            return response;
-                        }
-
-                ).toList();
+                .stream().map(this::mapEjemplarToEjemplarResponseDTO).toList();
     }
 
     @Override
@@ -54,6 +44,12 @@ public class EjemplarServiceImpl implements EjemplarService {
         dto.setSerialNFC(ejemplar.getSerialNFC());
 
         return dto;
+    }
+
+    @Override
+    public List<EjemplarResponseDTO> findEjemplaresByPublicacionId(Long publicacionId) {
+        return ejemplarRepository.findByPublicacionIdAndFechaBajaIsNull(publicacionId)
+                .stream().map(this::mapEjemplarToEjemplarResponseDTO).toList();
     }
 
     @Override
@@ -122,6 +118,20 @@ public class EjemplarServiceImpl implements EjemplarService {
     @Override
     public Optional<Ejemplar> findById(Long id) {
         return ejemplarRepository.findById(id);
+    }
+
+
+    private EjemplarResponseDTO mapEjemplarToEjemplarResponseDTO(Ejemplar ejemplar) {
+        EjemplarResponseDTO response = new EjemplarResponseDTO();
+        response.setId(ejemplar.getId());
+        float valoracion = ejemplar.getComentarios().size() == 0
+                ? 0
+                : (float) ejemplar.getComentarios()
+                    .stream().mapToInt(Comentario::getCalificacion).sum() / ejemplar.getComentarios().size();
+        DecimalFormat df = new DecimalFormat("#.00");
+        valoracion = Float.parseFloat(df.format(valoracion));
+        response.setValoracion(valoracion);
+        return response;
     }
 
     @Override

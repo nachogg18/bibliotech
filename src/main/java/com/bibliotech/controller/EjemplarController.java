@@ -38,6 +38,12 @@ public class EjemplarController {
         return ejemplarService.findAll();
     }
 
+    @GetMapping("/publicaciones/{publicacionId}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EJEMPLAR')")
+    public List<EjemplarResponseDTO> findEjemplaresByPublicacionId(@PathVariable Long publicacionId) {
+        return ejemplarService.findEjemplaresByPublicacionId(publicacionId);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EJEMPLAR')")
     public ResponseEntity<EjemplarDetailDTO> findOne(@PathVariable Long id) {
