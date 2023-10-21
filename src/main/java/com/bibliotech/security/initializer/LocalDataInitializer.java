@@ -189,7 +189,7 @@ public class LocalDataInitializer implements ApplicationRunner {
     
     private void createSuperAdminUser(Role superAdminRole) {
         //crea
-        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signup(
+        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signupWithoutRequiredConfirmation(
                 new SignUpRequest(
                         "SUPERADMIN",
                         "SUPERADMIN",

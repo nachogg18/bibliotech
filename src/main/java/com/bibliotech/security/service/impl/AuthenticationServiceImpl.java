@@ -17,6 +17,7 @@ import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
     checkExistentUserWithRequestEmail(request.email());
 
-    List<Role> roles = createRoles(request);
+    List<Role> roles = findRoles(request);
 
     User savedUser = createUser(request, roles);
 
@@ -56,6 +57,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
 
     sendVerificationCode(savedUser);
+
+    return authenticationResponse;
+  }
+
+
+  @Override
+  public JwtAuthenticationResponse signupWithoutRequiredConfirmation(@Valid SignUpRequest request) {
+    checkExistentUserWithRequestEmail(request.email());
+
+    List<Role> roles = findRoles(request);
+
+    User savedUser = createUser(request, roles);
+
+    assignRolesToUser(roles, savedUser);
+
+    JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
+
+    userVerificationService.bypassVerification(savedUser);
 
     return authenticationResponse;
   }
@@ -101,7 +120,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
 
-  private List<Role> createRoles(SignUpRequest request) {
+  private List<Role> findRoles(SignUpRequest request) {
     List<Role> roles = new ArrayList<>();
 
     if (request.roleIds() == null || request.roleIds().isEmpty()) {
@@ -171,6 +190,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+
+    if (Objects.isNull(user.getConfirmationDate())) {
+      throw new ValidationException("Not verified user");
+    }
     var jwt = jwtService.generateToken(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);

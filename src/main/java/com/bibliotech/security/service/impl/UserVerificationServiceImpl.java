@@ -60,8 +60,12 @@ public class UserVerificationServiceImpl implements UserVerificationService {
         );
 
         if (codeVerified.isPresent()) {
-            codeVerified.get().setVerificationDate(Instant.now());
+            Instant verificationDate = Instant.now();
+            codeVerified.get().setVerificationDate(verificationDate);
             verificationCodeRepository.save(codeVerified.get());
+            user.get().setConfirmationDate(verificationDate);
+
+            userService.save(user.get());
 
             return true;
         }
@@ -107,6 +111,12 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     @Override
     public void invalidateVerificationCode(VerificationCode verificationCode) {
         verificationCode.setExpirationDate(Instant.now());
+    }
+
+    @Override
+    public void bypassVerification(User user) {
+        user.setConfirmationDate(Instant.now());
+        userService.save(user);
     }
 
 }
