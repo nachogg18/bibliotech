@@ -1,17 +1,17 @@
 package com.bibliotech.security.service.impl;
 
 import com.bibliotech.security.dao.request.SignUpRequest;
+import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
-import com.bibliotech.security.entity.Role;
-import com.bibliotech.security.entity.Token;
-import com.bibliotech.security.entity.TokenType;
-import com.bibliotech.security.entity.User;
+import com.bibliotech.security.dao.response.UserDetailDto;
+import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.repository.UserRepository;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.JwtService;
 import com.bibliotech.security.service.RoleService;
+import com.bibliotech.security.service.UserVerificationService;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -19,7 +19,9 @@ import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -43,56 +45,142 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
   private final TokenRepository tokenRepository;
+  private final UserVerificationService userVerificationService;
 
   @Override
   public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
     checkExistentUserWithRequestEmail(request.email());
 
+    Role basicRole = assignBasicRole();
+
+    User savedUser = createUser(request, List.of(basicRole));
+
+    assignRolesToUser( List.of(basicRole), savedUser);
+
+    JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
+
+    sendVerificationCode(savedUser);
+
+    return authenticationResponse;
+  }
+
+
+  @Override
+  public UserDetailDto signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request) {
+    checkExistentUserWithRequestEmail(request.signUpRequest().email());
+
+    List<Role> roles = findRoles(request);
+
+    User savedUser = createUser(request.signUpRequest(), roles);
+
+    assignRolesToUser(roles, savedUser);
+
+    JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
+
+    userVerificationService.bypassVerification(savedUser);
+
+    return UserDetailDto.builder()
+            .id(savedUser.getId())
+            .nombre(savedUser.getFirstName())
+            .apellido(savedUser.getLastName())
+            .email(savedUser.getEmail())
+            .startDate(savedUser.getStartDate().toString())
+            .lastUpdatedDate(Objects.nonNull(savedUser.getLastUpdatedDate()) ? savedUser.getLastUpdatedDate().toString() : "")
+            .endDate(Objects.nonNull(savedUser.getEndDate()) ? savedUser.getEndDate().toString() : "")
+            .confirmationDate(Objects.nonNull(savedUser.getConfirmationDate()) ? savedUser.getConfirmationDate().toString() : "")
+            .roles(
+                    savedUser.getRoles().stream().map(
+                            role -> role.getName()
+                    ).collect(Collectors.toList())
+            )
+            .build();
+  }
+
+  private User createUser(SignUpRequest request, List<Role> roles) {
+    Instant creationInstant = Instant.now();
+    return userRepository.save(
+                    User.builder()
+                            .firstName(request.firstName())
+                            .lastName(request.lastName())
+                            .email(request.email())
+                            .password(passwordEncoder.encode(request.password()))
+                            .startDate(creationInstant)
+                            .lastUpdatedDate(creationInstant)
+                            .confirmationDate(null)
+                            .endDate(null)
+                            .roles(roles)
+                            .build());
+  }
+
+  private void sendVerificationCode(User user) {
+    VerificationCode verificationCode = userVerificationService.createVerificationCode(user.getEmail());
+    userVerificationService.sendVerificationCode(verificationCode);
+  }
+
+  private void assignRolesToUser(List<Role> roles, User savedUser) {
+    roles.stream().forEach(role -> roleService.assignUserToRol(role.getId(), savedUser));
+  }
+
+  private JwtAuthenticationResponse generateTokens(User user) {
+    var jwtToken = jwtService.generateToken(user);
+    var refreshToken = jwtService.generateRefreshToken(user);
+    revokeAllUserTokens(user);
+    saveUserToken(user, jwtToken);
+
+
+    return JwtAuthenticationResponse.builder()
+            .token(jwtToken)
+            .refreshToken(refreshToken)
+            .build();
+
+  }
+
+  private Role assignBasicRole() {
+    return
+            roleService
+                    .findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER)
+                    .orElseThrow(
+                            () ->
+                                    new ValidationException(
+                                            String.format(
+                                                    "no existen roles activos con ese nombre %s",
+                                                    RoleUtils.DEFAULT_ROLE_USER)));
+  }
+
+
+
+
+
+  private List<Role> findRoles(SignUpWithoutRequiredConfirmationRequest request) {
     List<Role> roles = new ArrayList<>();
 
     if (request.roleIds() == null || request.roleIds().isEmpty()) {
 
       logger.error("sin role id en la request, asignando role por defecto");
       var basicRole =
-          roleService
-              .findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER)
-              .orElseThrow(
-                  () ->
-                      new ValidationException(
-                          String.format(
-                              "no existen roles activos con ese nombre %s",
-                              RoleUtils.DEFAULT_ROLE_USER)));
+              roleService
+                      .findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER)
+                      .orElseThrow(
+                              () ->
+                                      new ValidationException(
+                                              String.format(
+                                                      "no existen roles activos con ese nombre %s",
+                                                      RoleUtils.DEFAULT_ROLE_USER)));
       roles.add(basicRole);
     } else {
       request.roleIds().stream()
-          .map(
-              roleId ->
-                  roleService
-                      .findByIdAndEndDateNull(roleId)
-                      .orElseThrow(
-                          () ->
-                              new ValidationException(
-                                  String.format("no existen roles activos con id %s", roleId))))
-          .forEach(role -> roles.add(role));
+              .map(
+                      roleId ->
+                              roleService
+                                      .findByIdAndEndDateNull(roleId)
+                                      .orElseThrow(
+                                              () ->
+                                                      new ValidationException(
+                                                              String.format("no existen roles activos con id %s", roleId))))
+              .forEach(role -> roles.add(role));
     }
 
-    User savedUser =
-        userRepository.save(
-            User.builder()
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
-                .startDate(Instant.now())
-                .endDate(null)
-                .roles(roles)
-                .build());
-    roles.stream().forEach(role -> roleService.assignUserToRol(role.getId(), savedUser));
-    var jwtToken = jwtService.generateToken(savedUser);
-    var refreshToken = jwtService.generateRefreshToken(savedUser);
-    revokeAllUserTokens(savedUser);
-    saveUserToken(savedUser, jwtToken);
-    return JwtAuthenticationResponse.builder().token(jwtToken).refreshToken(refreshToken).build();
+    return roles;
   }
 
   private void checkExistentUserWithRequestEmail(String email) {
@@ -133,6 +221,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository
             .findByEmail(request.getEmail())
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+
+    if (Objects.isNull(user.getConfirmationDate())) {
+      throw new ValidationException("Not verified user");
+    }
     var jwt = jwtService.generateToken(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);

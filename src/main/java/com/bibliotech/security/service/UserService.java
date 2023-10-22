@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface UserService {
     UserDetailsService userDetailsService();
     Optional<User> findById(Long id);
+
+    Optional<User> findByEmail(String email);
     List<User> findAll();
     List<FindUserDto> getUsers();
     User save(User user);

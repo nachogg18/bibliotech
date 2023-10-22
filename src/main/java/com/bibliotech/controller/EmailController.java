@@ -20,7 +20,7 @@ public class EmailController {
     @PostMapping("")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'ROLE')")
     public ResponseEntity<String> enviarCorreo(@RequestBody @Valid EmailSendRequest emailSendRequest) {
-        emailService.sendSimpleMessage(emailSendRequest.to(), emailSendRequest.subject(), emailSendRequest.text());
+        emailService.sendEmail(emailSendRequest.to(), emailSendRequest.subject(), emailSendRequest.text());
         return ResponseEntity.ok("Correo enviado con éxito");
     }
 }

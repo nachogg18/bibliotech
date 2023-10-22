@@ -1,8 +1,11 @@
 package com.bibliotech.security.initializer;
 
+import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Plataforma;
+import com.bibliotech.entity.Publicacion;
 import com.bibliotech.security.dao.request.SignUpRequest;
+import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.entity.Action;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Resource;
@@ -11,8 +14,10 @@ import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.ResourceService;
 import com.bibliotech.security.service.RoleService;
+import com.bibliotech.service.AutorService;
 import com.bibliotech.service.LinkService;
 import com.bibliotech.service.PlataformaService;
+import com.bibliotech.service.PublicacionService;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.ResourceNames;
 import com.bibliotech.utils.ResourceUtils;
@@ -22,40 +27,39 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
 @Profile({"prod"})
+@RequiredArgsConstructor
 public class ProdDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
 
-    @Autowired
-    private PrivilegeService privilegeService;
+    private final Environment env;
 
-    @Autowired
-    private RoleService roleService;
+    private final PrivilegeService privilegeService;
 
-    @Autowired
-    private PlataformaService plataformaService;
+    private final RoleService roleService;
 
-    @Autowired
-    private LinkService linkService;
+    private final PlataformaService plataformaService;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final LinkService linkService;
 
-    @Autowired
-    private ResourceService resourceService;
+    private final AuthenticationService authenticationService;
 
+    private final ResourceService resourceService;
 
+    private final PublicacionService publicacionService;
 
+    private final AutorService autorService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -75,6 +79,10 @@ public class ProdDataInitializer implements ApplicationRunner {
         createBibliotecarioRole(privileges);
 
         createSuperAdminUser(superAdminRole);
+
+        Autor autor = createAutor();
+
+        createPublicacion(List.of(autor));
 
 
 
@@ -172,17 +180,16 @@ public class ProdDataInitializer implements ApplicationRunner {
 
 
     private void createSuperAdminUser(Role superAdminRole) {
-        //crea
-        authenticationService.signup(
-                new SignUpRequest(
-                        "SUPERADMIN",
-                        "SUPERADMIN",
-                        "email@superadmin",
-                        "password",
-                        List.of(superAdminRole.getId())
-                )
-        );
-
+        // crea
+        authenticationService.signupWithoutRequiredConfirmation(
+                new SignUpWithoutRequiredConfirmationRequest(
+                        new SignUpRequest(
+                                env.getRequiredProperty("superadmin.firstname"),
+                                env.getRequiredProperty("superadmin.lastname"),
+                                env.getRequiredProperty("superadmin.email"),
+                                env.getRequiredProperty("superadmin.password")
+                        ),
+                        List.of(superAdminRole.getId())));
     }
 
 
@@ -197,6 +204,30 @@ public class ProdDataInitializer implements ApplicationRunner {
                         .fechaAlta(Instant.now())
                         .links(enabledLinks)
                         .nombre("plataforma")
+                        .build()
+        );
+    }
+
+    private void createPublicacion(List<Autor> autores) {
+
+        publicacionService.save(
+                Publicacion.builder()
+                        .fechaAlta(Instant.now())
+                        .titulo("Cien años de soledad")
+                        .autores(autores)
+                        .isbn("9788497592208")
+                        .anio(2003)
+                        .build()
+        );
+    }
+
+    private Autor createAutor() {
+
+        return autorService.save(
+                Autor.builder()
+                        .fechaAlta(Instant.now())
+                        .apellido("García Márquez")
+                        .nombre("Gabriel")
                         .build()
         );
     }
