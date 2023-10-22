@@ -36,4 +36,7 @@ application:
         expiration: 604800000
 
 superadmin:
+  firstname: ${SUPERADMIN_FIRSTNAME}
+  lastname: ${SUPERADMIN_LASTNAME}
+  password: ${SUPERADMIN_PASSWORD}
   email: ${SUPERADMIN_EMAIL}

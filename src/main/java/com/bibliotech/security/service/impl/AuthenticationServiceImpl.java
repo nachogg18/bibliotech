@@ -1,8 +1,10 @@
 package com.bibliotech.security.service.impl;
 
 import com.bibliotech.security.dao.request.SignUpRequest;
+import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.dao.response.UserDetailDto;
 import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.repository.UserRepository;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -48,11 +51,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
     checkExistentUserWithRequestEmail(request.email());
 
-    List<Role> roles = findRoles(request);
+    Role basicRole = assignBasicRole();
 
-    User savedUser = createUser(request, roles);
+    User savedUser = createUser(request, List.of(basicRole));
 
-    assignRolesToUser(roles, savedUser);
+    assignRolesToUser( List.of(basicRole), savedUser);
 
     JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
 
@@ -63,12 +66,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
   @Override
-  public JwtAuthenticationResponse signupWithoutRequiredConfirmation(@Valid SignUpRequest request) {
-    checkExistentUserWithRequestEmail(request.email());
+  public UserDetailDto signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request) {
+    checkExistentUserWithRequestEmail(request.signUpRequest().email());
 
     List<Role> roles = findRoles(request);
 
-    User savedUser = createUser(request, roles);
+    User savedUser = createUser(request.signUpRequest(), roles);
 
     assignRolesToUser(roles, savedUser);
 
@@ -76,7 +79,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     userVerificationService.bypassVerification(savedUser);
 
-    return authenticationResponse;
+    return UserDetailDto.builder()
+            .id(savedUser.getId())
+            .nombre(savedUser.getFirstName())
+            .apellido(savedUser.getLastName())
+            .email(savedUser.getEmail())
+            .startDate(savedUser.getStartDate().toString())
+            .lastUpdatedDate(Objects.nonNull(savedUser.getLastUpdatedDate()) ? savedUser.getLastUpdatedDate().toString() : "")
+            .endDate(Objects.nonNull(savedUser.getEndDate()) ? savedUser.getEndDate().toString() : "")
+            .confirmationDate(Objects.nonNull(savedUser.getConfirmationDate()) ? savedUser.getConfirmationDate().toString() : "")
+            .roles(
+                    savedUser.getRoles().stream().map(
+                            role -> role.getName()
+                    ).collect(Collectors.toList())
+            )
+            .build();
   }
 
   private User createUser(SignUpRequest request, List<Role> roles) {
@@ -118,9 +135,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   }
 
+  private Role assignBasicRole() {
+    return
+            roleService
+                    .findByNameAndEndDateNull(RoleUtils.DEFAULT_ROLE_USER)
+                    .orElseThrow(
+                            () ->
+                                    new ValidationException(
+                                            String.format(
+                                                    "no existen roles activos con ese nombre %s",
+                                                    RoleUtils.DEFAULT_ROLE_USER)));
+  }
 
 
-  private List<Role> findRoles(SignUpRequest request) {
+
+
+
+  private List<Role> findRoles(SignUpWithoutRequiredConfirmationRequest request) {
     List<Role> roles = new ArrayList<>();
 
     if (request.roleIds() == null || request.roleIds().isEmpty()) {
