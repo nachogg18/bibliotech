@@ -2,9 +2,7 @@ package com.bibliotech.security.dao.request;
 
 import jakarta.validation.constraints.*;
 
-public record SignUpRequest(
-        @NotBlank String firstName,
-        @NotBlank String lastName,
+public record VerificationUserRequest(
         @NotBlank @Email String email,
-        String password
+        @NotBlank @Pattern(regexp = "/w{6}") String code
 ){}

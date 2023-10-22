@@ -9,6 +9,9 @@ import java.util.Optional;
 @Repository
 public interface EjemplarRepository extends BaseRepository<Ejemplar, Long> {
     Optional<Ejemplar> findById(Long id);
+
     List<Ejemplar> findByFechaBajaNull();
+
+    List<Ejemplar> findByPublicacionIdAndFechaBajaIsNull(Long publicacion_id);
 
 }

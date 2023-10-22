@@ -25,3 +25,9 @@ token:
     key: ${JWT_KEY}
   expiration:
     time: ${TOKEN_EXPIRATION_TIME}
+
+superadmin:
+  firstname: ${SUPERADMIN_FIRSTNAME}
+  lastname: ${SUPERADMIN_LASTNAME}
+  password: ${SUPERADMIN_PASSWORD}
+  email: ${SUPERADMIN_EMAIL}

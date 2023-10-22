@@ -1,11 +1,11 @@
-package com.bibliotech.security.initializer;
+package com.bibliotech.initializer;
 
 import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.entity.Publicacion;
 import com.bibliotech.security.dao.request.SignUpRequest;
-import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.entity.Action;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Resource;
@@ -27,66 +27,62 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"local", "dockerlocal"})
-public class LocalDataInitializer implements ApplicationRunner {
+@Profile({"prod"})
+@RequiredArgsConstructor
+public class ProdDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
 
-    @Autowired
-    private PrivilegeService privilegeService;
+    private final Environment env;
 
-    @Autowired
-    private RoleService roleService;
+    private final PrivilegeService privilegeService;
 
-    @Autowired
-    private PlataformaService plataformaService;
+    private final RoleService roleService;
 
-    @Autowired
-    private LinkService linkService;
+    private final PlataformaService plataformaService;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final LinkService linkService;
 
-    @Autowired
-    private ResourceService resourceService;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private PublicacionService publicacionService;
+    private final ResourceService resourceService;
 
-    @Autowired
-    private AutorService autorService;
+    private final PublicacionService publicacionService;
+
+    private final AutorService autorService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-//        List<Link> enabledLinks = List.of(createLink());
+        List<Link> enabledLinks = List.of(createLink());
 
-//        createPlataformas(enabledLinks);
+        createPlataformas(enabledLinks);
 
-//        Set<Resource> resources = createResources();
-//
-//        Set<Privilege> privileges = createBasicPrivileges(resources);
-//
-//        Role superAdminRole = createSuperAdminRole(privileges);
-//
-//        createUserRole(privileges);
-//
-//        createBibliotecarioRole(privileges);
-//
-//        createSuperAdminUser(superAdminRole);
+        Set<Resource> resources = createResources();
 
-//        Autor autor = createAutor();
+        Set<Privilege> privileges = createBasicPrivileges(resources);
 
-//        createPublicacion(List.of(autor));
+        Role superAdminRole = createSuperAdminRole(privileges);
+
+        createUserRole(privileges);
+
+        createBibliotecarioRole(privileges);
+
+        createSuperAdminUser(superAdminRole);
+
+        Autor autor = createAutor();
+
+        createPublicacion(List.of(autor));
 
 
 
@@ -184,48 +180,33 @@ public class LocalDataInitializer implements ApplicationRunner {
 
 
     private void createSuperAdminUser(Role superAdminRole) {
-        //crea
-        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signup(
-                new SignUpRequest(
-                        "SUPERADMIN",
-                        "SUPERADMIN",
-                        "email@superadmin.com",
-                        "password1234",
-                        List.of(superAdminRole.getId())
-                )
-        );
-
-        logger.info(
-                String.format(
-                        "\ntoken: %s, \nrefresh_token: %s",
-                        jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
+        // crea
+        authenticationService.signupWithoutRequiredConfirmation(
+                new SignUpWithoutRequiredConfirmationRequest(
+                        new SignUpRequest(
+                                env.getRequiredProperty("superadmin.firstname"),
+                                env.getRequiredProperty("superadmin.lastname"),
+                                env.getRequiredProperty("superadmin.email"),
+                                env.getRequiredProperty("superadmin.password")
+                        ),
+                        List.of(superAdminRole.getId())));
     }
 
 
-//    private Link createLink() {
-//        return linkService.save( Link.builder()
-//                                .url("hola").build());
-//    }
-//    private void createPlataformas(List<Link> enabledLinks) {
-//
-//        plataformaService.save(
-//                Plataforma.builder()
-//                        .fechaAlta(Instant.now())
-//                        .links(enabledLinks)
-//                        .nombre("plataforma")
-//                        .build()
-//        );
-//    }
+    private Link createLink() {
+        return linkService.save( Link.builder()
+                .url("hola").build());
+    }
+    private void createPlataformas(List<Link> enabledLinks) {
 
-//        plataformaService.save(
-//                Plataforma.builder()
-//                        .fechaAlta(Instant.now())
-//                        .links(enabledLinks)
-//                        .nombre("plataforma")
-//                        .instrucciones("Instrucciones de prueba")
-//                        .build()
-//        );
-//    }
+        plataformaService.save(
+                Plataforma.builder()
+                        .fechaAlta(Instant.now())
+                        .links(enabledLinks)
+                        .nombre("plataforma")
+                        .build()
+        );
+    }
 
     private void createPublicacion(List<Autor> autores) {
 
@@ -253,4 +234,5 @@ public class LocalDataInitializer implements ApplicationRunner {
 
 
 }
+
 

@@ -23,10 +23,10 @@ token:
   signing:
     key: test1352675ghjt7789798578455855seserewgweew
   expiration:
-    time: 9000000000
+    time: ${TOKEN_EXPIRATION_TIME}
 
-application:
-  security:
-    jwt:
-      refresh-token:
-        expiration: 604800000
+superadmin:
+  firstname: ${SUPERADMIN_FIRSTNAME}
+  lastname: ${SUPERADMIN_LASTNAME}
+  password: ${SUPERADMIN_PASSWORD}
+  email: ${SUPERADMIN_EMAIL}

@@ -19,4 +19,5 @@ public class UserDetailDto {
     private String startDate;
     private String lastUpdatedDate;
     private String endDate;
+    private String confirmationDate;
 }

@@ -15,6 +15,8 @@ public interface EjemplarService {
 
     EjemplarDetailDTO findOne(Long id);
 
+    List<EjemplarResponseDTO> findEjemplaresByPublicacionId(Long publicacionId);
+
     Ejemplar createEjemplar(CrearEjemplarDTO request) throws Exception;
 
     Ejemplar save(Ejemplar ejemplar);
@@ -22,5 +24,6 @@ public interface EjemplarService {
     Ejemplar edit(EditEjemplarDTO ejemplar, Long id);
 
     void delete(Long id);
+
     Optional<Ejemplar> findById(Long id);
 }
