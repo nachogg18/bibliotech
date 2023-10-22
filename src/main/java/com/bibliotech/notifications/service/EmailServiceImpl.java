@@ -1,15 +1,16 @@
-package com.bibliotech.service;
+package com.bibliotech.notifications.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bibliotech.notifications.entity.Notification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-
-    @Autowired
-    private JavaMailSenderImpl emailSender;
+    
+    private final JavaMailSenderImpl emailSender;
 
     public void sendEmail(
       String to, String subject, String text) {
@@ -20,5 +21,11 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject(subject); 
         message.setText(text);
         emailSender.send(message);
+    }
+
+    @Override
+    public void sendNotification(Notification notification) {
+        notification.checkMandatoryField();
+        sendEmail(notification.getRecipient(), notification.getSubject(), notification.getMessage());
     }
 }

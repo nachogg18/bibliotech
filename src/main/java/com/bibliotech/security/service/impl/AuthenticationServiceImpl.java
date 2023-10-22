@@ -1,17 +1,15 @@
 package com.bibliotech.security.service.impl;
 
+import com.bibliotech.security.dao.request.ResetUserPasswordRequest;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.dao.response.ResetUserPasswordResponse;
 import com.bibliotech.security.dao.response.UserDetailDto;
 import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
-import com.bibliotech.security.repository.UserRepository;
-import com.bibliotech.security.service.AuthenticationService;
-import com.bibliotech.security.service.JwtService;
-import com.bibliotech.security.service.RoleService;
-import com.bibliotech.security.service.UserVerificationService;
+import com.bibliotech.security.service.*;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -39,7 +37,7 @@ import org.springframework.stereotype.Component;
 public class AuthenticationServiceImpl implements AuthenticationService {
   private static final Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final RoleService roleService;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
@@ -59,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
 
-    sendVerificationCode(savedUser);
+    sendVerificationCodeForRegister(savedUser);
 
     return authenticationResponse;
   }
@@ -98,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   private User createUser(SignUpRequest request, List<Role> roles) {
     Instant creationInstant = Instant.now();
-    return userRepository.save(
+    return userService.save(
                     User.builder()
                             .firstName(request.firstName())
                             .lastName(request.lastName())
@@ -112,9 +110,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .build());
   }
 
-  private void sendVerificationCode(User user) {
+  private void sendVerificationCodeForRegister(User user) {
+    String subject = "Confirmación de cuenta";
+    String message = "Confirme el registro de cuenta con el siguiente codigo de verificacion: ";
+    sendVerificationCode(user, subject, message);
+
+  }
+
+  private void sendVerificationCodeForResetPassword(User user) {
+    String subject = "Actualización de cuenta";
+    String message = "Confirme la actualización de contraseña con el siguiente codigo de verificacion: ";
+    sendVerificationCode(user, subject, message);
+  }
+
+  private void sendVerificationCode(User user, String subject, String message) {
     VerificationCode verificationCode = userVerificationService.createVerificationCode(user.getEmail());
-    userVerificationService.sendVerificationCode(verificationCode);
+    userVerificationService.sendVerificationCode(verificationCode, subject, message, user.getEmail());
+
   }
 
   private void assignRolesToUser(List<Role> roles, User savedUser) {
@@ -184,7 +196,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   private void checkExistentUserWithRequestEmail(String email) {
-    Optional<User> user = userRepository.findByEmail(email);
+    Optional<User> user = userService.findByEmail(email);
     if (user.isPresent()) {
       throw new ValidationException("el mail registrado ya existe");
     }
@@ -218,9 +230,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     var user =
-        userRepository
+        userService
             .findByEmail(request.getEmail())
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
 
     if (Objects.isNull(user.getConfirmationDate())) {
       throw new ValidationException("Not verified user");
@@ -248,6 +260,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public Authentication getAuthentication() {
     return SecurityContextHolder.getContext().getAuthentication();
+  }
+
+  @Override
+  public ResetUserPasswordResponse resetUserPassword(ResetUserPasswordRequest request) {
+    Optional<User> user = this.userService.getActiveUserByEmail(request.email());
+
+    if (user.isEmpty()) {
+      throw new ValidationException("no existen usuarios activos asociados al mail");
+    }
+
+    this.sendVerificationCodeForResetPassword(user.get());
+
+    return ResetUserPasswordResponse.builder()
+            .email(user.get().getEmail())
+            .status("CONFIRMATION_REQUIRED")
+            .build();
+
   }
 
   public Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName) {

@@ -108,6 +108,18 @@ public class UserServiceImpl implements UserService {
         ).findAny().get();
     }
 
+    @Override
+    public Optional<User> getActiveUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .filter(User::isEnabled);
+    }
+
+    @Override
+    public Optional<User> getUserToConfirmByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .filter(User::isConfirmationRequired);
+    }
+
     private User updatePassword(User user, String requestPassword) {
         if (StringUtils.isNotBlank(requestPassword)) {
             user.setPassword(requestPassword);

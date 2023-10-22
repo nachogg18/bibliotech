@@ -15,6 +15,7 @@ public enum ResourceNames {
     EVENTO,
     FACULTAD,
     LINK,
+    NOTIFICATION,
     MULTA,
     PLATAFORMA,
     PUBLICACION,

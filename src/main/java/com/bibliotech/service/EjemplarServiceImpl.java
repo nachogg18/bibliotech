@@ -1,18 +1,15 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearEjemplarDTO;
-
 import com.bibliotech.dto.EditEjemplarDTO;
 import com.bibliotech.dto.EjemplarDetailDTO;
 import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
-
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

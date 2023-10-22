@@ -1,4 +1,4 @@
-package com.bibliotech.security.initializer;
+package com.bibliotech.initializer;
 
 import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Link;

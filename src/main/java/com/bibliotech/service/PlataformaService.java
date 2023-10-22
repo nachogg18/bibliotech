@@ -5,6 +5,7 @@ import com.bibliotech.entity.Plataforma;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface PlataformaService {
     List<Plataforma> findAll();
 

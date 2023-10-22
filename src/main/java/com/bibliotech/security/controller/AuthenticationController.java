@@ -1,5 +1,6 @@
 package com.bibliotech.security.controller;
 
+import com.bibliotech.security.dao.request.ResetUserPasswordRequest;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.dao.request.SigninRequest;
@@ -34,18 +35,24 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest request) {
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody @Valid SigninRequest request) {
         return ResponseEntity.ok(authenticationService.signin(request));
     }
 
     @PostMapping("/verify")
     public ResponseEntity verifyAccount(@RequestBody @Valid VerificationCode verificationCode) {
 
-        if (userVerificationService.verifyCodeForEmail(
+        if (userVerificationService.verifyCodeForRegister(
                 verificationCode.getEmail(), verificationCode.getCode())) {
             return ResponseEntity.ok("usuario activado correctamente");
         } else {
             return ResponseEntity.ok("Falló la verificación del código");
         }
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity verifyAccount(@RequestBody @Valid ResetUserPasswordRequest request) {
+
+        return ResponseEntity.ok(authenticationService.resetUserPassword(request));
     }
 }

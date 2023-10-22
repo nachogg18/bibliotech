@@ -3,6 +3,7 @@ package com.bibliotech.security.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,6 +68,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return Objects.isNull(this.getEndDate())
+                && Objects.nonNull(this.getConfirmationDate());
     }
+
+    public boolean isConfirmationRequired() {
+        return Objects.isNull(this.getEndDate())
+                && Objects.isNull(this.getConfirmationDate());
+    }
+    
+    
+    
+    
 }

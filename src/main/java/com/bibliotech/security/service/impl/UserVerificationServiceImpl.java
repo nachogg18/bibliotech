@@ -1,17 +1,17 @@
 package com.bibliotech.security.service.impl;
 
+import com.bibliotech.notifications.entity.Notification;
+import com.bibliotech.notifications.service.NotificationService;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.entity.VerificationCode;
 import com.bibliotech.security.repository.VerificationCodeRepository;
 import com.bibliotech.security.service.UserService;
 import com.bibliotech.security.service.UserVerificationService;
-import com.bibliotech.service.EmailService;
+import com.bibliotech.utils.Dupla;
+import com.bibliotech.utils.Tripla;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,37 +21,52 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
     private final UserService userService;
 
-    private final EmailService emailService;
-
     private final VerificationCodeRepository verificationCodeRepository;
 
-    public boolean verifyCodeForEmail(String email, String code) {
-        Optional<User> user = userService.findByEmail(email);
+    private final NotificationService notificationService;
+
+    public boolean verifyCodeForRegister(String email, String code) {
+        var resultConfirmedVerificationCode = verifyCode(email, code);
+
+        return enableUser(resultConfirmedVerificationCode.getSegundo(), resultConfirmedVerificationCode.getTercero()).getPrimero();
+
+    }
+
+    public Tripla<Boolean, Optional<VerificationCode>, Optional<User>> verifyCode(String email, String code) {
+        Optional<User> user = userService.getUserToConfirmByEmail(email);
 
         if (user.isEmpty()) {
-            return false;
+            return new Tripla<>(Boolean.FALSE, Optional.of(null), user);
         }
 
-        if (Objects.nonNull(user.get().getConfirmationDate())) {
-            return false;
+        Dupla<Boolean, Optional<VerificationCode>> resultCheckedVerificationCode = checkVerificationCode(code, email);
+
+        if (!resultCheckedVerificationCode.getPrimero()) {
+            return new Tripla<>(false, resultCheckedVerificationCode.getSegundo(), user)  ;
         }
 
+        Dupla<Boolean, Optional<VerificationCode>> resultConfirmedVerificationCode = confirmVerificationCode(resultCheckedVerificationCode.getSegundo());
 
+
+        return new Tripla<>(resultConfirmedVerificationCode.getPrimero(), resultConfirmedVerificationCode.getSegundo(), user);
+
+    }
+
+    private Dupla<Boolean, Optional<VerificationCode>> checkVerificationCode(String code, String email) {
         Optional<VerificationCode> verificationCode = verificationCodeRepository.findByCode(code);
 
         if (verificationCode.isEmpty()) {
-            return false;
+            return new Dupla<>(Boolean.FALSE, verificationCode);
         }
 
         if (Objects.nonNull(verificationCode.get().getVerificationDate())) {
-            return false;
+            return new Dupla<>(Boolean.FALSE, verificationCode);
         }
 
         if (Objects.nonNull(verificationCode.get().getExpirationDate()) && verificationCode.get().getExpirationDate().isBefore(Instant.now())) {
-            return false;
+            return new Dupla<>(Boolean.FALSE, verificationCode);
         }
-        
-        
+
 
         Optional<VerificationCode> codeVerified = verificationCode.filter(
                 vc -> vc.getEmail().equals(email)
@@ -59,16 +74,49 @@ public class UserVerificationServiceImpl implements UserVerificationService {
                 vc -> vc.getCode().equals(code)
         );
 
-        if (codeVerified.isPresent()) {
+        if (codeVerified.isEmpty()) {
+            return new Dupla<>(Boolean.FALSE, codeVerified);
+        }
+
+        return new Dupla<>(Boolean.TRUE, codeVerified);
+    }
+
+    private Dupla<Boolean, Optional<VerificationCode>> confirmVerificationCode(Optional<VerificationCode> verificationCode) {
+        if (verificationCode.isPresent()) {
             Instant verificationDate = Instant.now();
-            codeVerified.get().setVerificationDate(verificationDate);
-            verificationCodeRepository.save(codeVerified.get());
-            user.get().setConfirmationDate(verificationDate);
+            verificationCode.get().setVerificationDate(verificationDate);
+            verificationCodeRepository.save(verificationCode.get());
+            return new Dupla<>(Boolean.TRUE, verificationCode);
+        }
+
+
+        return new Dupla<>(Boolean.FALSE, verificationCode);
+
+    }
+
+    private Tripla<Boolean, Optional<VerificationCode>, Optional<User>>  enableUser(Optional<VerificationCode> confirmedVerificationCode, Optional<User> user) {
+            if (user.isEmpty()) {
+                return new Tripla<>(Boolean.FALSE, confirmedVerificationCode, user);
+            }
+
+            if (confirmedVerificationCode.isEmpty()) {
+                return new Tripla<>(Boolean.FALSE, confirmedVerificationCode, user);
+            }
+
+            if (Objects.isNull(confirmedVerificationCode.get().getVerificationDate())) {
+                return new Tripla<>(Boolean.FALSE, confirmedVerificationCode, user);
+            }
+
+            user.get().setConfirmationDate(confirmedVerificationCode.get().getVerificationDate());
 
             userService.save(user.get());
 
-            return true;
-        }
+            return new Tripla<>(Boolean.TRUE, confirmedVerificationCode, user);
+
+    }
+
+    @Override
+    public boolean verifyCodeForResetPassword(String email, String code) {
         return false;
     }
 
@@ -101,11 +149,15 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     }
 
     @Override
-    public void sendVerificationCode(VerificationCode verificationCode) {
-        emailService.sendEmail(verificationCode.getEmail(), "Confirmar cuenta con el siguiente codigo de verificacion",
-                "Confirma tu cuenta con el siguiente código de verificacion: "+verificationCode.getCode()
+    public void sendVerificationCode(VerificationCode verificationCode, String subject, String message, String recipient) {
 
-                );
+        Notification notification = Notification.builder()
+                .subject(subject)
+                .message(message+verificationCode.getCode())
+                .recipient(recipient)
+                .build();
+
+        notificationService.notifyUser(notification);
     }
 
     @Override
