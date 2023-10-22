@@ -47,7 +47,7 @@ public class UserVerificationServiceImpl implements UserVerificationService {
             return false;
         }
 
-        if (Objects.nonNull(verificationCode.get().getExpirationDate()) || verificationCode.get().getExpirationDate().isBefore(Instant.now())) {
+        if (Objects.nonNull(verificationCode.get().getExpirationDate()) && verificationCode.get().getExpirationDate().isBefore(Instant.now())) {
             return false;
         }
         
