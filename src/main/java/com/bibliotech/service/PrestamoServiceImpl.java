@@ -73,17 +73,13 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     private void verifyUsuarioYEjemplar (PrestamoRequest prestamoRequest){
         //usuario existente, rol correspondiente y habilitado
-        if (userService.exists(prestamoRequest.getUsuarioID())) {
-            User usuario = userService.findById(prestamoRequest.getUsuarioID()).get();
-            if (!usuario.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
-            Role rolActual = usuario.getRoles().stream()
-                    .filter(rol -> rol.getEndDate() == null)
-                    .findFirst()
-                    .orElse(null);
-            //if (rolActual.) TODO: check rol usuario
-        } else {
-            throw new ValidationException(String.format("No existe usuario con el id %s", prestamoRequest.getUsuarioID()));
-        }
+        User usuario = userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ValidationException(String.format("No existe usuario con el id %s", prestamoRequest.getUsuarioID())));
+        if (!usuario.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
+//        Role rolActual = usuario.getRoles().stream()
+//                .filter(rol -> rol.getEndDate() == null)
+//                .findFirst()
+//                .orElse(null);
+//      if (rolActual.) TODO: check rol usuario
 
         //ejemplar existente y disponible
         if (ejemplarService.exists(prestamoRequest.getEjemplarID())){
