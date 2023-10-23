@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public List<User> findAll() {
         return userRepository.findAll(Sort.by(Sort.Order.desc("startDate")));
     }
@@ -104,8 +109,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean exists(Long id) {
-        return userRepository.existsById(id);
+    public Optional<User> getActiveUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .filter(User::isEnabled);
+    }
+
+    @Override
+    public Optional<User> getUserToConfirmByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .filter(User::isConfirmationRequired);
     }
 
     private User updatePassword(User user, String requestPassword) {

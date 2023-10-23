@@ -3,8 +3,11 @@ package com.bibliotech.security.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
-
-import lombok.*;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +30,7 @@ public class User implements UserDetails {
     private Instant startDate;
     private Instant lastUpdatedDate;
     private Instant endDate;
+    private Instant confirmationDate;
 
     private int legajo;
     private int dni;
@@ -64,6 +68,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return Objects.isNull(this.getEndDate())
+                && Objects.nonNull(this.getConfirmationDate());
     }
+
+    public boolean isConfirmationRequired() {
+        return Objects.isNull(this.getEndDate())
+                && Objects.isNull(this.getConfirmationDate());
+    }
+    
+    
+    
+    
 }

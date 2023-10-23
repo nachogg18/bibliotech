@@ -5,6 +5,7 @@ import com.bibliotech.entity.Ubicacion;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface UbicacionService {
     List<Ubicacion> findAll();
 

@@ -33,10 +33,10 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public Optional<Categoria> findOne(Long id) {
-        Optional<Categoria> categoriaOptional = categoriaRepository.findById(id);
+        Optional<Categoria> categoriaOption = categoriaRepository.findById(id);
         Optional<Categoria> categoria = Optional.empty();
-        if (categoriaOptional.isPresent())
-            categoria = categoriaOptional;
+        if (categoriaOption.isPresent())
+            categoria = categoriaOption;
         return categoria;
     }
 

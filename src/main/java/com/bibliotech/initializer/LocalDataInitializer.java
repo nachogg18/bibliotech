@@ -1,11 +1,11 @@
-package com.bibliotech.security.initializer;
+package com.bibliotech.initializer;
 
 import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.entity.Publicacion;
 import com.bibliotech.security.dao.request.SignUpRequest;
-import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.entity.Action;
 import com.bibliotech.security.entity.Privilege;
 import com.bibliotech.security.entity.Resource;
@@ -27,43 +27,39 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"local"})
+@Profile({"local","dockerlocal"})
+@RequiredArgsConstructor
 public class LocalDataInitializer implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
     
-    @Autowired
-    private PrivilegeService privilegeService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
-    private PlataformaService plataformaService;
-
-    @Autowired
-    private LinkService linkService;
-
-    @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
-    private ResourceService resourceService;
-
-    @Autowired
-    private PublicacionService publicacionService;
-
-    @Autowired
-    private AutorService autorService;
+    private final Environment env;
+    
+    private final PrivilegeService privilegeService;
+    
+    private final RoleService roleService;
+    
+    private final PlataformaService plataformaService;
+    
+    private final LinkService linkService;
+    
+    private final AuthenticationService authenticationService;
+    
+    private final ResourceService resourceService;
+    
+    private final PublicacionService publicacionService;
+    
+    private final AutorService autorService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -184,21 +180,16 @@ public class LocalDataInitializer implements ApplicationRunner {
 
     
     private void createSuperAdminUser(Role superAdminRole) {
-        //crea
-        JwtAuthenticationResponse jwtAuthenticationResponse = authenticationService.signup(
-                new SignUpRequest(
-                        "SUPERADMIN",
-                        "SUPERADMIN",
-                        "email@superadmin.com",
-                        "password1234",
-                        List.of(superAdminRole.getId())
-                )
-        );
-
-    logger.info(
-        String.format(
-            "\ntoken: %s, \nrefresh_token: %s",
-            jwtAuthenticationResponse.getToken(), jwtAuthenticationResponse.getRefreshToken()));
+    // crea
+    authenticationService.signupWithoutRequiredConfirmation(
+        new SignUpWithoutRequiredConfirmationRequest(
+            new SignUpRequest(
+                    env.getRequiredProperty("superadmin.firstname"),
+                    env.getRequiredProperty("superadmin.lastname"),
+                    env.getRequiredProperty("superadmin.email"),
+                    env.getRequiredProperty("superadmin.password")
+            ),
+            List.of(superAdminRole.getId())));
     }
 
 
