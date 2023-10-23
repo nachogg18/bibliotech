@@ -7,6 +7,8 @@ import com.bibliotech.entity.*;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
+import com.bibliotech.security.entity.Role;
+import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
@@ -61,8 +63,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         return PrestamoResponse
                 .builder()
-                .UsuarioID(userService.findById(prestamoRequest.getUsuarioID()).get().getId())
-                .EjemplarID(ejemplarService.findById(prestamoRequest.getEjemplarID()).get().getId())
+                .usuarioID(userService.findById(prestamoRequest.getUsuarioID()).get().getId())
+                .ejemplarID(ejemplarService.findById(prestamoRequest.getEjemplarID()).get().getId())
                 .PrestamoID(prestamo.getId())
                 .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
                 .fechaAlta(prestamo.getFechaAlta())
@@ -71,17 +73,29 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     private void verifyUsuarioYEjemplar (PrestamoRequest prestamoRequest){
         //usuario existente, rol correspondiente y habilitado
-        if (!userService.exists(prestamoRequest.getUsuarioID())) throw new ValidationException(String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID()));
-
-        //userService.findById(prestamoRequest.getUsuarioID()).get().getRoles().;
-
+        if (userService.exists(prestamoRequest.getUsuarioID())) {
+            User usuario = userService.findById(prestamoRequest.getUsuarioID()).get();
+            if (!usuario.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
+            Role rolActual = usuario.getRoles().stream()
+                    .filter(rol -> rol.getEndDate() == null)
+                    .findFirst()
+                    .orElse(null);
+            //if (rolActual.) TODO: check rol usuario
+        } else {
+            throw new ValidationException(String.format("No existe usuario con el id %s", prestamoRequest.getUsuarioID()));
+        }
 
         //ejemplar existente y disponible
-        if (!ejemplarService.exists(prestamoRequest.getEjemplarID())) throw new ValidationException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID()));
+        if (ejemplarService.exists(prestamoRequest.getEjemplarID())){
         Ejemplar ejemplar = ejemplarService.findById(prestamoRequest.getEjemplarID()).get();
-        Optional<EjemplarEstado> ultimoEstado = ejemplar.getEjemplarEstadoList().stream()
-                .max(Comparator.comparing(EjemplarEstado::getEstadoEjemplar));
-        if (ultimoEstado.get().getEstadoEjemplar() == EstadoEjemplar.EN_REPARACION || ultimoEstado.get().getEstadoEjemplar() == EstadoEjemplar.EXTRAVIADO) throw new ValidationException(String.format("El ejemplar con el id %s no está disponible", prestamoRequest.getEjemplarID()));
+        EjemplarEstado ultimoEstado = ejemplar.getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (ultimoEstado.getEstadoEjemplar() == EstadoEjemplar.EN_REPARACION || ultimoEstado.getEstadoEjemplar() == EstadoEjemplar.EXTRAVIADO) throw new ValidationException(String.format("El ejemplar con el id %s no está disponible", prestamoRequest.getEjemplarID()));
+        } else {
+            throw new ValidationException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID()));
+        }
     }
 
     private void verifyFechaPrestamos (PrestamoRequest prestamoRequest) {
@@ -95,7 +109,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             boolean prestamoOverlap = ejemplar.getPrestamos().stream()
                     .anyMatch(subEntity -> subEntity.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada()));
             if (prestamoOverlap)
-                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes", prestamoRequest.getEjemplarID()));
+                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes"));
         }
     }
 

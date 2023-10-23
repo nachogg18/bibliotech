@@ -11,7 +11,7 @@ public class PrestamoResponse {
     private Long PrestamoID;
     private Instant fechaFinEstimada;
     private Instant fechaInicioEstimada;
-    private Long UsuarioID;
-    private Long EjemplarID;
+    private Long usuarioID;
+    private Long ejemplarID;
     private Instant fechaAlta;
 }
