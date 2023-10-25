@@ -126,6 +126,8 @@ public class UserController {
                                 .startDate((Objects.nonNull(user.getStartDate()) ? user.getStartDate().toString() : ""))
                                 .endDate((Objects.nonNull(user.getLastName()) ? user.getLastName().toString() : ""))
                                 .endDate((Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : ""))
+                                .dni(user.getDni())
+                                .legajo(user.getLegajo())
                                 .build()
                 ).get()
         );
