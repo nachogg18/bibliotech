@@ -1,27 +1,21 @@
 package com.bibliotech.security.service;
 
-import com.bibliotech.security.dao.request.ResetUserPasswordRequest;
-import com.bibliotech.security.dao.request.SignUpRequest;
-import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
-import com.bibliotech.security.dao.request.SigninRequest;
+import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.dao.response.ResetUserPasswordResponse;
-import com.bibliotech.security.dao.response.UserDetailDto;
 import com.bibliotech.security.entity.User;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.security.core.Authentication;
 
-import java.util.Optional;
-
 public interface AuthenticationService {
-    JwtAuthenticationResponse signup(SignUpRequest request);
-
-    UserDetailDto signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request);
-
+    User signup(SignUpRequest request);
+    User signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request);
+    User setNewPassword(User user, String password);
     JwtAuthenticationResponse signin(SigninRequest request);
-
     Optional<User> getActiveUser();
     Authentication getAuthentication();
     ResetUserPasswordResponse resetUserPassword(ResetUserPasswordRequest request);
+    User setNewUserPassword(NewUserPasswordRequest request);
     Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName);
 }

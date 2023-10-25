@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final RoleService roleService;
+
     @Override
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {

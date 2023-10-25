@@ -1,6 +1,10 @@
 package com.bibliotech.security.dao.response;
 
+import com.bibliotech.security.entity.Role;
+import com.bibliotech.security.entity.User;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +24,23 @@ public class UserDetailDto {
     private String lastUpdatedDate;
     private String endDate;
     private String confirmationDate;
+    
+    
+    public static UserDetailDto userToUserDetailDto(User user) {
+        return UserDetailDto.builder()
+                .id(user.getId())
+                .nombre(user.getFirstName())
+                .apellido(user.getLastName())
+                .email(user.getEmail())
+                .startDate(user.getStartDate().toString())
+                .lastUpdatedDate(Objects.nonNull(user.getLastUpdatedDate()) ? user.getLastUpdatedDate().toString() : "")
+                .endDate(Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : "")
+                .confirmationDate(Objects.nonNull(user.getConfirmationDate()) ? user.getConfirmationDate().toString() : "")
+                .roles(
+                        user.getRoles().stream().map(
+                                Role::getName
+                        ).collect(Collectors.toList())
+                )
+                .build();
+    }
 }
