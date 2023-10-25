@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping(path = "api/v1/crearPrestamo")
+@RequestMapping(path = "api/v1/prestamoService")
 @Log4j2
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearer-key")
-public class PrestamoDTOController {
+public class PrestamoServiceController {
 
     @Autowired
     private final PrestamoService prestamoService;
@@ -24,5 +24,10 @@ public class PrestamoDTOController {
     @PostMapping
     public ResponseEntity<PrestamoResponse> save(@RequestBody PrestamoRequest request) throws Exception {
         return ResponseEntity.ok().body(prestamoService.crearPrestamo(request));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PrestamoResponse> update(@RequestBody PrestamoRequest request) {
+        return ResponseEntity.ok().body(prestamoService.modifyPrestamo(request));
     }
 }
