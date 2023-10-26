@@ -1,8 +1,6 @@
 package com.bibliotech.service;
 
-import com.bibliotech.dto.FindPrestamoDTO;
-import com.bibliotech.dto.PrestamoRequest;
-import com.bibliotech.dto.PrestamoResponse;
+import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
@@ -35,6 +33,47 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
         super(baseRepository);
+    }
+
+    @Override
+    public DetallePrestamoDTO getDetallePrestamo (Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con el id %s", id)));
+
+        List<RenovacionDTO> renovaciones = new ArrayList<>();
+
+        if (prestamo.getFechasRenovaciones() != null && !prestamo.getFechasRenovaciones().isEmpty()) {
+            Instant lastInstant = prestamo.getFechaInicioEstimada();
+
+            for (Instant instant : prestamo.getFechasRenovaciones()) {
+                renovaciones.add(RenovacionDTO.builder()
+                        .fechaInicioRenovacion(lastInstant)
+                        .fechaFinRenovacion(instant)
+                        .build());
+                lastInstant = instant;
+            }
+        } else {
+            if (prestamo.getFechaFinEstimada() != null) {
+                renovaciones.add(RenovacionDTO.builder()
+                        .fechaInicioRenovacion(prestamo.getFechaInicioEstimada())
+                        .fechaFinRenovacion(prestamo.getFechaFinEstimada())
+                        .build());
+            }
+        }
+
+        return DetallePrestamoDTO.builder()
+                .nombreApellidoUsuario(prestamo.getUsuario().getFirstName() + " " + prestamo.getUsuario().getLastName())
+                .idUsuario(prestamo.getUsuario().getId())
+                .dniUsuario(prestamo.getUsuario().getDni())
+                .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
+                .idEjemplar(prestamo.getEjemplar().getId())
+                .fechaInicioPrestamo(prestamo.getFechaInicioEstimada())
+                .fechaFinPrestamo(prestamo.getFechaFinEstimada())
+                .fechaDevolucion(prestamo.getFechaBaja())
+                .estado(prestamo.getEstado().stream().filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .renovaciones(renovaciones)
+                .build();
     }
 
     @Override
