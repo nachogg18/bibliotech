@@ -26,7 +26,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
         return prestamoService.getPrestamosByUserId(idUsuario);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detalle/{id}")
     @PreAuthorize("@authenticacionService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public DetallePrestamoDTO getDetallePrestamo(@PathVariable Long id) {
         return prestamoService.getDetallePrestamo(id);
