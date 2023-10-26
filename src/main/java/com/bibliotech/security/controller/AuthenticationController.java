@@ -1,14 +1,15 @@
 package com.bibliotech.security.controller;
 
-import com.bibliotech.security.dao.request.ResetUserPasswordRequest;
-import com.bibliotech.security.dao.request.SignUpRequest;
-import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
-import com.bibliotech.security.dao.request.SigninRequest;
+import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
+import com.bibliotech.security.dao.response.UserDetailDto;
+import com.bibliotech.security.entity.User;
 import com.bibliotech.security.entity.VerificationCode;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.UserVerificationService;
+import com.bibliotech.utils.Dupla;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,15 +24,16 @@ public class AuthenticationController {
     private final UserVerificationService userVerificationService;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody @Valid SignUpRequest request) {
-        return ResponseEntity.ok(authenticationService.signup(request));
+    public ResponseEntity<UserDetailDto> signup(@RequestBody @Valid SignUpRequest request) {
+
+        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signup(request)));
     }
 
     @PostMapping("/signup-without-verfication")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'USER')")
     public ResponseEntity signupWithoutVerification(@RequestBody @Valid SignUpWithoutRequiredConfirmationRequest request) {
         
-        return ResponseEntity.ok(authenticationService.signupWithoutRequiredConfirmation(request));
+        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signupWithoutRequiredConfirmation(request)));
     }
 
     @PostMapping("/signin")
@@ -42,17 +44,29 @@ public class AuthenticationController {
     @PostMapping("/verify")
     public ResponseEntity verifyAccount(@RequestBody @Valid VerificationCode verificationCode) {
 
-        if (userVerificationService.verifyCodeForRegister(
-                verificationCode.getEmail(), verificationCode.getCode())) {
-            return ResponseEntity.ok("usuario activado correctamente");
-        } else {
-            return ResponseEntity.ok("Falló la verificación del código");
+        Dupla<Boolean, Optional<User>> verifyCodeForRegisterResult = userVerificationService.verifyCodeForRegister(
+                verificationCode.getEmail(),
+                verificationCode.getCode());
+
+        if (verifyCodeForRegisterResult.getPrimero()) {
+            return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(verifyCodeForRegisterResult.getSegundo().get()));
         }
+
+        return ResponseEntity.ok(verifyCodeForRegisterResult.getPrimero());
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity verifyAccount(@RequestBody @Valid ResetUserPasswordRequest request) {
 
         return ResponseEntity.ok(authenticationService.resetUserPassword(request));
+    }
+
+    @PostMapping("/confirm-new-password")
+    public ResponseEntity<UserDetailDto> confirmNewPassword(@RequestBody @Valid NewUserPasswordRequest request) {
+
+        User user  = authenticationService
+                .setNewUserPassword(request);
+
+        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(user));
     }
 }
