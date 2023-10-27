@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamoDTO;
+import com.bibliotech.dto.PrestamoItemTablaDTO;
 import com.bibliotech.entity.EstadoPrestamo;
 import com.bibliotech.entity.Prestamo;
 import com.bibliotech.entity.PrestamoEstado;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
@@ -59,5 +61,27 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                                 .fechaInicio(prestamo.getFechaInicioEstimada())
                                 .build()
                 ).toList();
+    }
+
+    @Override
+    public List<PrestamoItemTablaDTO> getPrestamosListTable() {
+        List<Prestamo> prestamos = prestamosRepository.findAll();
+
+        return prestamos.stream().map(
+                prestamo -> {
+                    return PrestamoItemTablaDTO.builder()
+                            .id(prestamo.getId())
+                            .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
+                            .fechaDesde(prestamo.getFechaAlta())
+                            .fechaHasta(prestamo.getFechaBaja())
+                            .idEjemplar(prestamo.getEjemplar().getId())
+                            .idUsuario(prestamo.getUsuario().getId())
+                            .estado(prestamo.getEstado().stream().filter(estado -> estado.getFechaFin() == null)
+                                    .findFirst()
+                                    .orElse(null)
+                                    .getEstado().name())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }
