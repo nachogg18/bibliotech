@@ -11,7 +11,7 @@ import java.util.List;
 public class DetallePrestamoDTO {
     private String nombreApellidoUsuario;
     private Long idUsuario;
-    private int legajoUsuario;
+    private String legajoUsuario;
     private String tituloPublicacion;
     private Long idEjemplar;
     private Instant fechaInicioPrestamo;

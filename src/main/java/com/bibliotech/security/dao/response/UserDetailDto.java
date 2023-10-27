@@ -20,6 +20,6 @@ public class UserDetailDto {
     private String lastUpdatedDate;
     private String endDate;
     private String confirmationDate;
-    private int dni;
-    private int legajo;
+    private String dni;
+    private String legajo;
 }
