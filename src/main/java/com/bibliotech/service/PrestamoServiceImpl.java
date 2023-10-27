@@ -63,7 +63,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         return DetallePrestamoDTO.builder()
                 .nombreApellidoUsuario(prestamo.getUsuario().getFirstName() + " " + prestamo.getUsuario().getLastName())
                 .idUsuario(prestamo.getUsuario().getId())
-                //.dniUsuario(prestamo.getUsuario().getDni())
+                .legajoUsuario(prestamo.getUsuario().getLegajo())
                 .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
                 .idEjemplar(prestamo.getEjemplar().getId())
                 .fechaInicioPrestamo(prestamo.getFechaInicioEstimada())
