@@ -1,12 +1,9 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 @Table(name= "prestamo_estado")
@@ -14,12 +11,13 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PrestamoEstado extends Base{
     @Column
-    private Date fechaInicio = new Date();
+    private Instant fechaInicio = Instant.now();
 
     @Column
-    private Date fechaFin;
+    private Instant fechaFin;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
