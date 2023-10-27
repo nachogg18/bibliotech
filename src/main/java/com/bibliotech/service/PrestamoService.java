@@ -11,4 +11,6 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     PrestamoResponse modifyPrestamo(PrestamoRequest request);
 
     DetallePrestamoDTO getDetallePrestamo(Long id);
+
+    List<PrestamoItemTablaDTO> getPrestamosListTable();
 }

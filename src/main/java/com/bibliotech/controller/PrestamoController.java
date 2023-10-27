@@ -1,6 +1,7 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.FindPrestamoDTO;
+import com.bibliotech.dto.PrestamoItemTablaDTO;
 import com.bibliotech.entity.Prestamo;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
@@ -30,5 +31,11 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     @PreAuthorize("@authenticacionService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public DetallePrestamoDTO getDetallePrestamo(@PathVariable Long id) {
         return prestamoService.getDetallePrestamo(id);
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
+    public List<PrestamoItemTablaDTO> getPrestamosListTable() {
+        return prestamoService.getPrestamosListTable();
     }
 }

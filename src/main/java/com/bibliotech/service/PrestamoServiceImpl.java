@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
@@ -74,6 +75,28 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                         .orElse(null).getEstado().name())
                 .renovaciones(renovaciones)
                 .build();
+    }
+
+    @Override
+    public List<PrestamoItemTablaDTO> getPrestamosListTable() {
+        List<Prestamo> prestamos = prestamosRepository.findAll();
+
+        return prestamos.stream().map(
+                        prestamo -> {
+                            return PrestamoItemTablaDTO.builder()
+                                    .id(prestamo.getId())
+                                    .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
+                                    .fechaDesde(prestamo.getFechaAlta())
+                                    .fechaHasta(prestamo.getFechaBaja())
+                                    .idEjemplar(prestamo.getEjemplar().getId())
+                                    .idUsuario(prestamo.getUsuario().getId())
+                                    .estado(prestamo.getEstado().stream().filter(estado -> estado.getFechaFin() == null)
+                                            .findFirst()
+                                            .orElse(null)
+                                            .getEstado().name())
+                                    .build();
+                        })
+                .collect(Collectors.toList());
     }
 
     @Override
