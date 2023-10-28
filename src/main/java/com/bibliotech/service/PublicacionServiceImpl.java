@@ -74,8 +74,6 @@ public class PublicacionServiceImpl implements PublicacionService {
         return publicacionRepository.findById(id);
     }
 
-    ;
-
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
 
@@ -122,7 +120,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         detallePublicacionDTO.setEditoriales(Objects.nonNull(publicacion.getEditoriales()) ? publicacion.getEditoriales() : null);
         detallePublicacionDTO.setTipo(Objects.nonNull(publicacion.getTipoPublicacion()) ? publicacion.getTipoPublicacion() : null);
 
-        detallePublicacionDTO.setPlataforma(Objects.nonNull(publicacion.getLink().getPlataforma()) ? publicacion.getLink().getPlataforma() : null);
+        //detallePublicacionDTO.getLink().setPlataforma(Objects.nonNull(publicacion.getLink().getPlataforma()) ? publicacion.getLink().getPlataforma() : null);
 
         List<DetalleCategoriaDTO> detalleCategoriaDTOList = new ArrayList<>();
 
@@ -296,7 +294,11 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     @Override
     public ModificarPublicacionResponse updatePublicacion(ModificarPublicacionDTO req, Long id) {
-        Publicacion publicacionExistente = publicacionRepository.getById(id);
+
+        if (findById(id).isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+
+        Publicacion publicacionExistente = findById(id).get();
         Publicacion nuevaPublicacion = mapDtoToEntity(req, publicacionExistente);
 
         publicacionRepository.save(nuevaPublicacion);
@@ -307,15 +309,16 @@ public class PublicacionServiceImpl implements PublicacionService {
                 .isbn(nuevaPublicacion.getIsbn())
                 .titulo(nuevaPublicacion.getTitulo())
                 .build();
+
         return res;
     }
 
     private Publicacion mapDtoToEntity(ModificarPublicacionDTO req, Publicacion publicacion) {
-        if (req.getAnio() != null) publicacion.setAnio(req.getAnio());
-        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
-        if (req.getTitulo() != null) publicacion.setTitulo(req.getTitulo());
+
+        if (req.getAnioPublicacion() != null) publicacion.setAnio(req.getAnioPublicacion());
+        if (req.getIsbnPublicacion() != null) publicacion.setIsbn(req.getIsbnPublicacion());
+        if (req.getTituloPublicacion() != null) publicacion.setTitulo(req.getTituloPublicacion());
         if (req.getNroPaginas() != null) publicacion.setNroPaginas(req.getNroPaginas());
-        if (req.getIsbn() != null) publicacion.setIsbn(req.getIsbn());
 
         if(req.getIdsAutores() != null) {
             publicacion.setAutores(autorRepository.findByIdIn(req.getIdsAutores().toArray(new Long[0])));
@@ -325,21 +328,44 @@ public class PublicacionServiceImpl implements PublicacionService {
             publicacion.setEditoriales(editorialRepository.findByIdIn(req.getIdsEditoriales().toArray(new Long[0])));
         }
 
-        if(req.getIdsCategorias() != null) {
-            publicacion.setCategoriaPublicacionList(categoriaPublicacionRepository.findByIdIn(req.getIdsCategorias().toArray(new Long[0])));
+        CategoriaPublicacion.builder().build();
+
+        if(req.getCategorias() != null) {
+            publicacion.setCategoriaPublicacionList(
+                    req.getCategorias().stream().map(
+                            dto -> CategoriaPublicacion.builder().build()
+                                    //.builder()
+                                    //.categoria(categoriaService.findOne(dto.idCategoria()).orElseThrow(() -> new ValidationException(String.format("no existe categoria con id: %s", dto.idCategoria()))))
+                                    //.categoriaValorList(dto.idValores().stream().map(v -> categoriaValorService.findById(v).orElseThrow(() -> new ValidationException(String.format("no existe valor con id: %s", v)))).toList())
+                                   // .build()
+                    ).toList()
+            );
         }
 
         if(req.getLink()!=null){
-            Link linkNuevo = Link
-                    .builder()
-                    .url(req.getLink().url())
-                    .plataforma(
-                    plataformaService.findById(req.getLink().plataformaId())
-                            .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", req.getLink().plataformaId())))
-                    )
-                    .estadoLink(EstadoLink.valueOf(req.getLink().estado()))
-                    .build();
-            publicacion.setLink(linkNuevo);
+            if(Objects.nonNull(publicacion.getLink()) && Objects.nonNull(publicacion.getLink().getFechaBaja())){
+                publicacion.getLink().setUrl(req.getLink().getUrl());
+                publicacion.getLink().setPlataforma(
+                        plataformaService.findById(req.getLink().getPlataformaId())
+                                .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", req.getLink().getPlataformaId())))
+                );
+                publicacion.getLink().setEstadoLink(EstadoLink.valueOf(req.getLink().getEstado()));
+            } else {
+                Link linkNuevo = Link
+                        .builder()
+                        .fechaAlta(Instant.now())
+                        .url(req.getLink().getUrl())
+                        .plataforma(
+                                plataformaService.findById(req.getLink().getPlataformaId())
+                                        .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", req.getLink().getPlataformaId())))
+                        )
+                        .estadoLink(EstadoLink.valueOf(req.getLink().getEstado()))
+                        .build();
+                publicacion.setLink(linkNuevo);
+            }
+
+        } else {
+            publicacion.getLink().setFechaBaja(Instant.now());
         }
 
         if(req.getIdEdicion()!=null) publicacion.setEdicion(edicionRepository.findById(req.getIdEdicion()).get());
