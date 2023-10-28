@@ -9,6 +9,7 @@ import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -74,6 +75,12 @@ public class PublicacionController {
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
   public List<PublicacionResponseDTO> findAll() {
     return publicacionService.findAll();
+  }
+
+  @GetMapping("one/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
+  public Optional<Publicacion> findOne(@PathVariable Long id) {
+    return publicacionService.findById(id);
   }
 
   @GetMapping(path = "/paged")
