@@ -1,17 +1,13 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.Instant;
 import java.util.*;
+import lombok.*;
 
 @Entity
+@Builder
 @Table(name= "prestamo")
 @Getter
 @Setter

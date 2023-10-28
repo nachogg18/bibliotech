@@ -1,27 +1,19 @@
 package com.bibliotech.initializer;
 
-import com.bibliotech.entity.Autor;
-import com.bibliotech.entity.Link;
-import com.bibliotech.entity.Plataforma;
-import com.bibliotech.entity.Publicacion;
+import com.bibliotech.entity.*;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
-import com.bibliotech.security.entity.Action;
-import com.bibliotech.security.entity.Privilege;
-import com.bibliotech.security.entity.Resource;
-import com.bibliotech.security.entity.Role;
+import com.bibliotech.security.entity.*;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.ResourceService;
 import com.bibliotech.security.service.RoleService;
-import com.bibliotech.service.AutorService;
-import com.bibliotech.service.LinkService;
-import com.bibliotech.service.PlataformaService;
-import com.bibliotech.service.PublicacionService;
+import com.bibliotech.service.*;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.ResourceNames;
 import com.bibliotech.utils.ResourceUtils;
 import com.bibliotech.utils.RoleUtils;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +53,8 @@ public class LocalDataInitializer implements ApplicationRunner {
     
     private final AutorService autorService;
 
+    private final PrestamoService prestamoService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
@@ -74,15 +68,19 @@ public class LocalDataInitializer implements ApplicationRunner {
 
         Role superAdminRole = createSuperAdminRole(privileges);
 
-        createUserRole(privileges);
+        Role userBasicRole = createUserRole(privileges);
         
         createBibliotecarioRole(privileges);
         
         createSuperAdminUser(superAdminRole);
 
+        User userTest = createTestBasicUser(userBasicRole);
+
         Autor autor = createAutor();
 
         createPublicacion(List.of(autor));
+
+        createTestPrestamo(userTest);
 
 
         
@@ -192,6 +190,19 @@ public class LocalDataInitializer implements ApplicationRunner {
             List.of(superAdminRole.getId())));
     }
 
+    private User createTestBasicUser(Role basicRole) {
+        // crea
+        return authenticationService.signupWithoutRequiredConfirmation(
+                new SignUpWithoutRequiredConfirmationRequest(
+                        new SignUpRequest(
+                                "usertest",
+                                "usertest",
+                                "usertest@email.com",
+                                "user1234"
+                        ),
+                        List.of(basicRole.getId())));
+    }
+
 
     private Link createLink() {
         return linkService.save( Link.builder()
@@ -228,6 +239,25 @@ public class LocalDataInitializer implements ApplicationRunner {
                         .fechaAlta(Instant.now())
                         .apellido("García Márquez")
                         .nombre("Gabriel")
+                        .build()
+        );
+    }
+
+    private void createTestPrestamo(User user) throws Exception {
+
+        prestamoService.save(
+                Prestamo.builder()
+                        .fechaAlta(Instant.now())
+                        .fechaFinEstimada(Instant.now().plus(Duration.ofDays(2)))
+                        .fechaInicioEstimada(Instant.now().plus(Duration.ofDays(1)))
+                        .multa(null)
+                        .usuario(user)
+                        .estado(
+                                List.of(PrestamoEstado.builder()
+                                        .estado(EstadoPrestamo.EN_ESPERA)
+                                        .fechaFin(null)
+                                        .build())
+                        )
                         .build()
         );
     }

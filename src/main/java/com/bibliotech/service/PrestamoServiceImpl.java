@@ -1,25 +1,33 @@
 package com.bibliotech.service;
 
+import com.bibliotech.controller.BaseControllerImpl;
 import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamoDTO;
+import com.bibliotech.dto.PrestamosByParamsRequest;
 import com.bibliotech.entity.EstadoPrestamo;
 import com.bibliotech.entity.Prestamo;
 import com.bibliotech.entity.PrestamoEstado;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
+import com.bibliotech.repository.specifications.PrestamoSpecifications;
 import com.bibliotech.security.service.UserService;
 import jakarta.transaction.Transactional;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
     @Autowired
-    private ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(BaseControllerImpl.class);
     @Autowired
     private PrestamosRepository prestamosRepository;
     @Autowired
@@ -60,4 +68,65 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                                 .build()
                 ).toList();
     }
+
+    @Override
+    public List<Prestamo> findByParams(PrestamosByParamsRequest request) {
+
+        int parametrosAdmitidos = 0;
+
+        List<Specification<Prestamo>> specificationList = new ArrayList<>();
+
+        Specification<Prestamo> userIdSpec;
+
+        Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
+
+        Specification<Prestamo> fechaInicioEstimadaHastaSpec;
+
+        List<Long> userIds= request.getUsuariosIds();
+            if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
+                List<Specification<Prestamo>> userIdSpecifications = userIds.stream()
+              .map(
+              PrestamoSpecifications::hasUserWithId).collect(Collectors.toList());
+                userIdSpec = Specification.anyOf(userIdSpecifications);
+                specificationList.add(userIdSpec);
+                parametrosAdmitidos++;
+            }
+
+        Instant fechaInicioEstimadaDesde = request.getFechaInicioEstimadaDesde();
+        if (Objects.nonNull(fechaInicioEstimadaDesde)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaInicioEstimadaDesde(fechaInicioEstimadaDesde);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaInicioEstimadaHasta = request.getFechaInicioEstimadaHasta();
+        if (Objects.nonNull(fechaInicioEstimadaHasta)) {
+            fechaInicioEstimadaHastaSpec = PrestamoSpecifications.fechaInicioEstimadaHasta(fechaInicioEstimadaHasta);
+            specificationList.add(fechaInicioEstimadaHastaSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaFinEstimadaDesde = request.getFechaFinEstimadaDesde();
+        if (Objects.nonNull(fechaFinEstimadaDesde)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaFinEstimadaDesde(fechaInicioEstimadaDesde);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaFinEstimadaHasta = request.getFechaFinEstimadaHasta();
+        if (Objects.nonNull(fechaFinEstimadaHasta)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaFinEstimadaHasta(fechaFinEstimadaHasta);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+
+        if (parametrosAdmitidos > 0) {
+                return prestamosRepository.findAll(Specification.allOf(specificationList));
+            } else {
+                return prestamosRepository.findAll(PrestamoSpecifications.withoutResults());
+        }
+
+    }
+
 }
