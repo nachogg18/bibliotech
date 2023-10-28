@@ -30,7 +30,7 @@ public class Prestamo extends Base {
     @ElementCollection(targetClass = Date.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "fechasRenovacionesPrestamo", joinColumns = @JoinColumn(name = "fechaRenovacion_id"))
     @Column
-    private List<Date> fechasRenovaciones = new ArrayList<>();
+    private List<Instant> fechasRenovaciones = new ArrayList<>();
     //añadir tag @Transactional al método que vaya acceder a la lista
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -48,4 +48,8 @@ public class Prestamo extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "multa_id")
     private Multa multa;
+
+    public boolean overlapsWith(Instant periodStart, Instant periodEnd) {
+        return !this.fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(this.fechaInicioEstimada);
+    }
 }
