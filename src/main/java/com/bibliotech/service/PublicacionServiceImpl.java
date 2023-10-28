@@ -120,6 +120,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         detallePublicacionDTO.setAnioPublicacion(publicacion.getAnio());
         detallePublicacionDTO.setLink(Objects.nonNull(publicacion.getLink()) ? publicacion.getLink() : null);
         detallePublicacionDTO.setEditoriales(Objects.nonNull(publicacion.getEditoriales()) ? publicacion.getEditoriales() : null);
+        detallePublicacionDTO.setTipo(Objects.nonNull(publicacion.getTipoPublicacion()) ? publicacion.getTipoPublicacion() : null);
 
         detallePublicacionDTO.setPlataforma(Objects.nonNull(publicacion.getLink().getPlataforma()) ? publicacion.getLink().getPlataforma() : null);
 

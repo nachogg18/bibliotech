@@ -23,4 +23,5 @@ public class DetallePublicacionDTO {
     //private List<DetalleEjemplarDTO> ejemplares = new ArrayList<>();
     private Link link;
     private Plataforma plataforma;
+    private TipoPublicacion tipo;
 }
