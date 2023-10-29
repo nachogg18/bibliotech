@@ -1,11 +1,8 @@
 package com.bibliotech.service;
 
 
-import com.bibliotech.dto.EditEjemplarDTO;
-import com.bibliotech.dto.EjemplarDetailDTO;
-import com.bibliotech.dto.EjemplarResponseDTO;
+import com.bibliotech.dto.*;
 import com.bibliotech.entity.Ejemplar;
-import com.bibliotech.dto.CrearEjemplarDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +23,6 @@ public interface EjemplarService {
     void delete(Long id);
 
     Optional<Ejemplar> findById(Long id);
+
+    List<ComentarioDTO> getAllComentarios(Long id);
 }
