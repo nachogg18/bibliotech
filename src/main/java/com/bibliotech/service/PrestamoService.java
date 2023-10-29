@@ -8,9 +8,11 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) throws Exception;
     List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario);
 
-    PrestamoResponse modifyPrestamo(PrestamoRequest request);
+    PrestamoResponse checkOutPrestamo(Long id);
 
     DetallePrestamoDTO getDetallePrestamo(Long id);
 
     List<PrestamoItemTablaDTO> getPrestamosListTable();
+
+    PrestamoResponse checkInPrestamo(Long id);
 }

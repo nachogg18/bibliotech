@@ -3,6 +3,7 @@ package com.bibliotech.service;
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.BaseRepository;
+import com.bibliotech.repository.EjemplarEstadoRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.security.entity.Role;
@@ -31,6 +32,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     private PrestamoEstadoRepository prestamoEstadoRepository;
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    private EjemplarEstadoRepository ejemplarEstadoRepository;
 
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
         super(baseRepository);
@@ -118,11 +121,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         //prestamo presente o futuro
         PrestamoEstado prestamoEstado = new PrestamoEstado();
-        if (prestamoRequest.getFechaInicioEstimada().isBefore(Instant.now()) || prestamoRequest.getFechaInicioEstimada().equals(Instant.now())) {
-            prestamoEstado.setEstado(EstadoPrestamo.ACTIVO);
-        } else {
-            prestamoEstado.setEstado(EstadoPrestamo.EN_ESPERA);
-        }
+        prestamoEstado.setEstado(EstadoPrestamo.EN_ESPERA);
 
         prestamoEstadoRepository.save(prestamoEstado);
         prestamoNuevo.getEstado().add(prestamoEstado);
@@ -136,6 +135,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .fechaInicioEstimada(prestamoNuevo.getFechaInicioEstimada())
                 .fechaFinEstimada(prestamoNuevo.getFechaFinEstimada())
                 .fechaAlta(prestamoNuevo.getFechaAlta())
+                .estado(prestamoNuevo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
                 .build();
     }
 
@@ -199,9 +202,122 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
 
     @Override
-    public PrestamoResponse modifyPrestamo(PrestamoRequest request) {
+    public PrestamoResponse checkOutPrestamo(Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
+        Instant currentTime = Instant.now();
+
+        //verificacion estado prestamo
+        PrestamoEstado estadoPrestamo = prestamo.getEstado().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
+        if (estadoPrestamo.getEstado() != EstadoPrestamo.EN_ESPERA) throw new ValidationException("El préstamo no está en espera");
+
+        if (currentTime.isBefore(prestamo.getFechaInicioEstimada())) {
+            throw new ValidationException("Préstamo aún no comienza");
+        }
+
+        //if (!currentTime.isBefore(prestamo.getFechaInicioEstimada()))
 
 
-        return null;
+        //verificacion estado ejemplar
+        EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoEjemplar == null) throw new ValidationException("Error con el ejemplar");
+        if (estadoEjemplar.getEstadoEjemplar() != EstadoEjemplar.DISPONIBLE) throw new ValidationException("El ejemplar no está disponible");
+
+        //cambio de estados
+        estadoPrestamo.setFechaFin(Instant.now());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.ACTIVO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
+
+        estadoEjemplar.setFechaFin(Instant.now());
+        EjemplarEstado ejemplarEstado = new EjemplarEstado();
+        ejemplarEstado.setEstadoEjemplar(EstadoEjemplar.PRESTADO);
+        ejemplarEstadoRepository.save(ejemplarEstado);
+        prestamo.getEjemplar().getEjemplarEstadoList().add(ejemplarEstado);
+
+        //guardar cambios
+        prestamoEstadoRepository.save(estadoPrestamo);
+        ejemplarEstadoRepository.save(estadoEjemplar);
+        prestamosRepository.save(prestamo);
+
+        return PrestamoResponse
+                .builder()
+                .usuarioID(prestamo.getUsuario().getId())
+                .ejemplarID(prestamo.getEjemplar().getId())
+                .PrestamoID(prestamo.getId())
+                .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
+                .fechaFinEstimada(prestamo.getFechaFinEstimada())
+                .fechaAlta(prestamo.getFechaAlta())
+                .estado(prestamo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .build();
+    }
+
+    @Override
+    public PrestamoResponse checkInPrestamo(Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
+        Instant currentTime = Instant.now();
+
+        //verificacion estado prestamo
+        PrestamoEstado estadoPrestamo = prestamo.getEstado().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
+        if (!(estadoPrestamo.getEstado() == EstadoPrestamo.ACTIVO || estadoPrestamo.getEstado() == EstadoPrestamo.RENOVADO || estadoPrestamo.getEstado() == EstadoPrestamo.VENCIDO)) throw new ValidationException("El préstamo no activo");
+        if (currentTime.isBefore(prestamo.getFechaInicioEstimada())) {
+            throw new ValidationException("Préstamo aún no comienza");
+        }
+
+        //verificacion estado ejemplar
+        EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoEjemplar == null) throw new ValidationException("Error con el ejemplar");
+        if (estadoEjemplar.getEstadoEjemplar() != EstadoEjemplar.PRESTADO) throw new ValidationException("El ejemplar no está disponible");
+
+        //cambio de estados
+        estadoPrestamo.setFechaFin(Instant.now());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.DEVUELTO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
+
+        estadoEjemplar.setFechaFin(Instant.now());
+        EjemplarEstado ejemplarEstado = new EjemplarEstado();
+        ejemplarEstado.setEstadoEjemplar(EstadoEjemplar.DISPONIBLE);
+        ejemplarEstadoRepository.save(ejemplarEstado);
+        prestamo.getEjemplar().getEjemplarEstadoList().add(ejemplarEstado);
+
+        prestamo.setFechaBaja(Instant.now());
+
+        //guardar cambios
+        prestamoEstadoRepository.save(estadoPrestamo);
+        ejemplarEstadoRepository.save(estadoEjemplar);
+        prestamosRepository.save(prestamo);
+
+        return PrestamoResponse
+                .builder()
+                .usuarioID(prestamo.getUsuario().getId())
+                .ejemplarID(prestamo.getEjemplar().getId())
+                .PrestamoID(prestamo.getId())
+                .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
+                .fechaFinEstimada(prestamo.getFechaFinEstimada())
+                .fechaAlta(prestamo.getFechaAlta())
+                .estado(prestamo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .build();
     }
 }

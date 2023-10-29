@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,8 +27,21 @@ public class PrestamoServiceController {
         return ResponseEntity.ok().body(prestamoService.crearPrestamo(request));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<PrestamoResponse> update(@RequestBody PrestamoRequest request) {
-        return ResponseEntity.ok().body(prestamoService.modifyPrestamo(request));
+
+    @PatchMapping("/{id}/checkout")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    public ResponseEntity<PrestamoResponse> checkOutPrestamo(@PathVariable Long id) {
+        return ResponseEntity.ok().body(prestamoService.checkOutPrestamo(id));
     }
+
+    @PatchMapping("/{id}/checkin")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    public ResponseEntity<PrestamoResponse> checkInPrestamo(@PathVariable Long id) {
+        return ResponseEntity.ok().body(prestamoService.checkInPrestamo(id));
+    }
+
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<PrestamoResponse> update(@RequestBody PrestamoRequest request) {
+//        return ResponseEntity.ok().body(prestamoService.modifyPrestamo(request));
+//    }
 }

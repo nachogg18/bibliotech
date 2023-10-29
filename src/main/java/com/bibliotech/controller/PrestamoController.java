@@ -2,11 +2,13 @@ package com.bibliotech.controller;
 
 import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamoItemTablaDTO;
+import com.bibliotech.dto.PrestamoResponse;
 import com.bibliotech.entity.Prestamo;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.bibliotech.dto.DetallePrestamoDTO;
@@ -28,7 +30,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     }
 
     @GetMapping("/detalle/{id}")
-    @PreAuthorize("@authenticacionService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public DetallePrestamoDTO getDetallePrestamo(@PathVariable Long id) {
         return prestamoService.getDetallePrestamo(id);
     }
@@ -38,4 +40,5 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public List<PrestamoItemTablaDTO> getPrestamosListTable() {
         return prestamoService.getPrestamosListTable();
     }
+
 }
