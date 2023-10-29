@@ -22,6 +22,22 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
+    public List<Ubicacion> findAllDispobles() {
+        return ubicacionRepository.findByFechaBajaNullAndOcupadaFalse();
+    }
+
+    @Override
+    public List<Ubicacion> findAllDispoblesWith(Long id) {
+        List<Ubicacion> ubicaciones = findAllDispobles();
+        Optional<Ubicacion> ubicacionEjemplar = findById(id);
+        if(ubicacionEjemplar.isPresent()){
+            ubicaciones.add(ubicacionEjemplar.get());
+            return ubicaciones;
+        }
+        return ubicaciones;
+    }
+
+    @Override
     public Optional<Ubicacion> findById(Long id) {
         return ubicacionRepository.findById(id);
     }
@@ -38,6 +54,15 @@ public class UbicacionServiceImpl implements UbicacionService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
         ubicacion.setId(id);
         return ubicacionRepository.save(ubicacion);
+    }
+
+    @Override
+    public Ubicacion changeOcupada(Long id, boolean state) {
+       Optional<Ubicacion> ubicacion =  ubicacionRepository.findById(id);
+        if (ubicacion.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found");
+        ubicacion.get().setOcupada(state);
+        return ubicacionRepository.save(ubicacion.get());
     }
 
     @Override
