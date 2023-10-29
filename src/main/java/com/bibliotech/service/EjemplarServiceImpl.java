@@ -9,15 +9,18 @@ import com.bibliotech.repository.EjemplarRepository;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
 public class EjemplarServiceImpl implements EjemplarService {
+
     private final EjemplarRepository ejemplarRepository;
 
     private final PublicacionService publicacionService;
@@ -71,6 +74,8 @@ public class EjemplarServiceImpl implements EjemplarService {
                 .serialNFC(request.getSerialNFC())
                 .build();
 
+        ubicacion.setOcupada(true);
+
         return ejemplarRepository.save(ejemplar);
     }
 
@@ -80,33 +85,53 @@ public class EjemplarServiceImpl implements EjemplarService {
     }
 
     @Override
+    @Transactional
     public Ejemplar edit(EditEjemplarDTO request, Long id) {
         Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
 
-        if (request.getSerialNFC() != null)
+        if (request.getSerialNFC() != null && request.getSerialNFC() != ejemplar.getSerialNFC())
             ejemplar.setSerialNFC(request.getSerialNFC());
-        if(request.getIdUbicacion() != null) {
+        if(request.getIdUbicacion() != null && request.getIdUbicacion() != ejemplar.getPublicacion().getId()) {
             Ubicacion ubicacion = ubicacionService.findById(request.getIdUbicacion())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
+            ubicacionService.changeOcupada(ejemplar.getUbicacion().getId(), false);
+            ubicacion.setOcupada(true);
             ejemplar.setUbicacion(ubicacion);
         }
-        if(request.getEstadoEjemplar() != null) {
+
+        EjemplarEstado estadoActual = ejemplar.getEjemplarEstadoList().stream().filter(estado -> Objects.nonNull(estado.getFechaInicio())).findFirst().get();
+        if(request.getEstadoEjemplar() != null && estadoActual.getEstadoEjemplar() != EstadoEjemplar.valueOf(request.getEstadoEjemplar())) {
             EjemplarEstado estadoEjemplar = new EjemplarEstado();
             estadoEjemplar.setEstadoEjemplar(EstadoEjemplar.valueOf(request.getEstadoEjemplar().toUpperCase()));
             estadoEjemplar.setFechaInicio(Instant.now());
             // TODO: setear la fechaBaja en estados anteriores
+            // creo que esta resuelto abajo con lo que hice (Igna)
+            estadoActual.setFechaFin(Instant.now());
             ejemplar.getEjemplarEstadoList().add(estadoEjemplar);
         }
-        ejemplar.setId(id);
+
+        if(id != ejemplar.getId()) ejemplar.setId(id);
+
         return ejemplarRepository.save(ejemplar);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
         );
+        EjemplarEstado estadoEjemplar = ejemplar.getEjemplarEstadoList().stream().filter(estado -> !Objects.nonNull(estado.getFechaFin())).findFirst().get();
+        estadoEjemplar.setFechaFin(Instant.now());
+        if (estadoEjemplar.getEstadoEjemplar() == EstadoEjemplar.DISPONIBLE || estadoEjemplar.getEstadoEjemplar() == EstadoEjemplar.EN_REPARACION){
+            EjemplarEstado nuevoEstado = new EjemplarEstado();
+            nuevoEstado.setFechaInicio(Instant.now());
+            nuevoEstado.setFechaFin(Instant.now());
+            ejemplar.getEjemplarEstadoList().add(nuevoEstado);
+        } else if (estadoEjemplar.getEstadoEjemplar() != EstadoEjemplar.EXTRAVIADO){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Para eliminar el ejemplar, debe estar en DISPONIBLE, EN_REPARACION o EXTRAVIADO");
+        }
         ejemplar.setId(id);
         ejemplar.setFechaBaja(Instant.now());
         ejemplarRepository.save(ejemplar);
@@ -119,15 +144,28 @@ public class EjemplarServiceImpl implements EjemplarService {
 
 
     private EjemplarResponseDTO mapEjemplarToEjemplarResponseDTO(Ejemplar ejemplar) {
+
         EjemplarResponseDTO response = new EjemplarResponseDTO();
+
         response.setId(ejemplar.getId());
+        response.setTieneComentarios(!ejemplar.getComentarios().isEmpty());
+        response.setSerialNFC(ejemplar.getSerialNFC());
+
+        EjemplarEstado estadoFinal = ejemplar.getEjemplarEstadoList().stream().filter(estado -> !Objects.nonNull(estado.getFechaFin())).findFirst().get();
+
+        response.setEstado(estadoFinal.getEstadoEjemplar().toString());
+
+        //String ubicacion = ejemplar.getUbicacion().getDescripcion(); //+ " - " + ejemplar.getUbicacion().getBiblioteca().getNombre();
+        response.setUbicacion(ejemplar.getUbicacion());
+
         float valoracion = ejemplar.getComentarios().size() == 0
-                ? 0
+                ? 0.00f
                 : (float) ejemplar.getComentarios()
                     .stream().mapToInt(Comentario::getCalificacion).sum() / ejemplar.getComentarios().size();
-        DecimalFormat df = new DecimalFormat("#.00");
-        valoracion = Float.parseFloat(df.format(valoracion));
+//        DecimalFormat df = new DecimalFormat("#.00");
+//        valoracion = Float.parseFloat(df.format(valoracion));
         response.setValoracion(valoracion);
+
         return response;
     }
 
