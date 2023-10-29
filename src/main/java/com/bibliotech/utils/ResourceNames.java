@@ -17,6 +17,7 @@ public enum ResourceNames {
     LINK,
     NOTIFICATION,
     MULTA,
+    PARAMETRO,
     PLATAFORMA,
     PUBLICACION,
     PRESTAMO,

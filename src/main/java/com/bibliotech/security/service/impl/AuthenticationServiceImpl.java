@@ -1,15 +1,12 @@
 package com.bibliotech.security.service.impl;
 
-import com.bibliotech.security.dao.request.ResetUserPasswordRequest;
-import com.bibliotech.security.dao.request.SignUpRequest;
-import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
-import com.bibliotech.security.dao.request.SigninRequest;
+import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.dao.response.ResetUserPasswordResponse;
-import com.bibliotech.security.dao.response.UserDetailDto;
 import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.service.*;
+import com.bibliotech.utils.Dupla;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -46,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserVerificationService userVerificationService;
 
   @Override
-  public JwtAuthenticationResponse signup(@Valid SignUpRequest request) {
+  public User signup(@Valid SignUpRequest request) {
     checkExistentUserWithRequestEmail(request.email());
 
     Role basicRole = assignBasicRole();
@@ -59,12 +55,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     sendVerificationCodeForRegister(savedUser);
 
-    return authenticationResponse;
+    return savedUser;
   }
 
 
   @Override
-  public UserDetailDto signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request) {
+  public User signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request) {
     checkExistentUserWithRequestEmail(request.signUpRequest().email());
 
     List<Role> roles = findRoles(request);
@@ -77,21 +73,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     userVerificationService.bypassVerification(savedUser);
 
-    return UserDetailDto.builder()
-            .id(savedUser.getId())
-            .nombre(savedUser.getFirstName())
-            .apellido(savedUser.getLastName())
-            .email(savedUser.getEmail())
-            .startDate(savedUser.getStartDate().toString())
-            .lastUpdatedDate(Objects.nonNull(savedUser.getLastUpdatedDate()) ? savedUser.getLastUpdatedDate().toString() : "")
-            .endDate(Objects.nonNull(savedUser.getEndDate()) ? savedUser.getEndDate().toString() : "")
-            .confirmationDate(Objects.nonNull(savedUser.getConfirmationDate()) ? savedUser.getConfirmationDate().toString() : "")
-            .roles(
-                    savedUser.getRoles().stream().map(
-                            role -> role.getName()
-                    ).collect(Collectors.toList())
-            )
-            .build();
+    return savedUser;
+  }
+
+  @Override
+  public User setNewPassword(User user, String password) {
+    user.setPassword(passwordEncoder.encode(password));
+    return user;
   }
 
   private User createUser(SignUpRequest request, List<Role> roles) {
@@ -277,6 +265,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .status("CONFIRMATION_REQUIRED")
             .build();
 
+  }
+
+  @Override
+  public User setNewUserPassword(NewUserPasswordRequest request) {
+    Dupla<Boolean, Optional<User>> dupla = userVerificationService
+            .verifyCodeForResetPassword(
+                    request.verificationUserRequest().email(),
+                    request.verificationUserRequest().code());
+
+    User user = dupla
+            .getSegundo()
+            .get();
+
+    user.setPassword(passwordEncoder.encode(request.newPassword()));
+
+    userService.save(user);
+
+    return dupla.getSegundo().get();
   }
 
   public Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName) {

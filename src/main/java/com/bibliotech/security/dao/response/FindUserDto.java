@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FindUserDto {
     private Long id;
-    private int dni;
-    private int legajo;
+    private String dni;
+    private String legajo;
     private String nombre;
     private String apellido;
 }
