@@ -25,30 +25,35 @@ public class UserVerificationServiceImpl implements UserVerificationService {
 
     private final NotificationService notificationService;
 
-    public boolean verifyCodeForRegister(String email, String code) {
-        var resultConfirmedVerificationCode = verifyCode(email, code);
+    public Dupla<Boolean, Optional<User>> verifyCodeForRegister(String email, String code) {
+        Optional<User> getUserToConfirm = userService.getUserToConfirmByEmail(email);
+        var resultConfirmedVerificationCode = verifyCode(getUserToConfirm, code);
 
-        return enableUser(resultConfirmedVerificationCode.getSegundo(), resultConfirmedVerificationCode.getTercero()).getPrimero();
+        var enableUserOperationResult = enableUser(
+                resultConfirmedVerificationCode.getSegundo(),
+                resultConfirmedVerificationCode.getTercero());
+
+        return new Dupla<>(enableUserOperationResult.getPrimero(),
+                enableUserOperationResult.getTercero()
+                ) ;
 
     }
 
-    public Tripla<Boolean, Optional<VerificationCode>, Optional<User>> verifyCode(String email, String code) {
-        Optional<User> user = userService.getUserToConfirmByEmail(email);
-
-        if (user.isEmpty()) {
-            return new Tripla<>(Boolean.FALSE, Optional.of(null), user);
+    public Tripla<Boolean, Optional<VerificationCode>, Optional<User>> verifyCode(Optional<User> optionalUser, String code) {
+        if (optionalUser.isEmpty()) {
+            return new Tripla<>(Boolean.FALSE, Optional.of(null), optionalUser);
         }
 
-        Dupla<Boolean, Optional<VerificationCode>> resultCheckedVerificationCode = checkVerificationCode(code, email);
+        Dupla<Boolean, Optional<VerificationCode>> resultCheckedVerificationCode = checkVerificationCode(code, optionalUser.get().getEmail());
 
         if (!resultCheckedVerificationCode.getPrimero()) {
-            return new Tripla<>(false, resultCheckedVerificationCode.getSegundo(), user)  ;
+            return new Tripla<>(false, resultCheckedVerificationCode.getSegundo(), optionalUser)  ;
         }
 
         Dupla<Boolean, Optional<VerificationCode>> resultConfirmedVerificationCode = confirmVerificationCode(resultCheckedVerificationCode.getSegundo());
 
 
-        return new Tripla<>(resultConfirmedVerificationCode.getPrimero(), resultConfirmedVerificationCode.getSegundo(), user);
+        return new Tripla<>(resultConfirmedVerificationCode.getPrimero(), resultConfirmedVerificationCode.getSegundo(), optionalUser);
 
     }
 
@@ -116,9 +121,13 @@ public class UserVerificationServiceImpl implements UserVerificationService {
     }
 
     @Override
-    public boolean verifyCodeForResetPassword(String email, String code) {
-        return false;
+    public Dupla<Boolean, Optional<User>> verifyCodeForResetPassword(String email, String code) {
+        Optional<User> optionalUser = userService.getActiveUserByEmail(email);
+        Tripla<Boolean, Optional<VerificationCode>, Optional<User>> verificationCodeOperationResult = verifyCode(optionalUser, code);
+
+        return new Dupla<>(verificationCodeOperationResult.getPrimero(), verificationCodeOperationResult.getTercero());
     }
+
 
 
     public static String generateVerificationCode() {

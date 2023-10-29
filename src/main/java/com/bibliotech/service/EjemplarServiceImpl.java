@@ -154,4 +154,10 @@ public class EjemplarServiceImpl implements EjemplarService {
         return comentarioDTOS;
     };
 
+
+    @Override
+    public boolean exists(Long id) {
+        return ejemplarRepository.existsById(id);
+    }
+
 }

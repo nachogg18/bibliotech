@@ -25,4 +25,6 @@ public interface EjemplarService {
     Optional<Ejemplar> findById(Long id);
 
     List<ComentarioDTO> getAllComentarios(Long id);
+
+    boolean exists(Long id);
 }

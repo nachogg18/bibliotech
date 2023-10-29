@@ -76,8 +76,6 @@ public class PublicacionServiceImpl implements PublicacionService {
         return publicacionRepository.findById(id);
     }
 
-    ;
-
     @Override
     public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
 
