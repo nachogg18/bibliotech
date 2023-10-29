@@ -5,6 +5,7 @@ import com.bibliotech.entity.*;
 import com.bibliotech.repository.BaseRepository;
 import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
+import com.bibliotech.repository.specifications.PrestamoSpecifications;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
@@ -12,15 +13,21 @@ import com.bibliotech.security.service.UserService;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
+    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(PrestamoServiceImpl.class);
     @Autowired
     private PrestamosRepository prestamosRepository;
     @Autowired
@@ -99,6 +106,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .collect(Collectors.toList());
     }
 
+
     @Override
     @Transactional
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
@@ -152,7 +160,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         //usuario existente, rol correspondiente y habilitado
         User usuarioAutenticado = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
 
-        if (!usuarioAutenticado.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
+        if (!usuarioAutenticado.isEnabled()) throw new ValidationException("El usuario no está habilitado");
         Role rolActual = usuarioAutenticado.getRoles().stream()
                 .filter(rol -> rol.getEndDate() == null)
                 .findFirst()
@@ -178,7 +186,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             boolean prestamoOverlap = ejemplar.getPrestamos().stream()
                     .anyMatch(subEntity -> subEntity.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada()));
             if (prestamoOverlap)
-                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes"));
+                throw new ValidationException("El periodo de tiempo se superpone con prestamos existentes");
         }
     }
 
@@ -197,6 +205,112 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 ).toList();
     }
 
+    @Override
+    public List<Prestamo> findByParams(PrestamosByParamsRequest request) {
+
+        int parametrosAdmitidos = 0;
+
+        List<Specification<Prestamo>> specificationList = new ArrayList<>();
+
+        Specification<Prestamo> prestamoIdSpec;
+
+        Specification<Prestamo> prestamoEstadoIdSpec;
+
+        Specification<Prestamo> userIdSpec;
+
+        Specification<Prestamo> multaIdSpec;
+
+        Specification<Prestamo> ejemplarIdSpec;
+
+        Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
+
+        Specification<Prestamo> fechaInicioEstimadaHastaSpec;
+
+        List<Long> prestamosIds = request.getPrestamosIds();
+        if (Objects.nonNull(prestamosIds) && !prestamosIds.isEmpty()) {
+            List<Specification<Prestamo>> prestamoIdSpecifications = prestamosIds.stream()
+                    .map(PrestamoSpecifications::hasId).collect(Collectors.toList());
+            prestamoIdSpec = Specification.anyOf(prestamoIdSpecifications);
+            specificationList.add(prestamoIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<Long> userIds= request.getUsuariosIds();
+        if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
+                List<Specification<Prestamo>> userIdSpecifications = userIds.stream()
+              .map(
+              PrestamoSpecifications::hasUserWithId).collect(Collectors.toList());
+                userIdSpec = Specification.anyOf(userIdSpecifications);
+                specificationList.add(userIdSpec);
+                parametrosAdmitidos++;
+        }
+
+        List<Long> ejemplaresIds= request.getEjemplaresIds();
+        if (Objects.nonNull(ejemplaresIds) && !ejemplaresIds.isEmpty()) {
+            List<Specification<Prestamo>> ejemplarIdSpecifications = ejemplaresIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasEjemplarWithId).collect(Collectors.toList());
+            ejemplarIdSpec = Specification.anyOf(ejemplarIdSpecifications);
+            specificationList.add(ejemplarIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<Long> multasIds= request.getMultasIds();
+        if (Objects.nonNull(multasIds) && !multasIds.isEmpty()) {
+            List<Specification<Prestamo>> multaIdSpecifications = multasIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasMultaWithId).collect(Collectors.toList());
+            multaIdSpec = Specification.anyOf(multaIdSpecifications);
+            specificationList.add(multaIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<Long> prestamosEstadosIds = request.getPrestamosEstadosIds();
+        if (Objects.nonNull(prestamosEstadosIds) && !prestamosEstadosIds.isEmpty()) {
+            List<Specification<Prestamo>> prestamoEstadoIdSpecifications = prestamosEstadosIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasPrestamoEstadoWithId).collect(Collectors.toList());
+            prestamoEstadoIdSpec = Specification.anyOf(prestamoEstadoIdSpecifications);
+            specificationList.add(prestamoEstadoIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaInicioEstimadaDesde = request.getFechaInicioEstimadaDesde();
+        if (Objects.nonNull(fechaInicioEstimadaDesde)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaInicioEstimadaDesde(fechaInicioEstimadaDesde);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaInicioEstimadaHasta = request.getFechaInicioEstimadaHasta();
+        if (Objects.nonNull(fechaInicioEstimadaHasta)) {
+            fechaInicioEstimadaHastaSpec = PrestamoSpecifications.fechaInicioEstimadaHasta(fechaInicioEstimadaHasta);
+            specificationList.add(fechaInicioEstimadaHastaSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaFinEstimadaDesde = request.getFechaFinEstimadaDesde();
+        if (Objects.nonNull(fechaFinEstimadaDesde)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaFinEstimadaDesde(fechaInicioEstimadaDesde);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+        Instant fechaFinEstimadaHasta = request.getFechaFinEstimadaHasta();
+        if (Objects.nonNull(fechaFinEstimadaHasta)) {
+            fechaInicioEstimadaDesdeSpec = PrestamoSpecifications.fechaFinEstimadaHasta(fechaFinEstimadaHasta);
+            specificationList.add(fechaInicioEstimadaDesdeSpec);
+            parametrosAdmitidos++;
+        }
+
+
+        if (parametrosAdmitidos > 0) {
+                return prestamosRepository.findAll(Specification.allOf(specificationList));
+            } else {
+                return prestamosRepository.findAll(PrestamoSpecifications.withoutResults());
+        }
+
+    }
 
     @Override
     public PrestamoResponse modifyPrestamo(PrestamoRequest request) {
@@ -204,4 +318,5 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         return null;
     }
+
 }

@@ -1,17 +1,16 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 import lombok.*;
 
-import java.time.Instant;
-
 @Entity
+@Builder
 @Table(name= "prestamo_estado")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class PrestamoEstado extends Base{
     @Column
     private Instant fechaInicio = Instant.now();

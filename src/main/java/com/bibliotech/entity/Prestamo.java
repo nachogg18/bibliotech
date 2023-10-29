@@ -1,20 +1,18 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.Instant;
 import java.util.*;
+import lombok.*;
 
 @Entity
+@Builder
 @Table(name= "prestamo")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Prestamo extends Base {
 
     @Column
