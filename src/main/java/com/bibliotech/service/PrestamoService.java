@@ -15,4 +15,10 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     List<PrestamoItemTablaDTO> getPrestamosListTable();
 
     PrestamoResponse checkInPrestamo(Long id);
+
+    PrestamoResponse cancelarPrestamo(Long id);
+
+    PrestamoResponse renovarPrestamo(Long id, RenovacionDTO req);
+
+    PrestamoResponse extravioPrestamo(Long id);
 }

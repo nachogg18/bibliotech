@@ -107,7 +107,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
         //verificaciones
         User usuarioPrestamo = verifyUsuarioYEjemplar(prestamoRequest);
-        verifyFechaPrestamos(prestamoRequest);
+        Ejemplar ejemplar =  ejemplarService.findById(prestamoRequest.getEjemplarID()).orElseThrow(() -> new ValidationException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID())));
+        verifyFechaPrestamos(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada(), ejemplar);
 
         //creacion de prestamo
         Prestamo prestamoNuevo = Prestamo.builder()
@@ -167,21 +168,26 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         }
     }
 
-    private void verifyFechaPrestamos (PrestamoRequest prestamoRequest) {
+    private void verifyFechaPrestamos (Instant fechaInicio, Instant fechaFin, Ejemplar ejemplar) {
         //verificar que fecha fin > fecha inicio
-        if(prestamoRequest.getFechaInicioEstimada().isAfter(prestamoRequest.getFechaFinEstimada())) throw new ValidationException("La fecha inicio debe estar antes de la fecha fin");
+        if(fechaInicio.isAfter(fechaFin)) throw new ValidationException("La fecha inicio debe estar antes de la fecha fin");
 
         //comparar con dias maximos y minimos parametrizados
-        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
-        // if(prestamoRequest.getFechaInicioEstimada().until(prestamoRequest.getFechaFinEstimada(), ChronoUnit.DAYS) < días min parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) < días min parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
 
         //comparar overlap con otras fechas
-        Ejemplar ejemplar = ejemplarService.findById(prestamoRequest.getEjemplarID()).get();
         if (!ejemplar.getPrestamos().isEmpty()) {
-            boolean prestamoOverlap = ejemplar.getPrestamos().stream()
-                    .anyMatch(subEntity -> subEntity.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada()));
+            List<Prestamo> prestamosEnEspera = ejemplar.getPrestamos().stream()
+                    .filter(prestamo -> prestamo.getEstado().stream()
+                            .anyMatch(estado -> (estado.getEstado() == EstadoPrestamo.EN_ESPERA || estado.getEstado() == EstadoPrestamo.ACTIVO) && estado.getFechaFin() == null))
+                    .toList();
+            boolean prestamoOverlap = prestamosEnEspera.stream()
+                    .anyMatch(subEntity -> subEntity.overlapsWith(fechaInicio, fechaFin));
             if (prestamoOverlap)
                 throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes"));
+        } else {
+            ejemplar.setPrestamos(new ArrayList<>());
         }
     }
 
@@ -255,10 +261,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
                 .fechaFinEstimada(prestamo.getFechaFinEstimada())
                 .fechaAlta(prestamo.getFechaAlta())
-                .estado(prestamo.getEstado().stream()
+                .estado(Objects.requireNonNull(prestamo.getEstado().stream()
                         .filter(estado -> estado.getFechaFin() == null)
                         .findFirst()
-                        .orElse(null).getEstado().name())
+                        .orElse(null)).getEstado().name())
                 .build();
     }
 
@@ -304,6 +310,137 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         //guardar cambios
         prestamoEstadoRepository.save(estadoPrestamo);
         ejemplarEstadoRepository.save(estadoEjemplar);
+        prestamosRepository.save(prestamo);
+
+        return PrestamoResponse
+                .builder()
+                .usuarioID(prestamo.getUsuario().getId())
+                .ejemplarID(prestamo.getEjemplar().getId())
+                .PrestamoID(prestamo.getId())
+                .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
+                .fechaFinEstimada(prestamo.getFechaFinEstimada())
+                .fechaAlta(prestamo.getFechaAlta())
+                .estado(prestamo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .build();
+    }
+
+    @Override
+    public PrestamoResponse cancelarPrestamo(Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
+        Instant currentTime = Instant.now();
+
+        //verificacion estado prestamo
+        PrestamoEstado estadoPrestamo = prestamo.getEstado().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
+        if (estadoPrestamo.getEstado() != EstadoPrestamo.EN_ESPERA) throw new ValidationException("El préstamo no está en espera");
+
+        //cambio de estados
+        estadoPrestamo.setFechaFin(Instant.now());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.CANCELADO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
+
+        prestamosRepository.save(prestamo);
+
+        return PrestamoResponse
+                .builder()
+                .usuarioID(prestamo.getUsuario().getId())
+                .ejemplarID(prestamo.getEjemplar().getId())
+                .PrestamoID(prestamo.getId())
+                .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
+                .fechaFinEstimada(prestamo.getFechaFinEstimada())
+                .fechaAlta(prestamo.getFechaAlta())
+                .estado(prestamo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .build();
+    }
+
+    @Override
+    public PrestamoResponse renovarPrestamo(Long id, RenovacionDTO req) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
+        Instant currentTime = Instant.now();
+
+        //verificacion estado prestamo
+        PrestamoEstado estadoPrestamo = prestamo.getEstado().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
+        if (estadoPrestamo.getEstado() != EstadoPrestamo.ACTIVO) throw new ValidationException("El préstamo no está activo");
+
+        verifyFechaPrestamos(req.getFechaInicioRenovacion(), req.getFechaFinRenovacion(), prestamo.getEjemplar());
+
+        if (prestamo.getFechasRenovaciones() != null /*&& prestamo.getFechasRenovaciones().size() < maxRenovaciones*/){
+            prestamo.getFechasRenovaciones().add(Instant.now());
+        }
+
+        //cambio de estados
+        estadoPrestamo.setFechaFin(Instant.now());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.CANCELADO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
+
+        prestamosRepository.save(prestamo);
+
+        return PrestamoResponse
+                .builder()
+                .usuarioID(prestamo.getUsuario().getId())
+                .ejemplarID(prestamo.getEjemplar().getId())
+                .PrestamoID(prestamo.getId())
+                .fechaInicioEstimada(prestamo.getFechaInicioEstimada())
+                .fechaFinEstimada(prestamo.getFechaFinEstimada())
+                .fechaAlta(prestamo.getFechaAlta())
+                .estado(prestamo.getEstado().stream()
+                        .filter(estado -> estado.getFechaFin() == null)
+                        .findFirst()
+                        .orElse(null).getEstado().name())
+                .build();
+    }
+
+    @Override
+    public PrestamoResponse extravioPrestamo(Long id) {
+        Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
+        Instant currentTime = Instant.now();
+
+        //verificacion estado prestamo
+        PrestamoEstado estadoPrestamo = prestamo.getEstado().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
+        if (!(estadoPrestamo.getEstado() == EstadoPrestamo.ACTIVO || estadoPrestamo.getEstado() == EstadoPrestamo.RENOVADO || estadoPrestamo.getEstado() == EstadoPrestamo.VENCIDO)) throw new ValidationException("El préstamo no está activo");
+
+        //verificacion estado ejemplar
+        EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin() == null)
+                .findFirst()
+                .orElse(null);
+        if (estadoEjemplar == null) throw new ValidationException("Error con el ejemplar");
+        if (estadoEjemplar.getEstadoEjemplar() != EstadoEjemplar.PRESTADO) throw new ValidationException("El ejemplar no está prestado");
+
+        //cambio de estados
+        estadoPrestamo.setFechaFin(Instant.now());
+        PrestamoEstado prestamoEstado = new PrestamoEstado();
+        prestamoEstado.setEstado(EstadoPrestamo.EXTRAVIADO);
+        prestamoEstadoRepository.save(prestamoEstado);
+        prestamo.getEstado().add(prestamoEstado);
+
+        estadoEjemplar.setFechaFin(Instant.now());
+        EjemplarEstado ejemplarEstado = new EjemplarEstado();
+        ejemplarEstado.setEstadoEjemplar(EstadoEjemplar.EXTRAVIADO);
+        ejemplarEstadoRepository.save(ejemplarEstado);
+        prestamo.getEjemplar().getEjemplarEstadoList().add(ejemplarEstado);
+
         prestamosRepository.save(prestamo);
 
         return PrestamoResponse
