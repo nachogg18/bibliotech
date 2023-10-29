@@ -169,4 +169,8 @@ public class EjemplarServiceImpl implements EjemplarService {
         return response;
     }
 
+    @Override
+    public boolean exists(Long id) {
+        return ejemplarRepository.existsById(id);
+    }
 }
