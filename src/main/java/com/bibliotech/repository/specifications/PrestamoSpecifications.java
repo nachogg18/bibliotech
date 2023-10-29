@@ -15,6 +15,40 @@ public class PrestamoSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.or();
     }
 
+    public static Specification<Prestamo> hasId(Long id) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+
+            Predicate idPredicate = criteriaBuilder.equal(root.get("id"), id);
+
+            return idPredicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasMultaWithId(Long multaId) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad multa
+            root.fetch("multa");
+
+            // Crea una condición para buscar por el ID de la multa
+            Predicate multaIdPredicate = criteriaBuilder.equal(root.get("multa").get("id"), multaId);
+
+            return multaIdPredicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasPrestamoEstadoWithId(Long prestamoEstadoId) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad prestamo estado
+            root.fetch("estado");
+
+            // Crea una condición para buscar por el ID del prestamo estado
+            Predicate prestamoEstadoIdPredicate = criteriaBuilder.equal(root.get("estado").get("id"), prestamoEstadoId);
+
+            return prestamoEstadoIdPredicate;
+        };
+    }
+
+
     public static Specification<Prestamo> hasUserWithId(Long userId) {
         return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             // Obtén la relación con la entidad User
@@ -26,6 +60,19 @@ public class PrestamoSpecifications {
             return userIdPredicate;
         };
     }
+
+    public static Specification<Prestamo> hasEjemplarWithId(Long ejemplarId) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad User
+            root.fetch("ejemplar");
+
+            // Crea una condición para buscar por el ID del usuario
+            Predicate ejemplarIdPredicate = criteriaBuilder.equal(root.get("ejemplar").get("id"), ejemplarId);
+
+            return ejemplarIdPredicate;
+        };
+    }
+
 
     public static <T> Specification<T> fechaInicioEstimadaDesde(Instant fechaDesde) {
         return (Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {

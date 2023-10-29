@@ -1,6 +1,5 @@
 package com.bibliotech.dto;
 
-import com.bibliotech.entity.*;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.util.List;
@@ -14,31 +13,35 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class PrestamosByParamsRequest {
-    Long id;
+    List<Long> prestamosIds;
     Instant fechaInicioEstimadaDesde;
     Instant fechaInicioEstimadaHasta;
     Instant fechaFinEstimadaDesde;
     Instant fechaFinEstimadaHasta;
+    Instant fechaAltaDesde;
+    Instant fechaAltaHasta;
     Instant fechaBajaDesde;
     Instant fechaBajaHasta;
-    Long ejemplarId;
-    List<Long> estadoPrestamoIds;
-    List<PrestamoEstado> prestamosEstados;
+    List<Long> ejemplaresIds;
+    List<Long> prestamosEstadosIds;
+    List<String> prestamosEstadosNombres;
     List<Long> multasIds;
     List<Long> usuariosIds;
 
 
     Boolean hasAnyFieldFilled() {
-        return Objects.nonNull(id)
+        return Objects.nonNull(prestamosIds)
                 || Objects.nonNull(fechaInicioEstimadaDesde)
                 || Objects.nonNull(fechaInicioEstimadaHasta)
                 || Objects.nonNull(fechaFinEstimadaDesde)
                 || Objects.nonNull(fechaFinEstimadaHasta)
+                || Objects.nonNull(fechaAltaDesde)
+                || Objects.nonNull(fechaAltaHasta)
                 || Objects.nonNull(fechaBajaDesde)
                 || Objects.nonNull(fechaBajaHasta)
-                || Objects.nonNull(ejemplarId)
-                || Objects.nonNull(estadoPrestamoIds)
-                || Objects.nonNull(prestamosEstados)
+                || Objects.nonNull(ejemplaresIds)
+                || Objects.nonNull(prestamosEstadosIds)
+                || Objects.nonNull(prestamosEstadosNombres)
                 || Objects.nonNull(multasIds)
                 || Objects.nonNull(usuariosIds);
                 

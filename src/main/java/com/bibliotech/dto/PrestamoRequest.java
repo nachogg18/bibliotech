@@ -1,11 +1,15 @@
 package com.bibliotech.dto;
 
 import jakarta.validation.constraints.Future;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
 import java.time.Instant;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class PrestamoRequest {
     @NotBlank (message = "fecha fin estimada obligatorio")

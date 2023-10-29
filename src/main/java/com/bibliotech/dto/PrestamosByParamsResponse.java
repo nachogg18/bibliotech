@@ -22,7 +22,7 @@ public class PrestamosByParamsResponse {
     public static PrestamosByParamsResponse prestamoToPrestamoByParamsResponse(Prestamo prestamo) {
         return PrestamosByParamsResponse.builder().
                 UsuarioID((Objects.nonNull(prestamo.getUsuario()) && Objects.nonNull(prestamo.getUsuario().getId()) ? prestamo.getUsuario().getId().toString() : ""))
-                .EjemplarID((Objects.nonNull(prestamo.getEjemplar()) && Objects.nonNull(prestamo.getEjemplar().getId()) ? prestamo.getEjemplar().toString() : ""))
+                .EjemplarID((Objects.nonNull(prestamo.getEjemplar()) && Objects.nonNull(prestamo.getEjemplar().getId()) ? prestamo.getEjemplar().getId().toString() : ""))
                 .fechaInicioEstimada((Objects.nonNull(prestamo.getFechaInicioEstimada())? prestamo.getFechaInicioEstimada().toString() : ""))
                 .fechaFinEstimada((Objects.nonNull(prestamo.getFechaFinEstimada())? prestamo.getFechaFinEstimada().toString() : ""))
                 .build();

@@ -160,7 +160,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         //usuario existente, rol correspondiente y habilitado
         User usuarioAutenticado = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
 
-        if (!usuarioAutenticado.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
+        if (!usuarioAutenticado.isEnabled()) throw new ValidationException("El usuario no está habilitado");
         Role rolActual = usuarioAutenticado.getRoles().stream()
                 .filter(rol -> rol.getEndDate() == null)
                 .findFirst()
@@ -186,7 +186,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             boolean prestamoOverlap = ejemplar.getPrestamos().stream()
                     .anyMatch(subEntity -> subEntity.overlapsWith(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada()));
             if (prestamoOverlap)
-                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes"));
+                throw new ValidationException("El periodo de tiempo se superpone con prestamos existentes");
         }
     }
 
@@ -212,21 +212,68 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         List<Specification<Prestamo>> specificationList = new ArrayList<>();
 
+        Specification<Prestamo> prestamoIdSpec;
+
+        Specification<Prestamo> prestamoEstadoIdSpec;
+
         Specification<Prestamo> userIdSpec;
+
+        Specification<Prestamo> multaIdSpec;
+
+        Specification<Prestamo> ejemplarIdSpec;
 
         Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
 
         Specification<Prestamo> fechaInicioEstimadaHastaSpec;
 
+        List<Long> prestamosIds = request.getPrestamosIds();
+        if (Objects.nonNull(prestamosIds) && !prestamosIds.isEmpty()) {
+            List<Specification<Prestamo>> prestamoIdSpecifications = prestamosIds.stream()
+                    .map(PrestamoSpecifications::hasId).collect(Collectors.toList());
+            prestamoIdSpec = Specification.anyOf(prestamoIdSpecifications);
+            specificationList.add(prestamoIdSpec);
+            parametrosAdmitidos++;
+        }
+
         List<Long> userIds= request.getUsuariosIds();
-            if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
+        if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
                 List<Specification<Prestamo>> userIdSpecifications = userIds.stream()
               .map(
               PrestamoSpecifications::hasUserWithId).collect(Collectors.toList());
                 userIdSpec = Specification.anyOf(userIdSpecifications);
                 specificationList.add(userIdSpec);
                 parametrosAdmitidos++;
-            }
+        }
+
+        List<Long> ejemplaresIds= request.getEjemplaresIds();
+        if (Objects.nonNull(ejemplaresIds) && !ejemplaresIds.isEmpty()) {
+            List<Specification<Prestamo>> ejemplarIdSpecifications = ejemplaresIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasEjemplarWithId).collect(Collectors.toList());
+            ejemplarIdSpec = Specification.anyOf(ejemplarIdSpecifications);
+            specificationList.add(ejemplarIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<Long> multasIds= request.getMultasIds();
+        if (Objects.nonNull(multasIds) && !multasIds.isEmpty()) {
+            List<Specification<Prestamo>> multaIdSpecifications = multasIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasMultaWithId).collect(Collectors.toList());
+            multaIdSpec = Specification.anyOf(multaIdSpecifications);
+            specificationList.add(multaIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<Long> prestamosEstadosIds = request.getPrestamosEstadosIds();
+        if (Objects.nonNull(prestamosEstadosIds) && !prestamosEstadosIds.isEmpty()) {
+            List<Specification<Prestamo>> prestamoEstadoIdSpecifications = prestamosEstadosIds.stream()
+                    .map(
+                            PrestamoSpecifications::hasPrestamoEstadoWithId).collect(Collectors.toList());
+            prestamoEstadoIdSpec = Specification.anyOf(prestamoEstadoIdSpecifications);
+            specificationList.add(prestamoEstadoIdSpec);
+            parametrosAdmitidos++;
+        }
 
         Instant fechaInicioEstimadaDesde = request.getFechaInicioEstimadaDesde();
         if (Objects.nonNull(fechaInicioEstimadaDesde)) {
