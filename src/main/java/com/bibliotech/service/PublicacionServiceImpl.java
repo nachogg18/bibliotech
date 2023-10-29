@@ -210,6 +210,7 @@ public class PublicacionServiceImpl implements PublicacionService {
                         .link(
                                 Link.builder()
                                         .url(request.getLink().getUrl())
+                                        .fechaAlta(Instant.now())
                                         .plataforma(
                                                 plataformaService.findById(request.getLink().getPlataformaId())
                                                         .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", request.getLink().getPlataformaId())))
