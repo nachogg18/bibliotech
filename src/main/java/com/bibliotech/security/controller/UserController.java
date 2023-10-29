@@ -117,18 +117,7 @@ public class UserController {
     public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable Long id) {
         return ResponseEntity.ok(
                 userService.findById(id).map(
-                        user -> UserDetailDto.builder()
-                                .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
-                                .nombre(user.getFirstName())
-                                .apellido(user.getLastName())
-                                .email((Objects.nonNull(user.getEmail())) ? user.getEmail() : "")
-                                .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of()))
-                                .startDate((Objects.nonNull(user.getStartDate()) ? user.getStartDate().toString() : ""))
-                                .endDate((Objects.nonNull(user.getLastName()) ? user.getLastName().toString() : ""))
-                                .endDate((Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : ""))
-                                .dni(user.getDni())
-                                .legajo(user.getLegajo())
-                                .build()
+                        user -> UserDetailDto.userToUserDetailDto(user)
                 ).get()
         );
     }
@@ -147,16 +136,7 @@ public class UserController {
     return ResponseEntity.ok(
             Streams.of(userService.edit(userId, editUserRequest)).map(
                     user ->
-                        UserDetailDto.builder()
-                                .id(user.getId())
-                                .nombre(user.getFirstName())
-                                .apellido(user.getLastName())
-                                .email(user.getEmail())
-                                .roles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
-                                .startDate(Objects.nonNull(user.getStartDate()) ? user.getStartDate().toString() : "")
-                                .lastUpdatedDate(Objects.nonNull(user.getLastUpdatedDate()) ? user.getLastUpdatedDate().toString() : "")
-                                .endDate(Objects.nonNull(user.getEndDate()) ? user.getEndDate().toString() : "")
-                                .build()
+                        UserDetailDto.userToUserDetailDto(user)
             ).findAny().get()
 
         );

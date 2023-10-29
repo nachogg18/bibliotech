@@ -41,4 +41,7 @@ public class Ejemplar extends Base {
     @ManyToOne
     private Ubicacion ubicacion;
 
+    @OneToMany(mappedBy = "ejemplar")
+    private List<Prestamo> prestamos = new ArrayList<>();
+
 }
