@@ -331,13 +331,14 @@ public class PublicacionServiceImpl implements PublicacionService {
         CategoriaPublicacion.builder().build();
 
         if(req.getCategorias() != null) {
-            publicacion.setCategoriaPublicacionList(
+            publicacion.getCategoriaPublicacionList().clear();
+            publicacion.getCategoriaPublicacionList().addAll(
                     req.getCategorias().stream().map(
-                            dto -> CategoriaPublicacion.builder().build()
-                                    //.builder()
-                                    //.categoria(categoriaService.findOne(dto.idCategoria()).orElseThrow(() -> new ValidationException(String.format("no existe categoria con id: %s", dto.idCategoria()))))
-                                    //.categoriaValorList(dto.idValores().stream().map(v -> categoriaValorService.findById(v).orElseThrow(() -> new ValidationException(String.format("no existe valor con id: %s", v)))).toList())
-                                   // .build()
+                            dto -> CategoriaPublicacion
+                                    .builder()
+                                    .categoria(categoriaService.findOne(dto.idCategoria()).orElseThrow(() -> new ValidationException(String.format("no existe categoria con id: %s", dto.idCategoria()))))
+                                    .categoriaValorList(dto.idValores().stream().map(v -> categoriaValorService.findById(v).orElseThrow(() -> new ValidationException(String.format("no existe valor con id: %s", v)))).toList())
+                                    .build()
                     ).toList()
             );
         }
