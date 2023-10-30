@@ -14,4 +14,6 @@ public class PrestamoResponse {
     private Long usuarioID;
     private Long ejemplarID;
     private Instant fechaAlta;
+
+    private String estado;
 }
