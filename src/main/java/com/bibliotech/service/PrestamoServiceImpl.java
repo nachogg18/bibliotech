@@ -380,7 +380,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         verifyFechaPrestamos(req.getFechaInicioRenovacion(), req.getFechaFinRenovacion(), prestamo.getEjemplar());
 
         if (prestamo.getFechasRenovaciones() != null /*&& prestamo.getFechasRenovaciones().size() < maxRenovaciones*/){
-            prestamo.getFechasRenovaciones().add(Instant.now());
+            prestamo.getFechasRenovaciones().add(req.getFechaFinRenovacion());
         }
 
         //cambio de estados
