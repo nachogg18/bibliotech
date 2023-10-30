@@ -1,3 +1,9 @@
+application:
+  security:
+    jwt:
+      refresh-token:
+        expiration: ${REFRESH_TOKEN_EXPIRATION}
+
 spring:
   datasource:
     url: ${DB_URL}
@@ -14,7 +20,7 @@ spring:
       ddl-auto: create-drop
     properties:
       hibernate:
-        dialect:  org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect
 token:
   signing:
     key: ${JWT_KEY}
