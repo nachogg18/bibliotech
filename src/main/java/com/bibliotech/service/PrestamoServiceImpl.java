@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
@@ -164,7 +166,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         //usuario existente, rol correspondiente y habilitado
         User usuarioAutenticado = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
 
-        if (!usuarioAutenticado.isEnabled()) throw new ValidationException(String.format("El usuario no está habilitado"));
+        if (!usuarioAutenticado.isEnabled()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El usuario no está habilitado"));
         Role rolActual = usuarioAutenticado.getRoles().stream()
                 .filter(rol -> rol.getEndDate() == null)
                 .findFirst()
@@ -172,13 +174,14 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         if (rolActual.equals(RoleUtils.DEFAULT_ROLE_USER)) {
             return usuarioAutenticado;
         } else {
-            return userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ValidationException(String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
+            return userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
         }
     }
 
     private void verifyFechaPrestamos (Instant fechaInicio, Instant fechaFin, Ejemplar ejemplar) {
         //verificar que fecha fin > fecha inicio
-        if(fechaInicio.isAfter(fechaFin)) throw new ValidationException("La fecha inicio debe estar antes de la fecha fin");
+        if(fechaInicio.isAfter(fechaFin)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fecha inicio debe estar antes de la fecha fin");
+        if(Instant.now().isAfter(fechaFin)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fecha fin debe estar en el futuro");
 
         //comparar con dias maximos y minimos parametrizados
         // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
@@ -193,7 +196,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             boolean prestamoOverlap = prestamosEnEspera.stream()
                     .anyMatch(subEntity -> subEntity.overlapsWith(fechaInicio, fechaFin));
             if (prestamoOverlap)
-                throw new ValidationException(String.format("El periodo de tiempo se superpone con prestamos existentes"));
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El periodo de tiempo se superpone con prestamos existentes");
         } else {
             ejemplar.setPrestamos(new ArrayList<>());
         }
