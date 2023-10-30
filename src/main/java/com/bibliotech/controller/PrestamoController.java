@@ -5,12 +5,12 @@ import com.bibliotech.entity.Prestamo;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -27,7 +27,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     }
 
     @GetMapping("/detalle/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
+    @PreAuthorize("@authenticacionService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public DetallePrestamoDTO getDetallePrestamo(@PathVariable Long id) {
         return prestamoService.getDetallePrestamo(id);
     }
@@ -36,6 +36,18 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public List<PrestamoItemTablaDTO> getPrestamosListTable() {
         return prestamoService.getPrestamosListTable();
+    }
+
+    @PostMapping(path = "/findByParams")
+        public List<PrestamosByParamsResponse> findByParams(
+            @RequestBody PrestamosByParamsRequest request) {
+
+        request.validate();
+
+        return prestamoService.findByParams(request).stream()
+                .map(
+                        prestamo -> PrestamosByParamsResponse.prestamoToPrestamoByParamsResponse(prestamo))
+                .collect(Collectors.toList());
     }
 
     @PostMapping
@@ -73,6 +85,4 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
     }
-
-
 }
