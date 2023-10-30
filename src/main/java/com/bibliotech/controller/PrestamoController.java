@@ -50,7 +50,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
                 .collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PostMapping("/crearPrestamo")
     public ResponseEntity<PrestamoResponse> save(@RequestBody PrestamoRequest request) throws Exception {
         return ResponseEntity.ok().body(prestamoService.crearPrestamo(request));
     }
