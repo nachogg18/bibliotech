@@ -50,6 +50,8 @@ public class LocalDataInitializer implements ApplicationRunner {
 
   private final ResourceService resourceService;
 
+  private final EdicionService edicionService;
+
   private final PublicacionService publicacionService;
 
   private final AutorService autorService;
@@ -68,6 +70,8 @@ public class LocalDataInitializer implements ApplicationRunner {
     List<Link> enabledLinks = List.of(createLink());
 
     createPlataformas(enabledLinks);
+
+    createEdicion();
 
     Set<Resource> resources = createResources();
 
@@ -250,6 +254,15 @@ public class LocalDataInitializer implements ApplicationRunner {
             .apellido("García Márquez")
             .nombre("Gabriel")
             .build());
+  }
+
+  private Edicion createEdicion() {
+
+    return edicionService.save(
+            Edicion.builder()
+                    .fechaAlta(Instant.now())
+                    .nombre("primera")
+                    .build());
   }
 
   private Ejemplar createTestEjemplar(Publicacion publicacion, Comentario comentario) {

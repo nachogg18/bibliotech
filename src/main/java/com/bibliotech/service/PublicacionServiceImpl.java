@@ -246,17 +246,8 @@ public class PublicacionServiceImpl implements PublicacionService {
                         .fechaAlta(Instant.now())
                         .fechaBaja(null)
                         .build());
-
-        PublicacionResponseDTO responseDTO = new PublicacionResponseDTO();
-        responseDTO.setTituloPublicacion(publicacion.getTitulo());
-        responseDTO.setAnioPublicacion(publicacion.getAnio());
-        responseDTO.setNombreEdicion(publicacion.getEdicion().getNombre());
-        responseDTO.setNombreEditorial(publicacion.getEditoriales().get(0).getNombre());
-        responseDTO.setId(publicacion.getId());
-        responseDTO.setNombreAutores(
-                publicacion.getAutores().stream().map(a -> a.getApellido() + ", " + a.getNombre()).toList()
-        );
-        return responseDTO;
+        
+        return PublicacionResponseDTO.PublicacionToPublicacionResponseDTO(publicacion);
     }
 
 
