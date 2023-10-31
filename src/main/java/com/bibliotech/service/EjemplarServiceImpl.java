@@ -1,13 +1,12 @@
 package com.bibliotech.service;
 
-import com.bibliotech.dto.CrearEjemplarDTO;
-import com.bibliotech.dto.EditEjemplarDTO;
-import com.bibliotech.dto.EjemplarDetailDTO;
-import com.bibliotech.dto.EjemplarResponseDTO;
+import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarRepository;
 import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -170,7 +169,33 @@ public class EjemplarServiceImpl implements EjemplarService {
     }
 
     @Override
+    public List<ComentarioDTO> getAllComentarios(Long id){
+        List<Comentario> comentarios = ejemplarRepository.findComentariosByEjemplarId(id);
+        List<ComentarioDTO> comentarioDTOS = comentarios.stream().map( comentario -> {
+            ComentarioDTO dto = new ComentarioDTO();
+            dto.setId(comentario.getId());
+            dto.setComentario(comentario.getComentario());
+
+            Instant fecha = comentario.getFechaAlta();
+            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
+            // Crear un formateador de fecha y hora
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            // Formatear el Instant en la zona horaria de Argentina
+            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
+
+            dto.setFecha(formattedDateTime);
+            dto.setCalificacion(comentario.getCalificacion());
+            dto.setAltaUsuario(comentario.getAltaUsuario().getFirstName() + ' ' + comentario.getAltaUsuario().getLastName());
+            return dto;
+        }).toList();
+
+        return comentarioDTOS;
+    };
+
+
+    @Override
     public boolean exists(Long id) {
         return ejemplarRepository.existsById(id);
     }
+
 }

@@ -10,6 +10,8 @@ import com.bibliotech.utils.PageUtil;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -381,5 +383,29 @@ public class PublicacionServiceImpl implements PublicacionService {
 
         return publicacion;
     }
+
+    @Override
+    public List<ComentarioDTO> getAllComentarios(Long id){
+        List<Comentario> comentarios = publicacionRepository.findComentariosByPublicacionId(id);
+        List<ComentarioDTO> comentarioDTOS = comentarios.stream().map( comentario -> {
+            ComentarioDTO dto = new ComentarioDTO();
+            dto.setId(comentario.getId());
+            dto.setComentario(comentario.getComentario());
+
+            Instant fecha = comentario.getFechaAlta();
+            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
+            // Crear un formateador de fecha y hora
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            // Formatear el Instant en la zona horaria de Argentina
+            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
+
+            dto.setFecha(formattedDateTime);
+            dto.setCalificacion(comentario.getCalificacion());
+            dto.setAltaUsuario(comentario.getAltaUsuario().getFirstName() + ' ' + comentario.getAltaUsuario().getLastName());
+            return dto;
+        }).toList();
+
+        return comentarioDTOS;
+    };
 
 }

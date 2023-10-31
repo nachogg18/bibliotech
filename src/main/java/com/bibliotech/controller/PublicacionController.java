@@ -1,10 +1,7 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
-import com.bibliotech.entity.Autor;
-import com.bibliotech.entity.Edicion;
-import com.bibliotech.entity.Editorial;
-import com.bibliotech.entity.Publicacion;
+import com.bibliotech.entity.*;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -101,5 +98,11 @@ public class PublicacionController {
   public ResponseEntity<?> updatePublicacion(
       @RequestBody ModificarPublicacionDTO req, @PathVariable Long id) {
     return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
+  }
+
+  @GetMapping(path="{id}/comentarios")
+  //TODO cambiar la preautorizacion a lectura de comentarios
+  public ResponseEntity<List<ComentarioDTO>> getComentarios(@PathVariable Long id){
+    return ResponseEntity.ok().body(publicacionService.getAllComentarios(id));
   }
 }
