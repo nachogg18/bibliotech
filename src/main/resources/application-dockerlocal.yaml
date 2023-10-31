@@ -1,6 +1,8 @@
-logging:
-  level:
-    com.bibliotech: debug
+application:
+  security:
+    jwt:
+      refresh-token:
+        expiration: ${REFRESH_TOKEN_EXPIRATION}
 
 spring:
   datasource:
@@ -15,13 +17,13 @@ spring:
     password: ${EMAIL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
-        dialect:  org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect
 token:
   signing:
-    key: test1352675ghjt7789798578455855seserewgweew
+    key: ${JWT_KEY}
   expiration:
     time: ${TOKEN_EXPIRATION_TIME}
 
