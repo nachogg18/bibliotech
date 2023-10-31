@@ -8,6 +8,7 @@ import com.bibliotech.entity.Multa;
 import com.bibliotech.entity.MultaEstado;
 import com.bibliotech.repository.MultaRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
+import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -92,5 +93,37 @@ public class MultaServiceImpl implements MultaService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<MultaItemTablaDTO> getMultasByUserId(Long idUsuario) {
+        return multaRepository.findMultasByUsuarioId(idUsuario)
+                .stream().map(
+                        multa -> MultaItemTablaDTO
+                                .builder()
+                                .id(multa.getId())
+                                .idPrestamo(multa.getPrestamo().getId())
+                                .idUsuario(multa.getUser().getId())
+                                .fechaDesde(multa.getFechaInicio())
+                                .fechaHasta(multa.getFechaFin())
+                                .estado(multa.getMultaEstados().stream()
+                                        .filter(estado -> estado.getFechaFin() == null)
+                                        .findFirst()
+                                        .orElse(null)
+                                                .getNombre()
+                                        )
+                                .tipo(multa.getTipoMulta().getNombre())
+                                .build()
+                ).toList();
+    }
+
+    @Override
+    public boolean isUsuarioHabilitado(Long id) {
+        User usuario = userService.findById(id).get();
+        List<MultaItemTablaDTO> multasUsuario = getMultasByUserId(usuario.getId());
+        if (multasUsuario.stream().filter(
+                multa -> multa.getEstado() == "ACTIVA"
+        ).findAny().orElse(null) == null) return true;
+        return false;
     }
 }
