@@ -39,15 +39,14 @@ public class CategoriaValorServiceImpl implements CategoriaValorService {
         Categoria categoria = categoriaService.findOne(valorDTO.getIdCategoria())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
         CategoriaValor valor = new CategoriaValor();
+
         valor.setNombre(valorDTO.getNombre());
-        valor.setCategoria(categoria);
+
         valor = categoriaValorRepository.save(valor);
-        MostrarCategoriaValorDTO retorna = modelMapper.map(valor, MostrarCategoriaValorDTO.class);
-        log.info(valorDTO.toString());
-        log.info(categoria.toString());
-        log.info(valor.toString());
-        log.info(retorna.toString());
-        return retorna;
+        categoria.getValores().add(valor);
+        categoriaService.save(categoria);
+
+        return modelMapper.map(valor, MostrarCategoriaValorDTO.class);
     }
 
     @Override
