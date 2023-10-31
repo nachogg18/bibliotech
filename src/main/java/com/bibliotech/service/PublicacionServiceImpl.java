@@ -7,6 +7,7 @@ import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
 import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.stream.Streams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -25,12 +27,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Log4j2
 public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
-    private final TipoPublicacionRepository tipoPublicacionRepository;
-    private final LinkRepository linkRepository;
+    private final LinkService linkService;
     private final EditorialRepository editorialRepository;
     private final EdicionRepository edicionRepository;
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
@@ -207,14 +209,19 @@ public class PublicacionServiceImpl implements PublicacionService {
                                                         String.format("no existe edicion con id: %s", request.getIdEdicion())))
                         )
                         .link(
-                                Link.builder()
-                                        .url(request.getLink().getUrl())
-                                        .plataforma(
-                                                plataformaService.findById(request.getLink().getPlataformaId())
-                                                        .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", request.getLink().getPlataformaId())))
-                                        )
-                                        .estadoLink(EstadoLink.valueOf(request.getLink().getEstado()))
-                                        .build()
+
+                                Streams.of(request.getLink()).map( linkRequestDTO -> linkService.save(
+                                        Link.builder()
+                                                .url(request.getLink().getUrl())
+                                                .fechaAlta(Instant.now())
+                                                .plataforma(
+                                                        plataformaService.findById(request.getLink().getPlataformaId())
+                                                                .orElseThrow(() -> new ValidationException(String.format("no existe plataforma con id: %s", request.getLink().getPlataformaId())))
+                                                )
+                                                .estadoLink(EstadoLink.valueOf(request.getLink().getEstado()))
+                                                .build()
+                                )).findAny().get()
+
                         )
                         .categoriaPublicacionList(
                                 request.getCategorias().stream().map(
@@ -370,7 +377,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         }
 
         if(req.getIdEdicion()!=null) publicacion.setEdicion(edicionRepository.findById(req.getIdEdicion()).get());
-        if(req.getIdTipoPublicacion()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getIdTipoPublicacion()).get());
+        if(req.getIdTipoPublicacion()!=null) publicacion.setTipoPublicacion(tipoPublicacionService.findById(req.getIdTipoPublicacion()).get());
 
         return publicacion;
     }

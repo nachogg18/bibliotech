@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Plataforma;
 import com.bibliotech.repository.PlataformaRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PlataformaServiceImpl implements PlataformaService {
 
     private final PlataformaRepository plataformaRepository;
