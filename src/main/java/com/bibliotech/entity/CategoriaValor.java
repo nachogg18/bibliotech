@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -19,6 +20,7 @@ public class CategoriaValor extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
+    @JsonIgnore
     @ManyToOne
     private Categoria categoria;
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TipoPublicacionService {
+
+    Optional<TipoPublicacion> findById(Long id);
     List<TipoPublicacion> findAll();
 
     TipoPublicacion save(TipoPublicacion tipoPublicacion);

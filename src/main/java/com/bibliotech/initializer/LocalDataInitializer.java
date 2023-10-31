@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
 @Profile({"local", "dockerlocal"})
 @RequiredArgsConstructor
 public class LocalDataInitializer implements ApplicationRunner {
-
   private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
 
   private final Environment env;
@@ -65,33 +64,33 @@ public class LocalDataInitializer implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
-    //List<Link> enabledLinks = List.of(createLink());
+    List<Link> enabledLinks = List.of(createLink());
 
-    //createPlataformas(enabledLinks);
+    createPlataformas(enabledLinks);
 
-    //Set<Resource> resources = createResources();
+    Set<Resource> resources = createResources();
 
-    //Set<Privilege> privileges = createBasicPrivileges(resources);
+    Set<Privilege> privileges = createBasicPrivileges(resources);
 
-    //Role superAdminRole = createSuperAdminRole(privileges);
+    Role superAdminRole = createSuperAdminRole(privileges);
 
-    //Role userBasicRole = createUserRole(privileges);
+    Role userBasicRole = createUserRole(privileges);
 
-    //createBibliotecarioRole(privileges);
+    createBibliotecarioRole(privileges);
 
-    //createSuperAdminUser(superAdminRole);
+    createSuperAdminUser(superAdminRole);
 
-    //User userTest = createTestBasicUser(userBasicRole);
+    User userTest = createTestBasicUser(userBasicRole);
 
-    //Autor autor = createAutor();
+    Autor autor = createAutor();
 
-    //Publicacion publicacionTest = createPublicacion(List.of(autor));
+    Publicacion publicacionTest = createPublicacion(List.of(autor));
 
-    //Comentario comentarioTest = createComentarioRegular();
+    Comentario comentarioTest = createComentarioRegular();
 
-    //Ejemplar ejemplar = createTestEjemplar(publicacionTest, comentarioTest);
+    Ejemplar ejemplar = createTestEjemplar(publicacionTest, comentarioTest);
 
-    //createTestPrestamo(userTest, ejemplar);
+    createTestPrestamo(userTest, ejemplar);
   }
 
   private Set<Resource> createResources() {

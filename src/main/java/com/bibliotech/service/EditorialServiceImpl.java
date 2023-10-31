@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Editorial;
 import com.bibliotech.repository.EditorialRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EditorialServiceImpl implements EditorialService {
 

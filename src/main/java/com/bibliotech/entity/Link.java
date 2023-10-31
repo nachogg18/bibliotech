@@ -22,7 +22,7 @@ public class Link extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne
     private Plataforma plataforma;
     @Enumerated(EnumType.ORDINAL)
