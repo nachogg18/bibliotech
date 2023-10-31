@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UbicacionService {
     List<Ubicacion> findAll();
 
-    List<Ubicacion> findAllDispobles();
+    List<Ubicacion> findAllDisponibles();
 
     public List<Ubicacion> findAllDispoblesWith(Long id);
 

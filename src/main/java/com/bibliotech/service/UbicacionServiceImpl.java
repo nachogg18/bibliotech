@@ -22,13 +22,13 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public List<Ubicacion> findAllDispobles() {
+    public List<Ubicacion> findAllDisponibles() {
         return ubicacionRepository.findByFechaBajaNullAndOcupadaFalse();
     }
 
     @Override
     public List<Ubicacion> findAllDispoblesWith(Long id) {
-        List<Ubicacion> ubicaciones = findAllDispobles();
+        List<Ubicacion> ubicaciones = findAllDisponibles();
         Optional<Ubicacion> ubicacionEjemplar = findById(id);
         if(ubicacionEjemplar.isPresent()){
             ubicaciones.add(ubicacionEjemplar.get());

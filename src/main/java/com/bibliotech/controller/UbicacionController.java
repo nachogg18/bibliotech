@@ -28,7 +28,7 @@ public class UbicacionController {
     @GetMapping("disponibles")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'UBICACION')")
     public List<Ubicacion> findAllDisponibles() {
-        return ubicacionService.findAllDispobles();
+        return ubicacionService.findAllDisponibles();
     }
 
     @GetMapping("disponibles-with/{id}")
