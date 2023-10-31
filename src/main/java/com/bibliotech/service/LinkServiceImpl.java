@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.Link;
 import com.bibliotech.repository.LinkRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LinkServiceImpl implements LinkService {
 
     private final LinkRepository linkRepository;

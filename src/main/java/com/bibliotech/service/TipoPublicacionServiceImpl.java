@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.entity.TipoPublicacion;
 import com.bibliotech.repository.TipoPublicacionRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -11,10 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TipoPublicacionServiceImpl implements TipoPublicacionService {
 
     private final TipoPublicacionRepository tipoPublicacionRepository;
+
+    @Override
+    public Optional<TipoPublicacion> findById(Long id) {
+        return tipoPublicacionRepository.findById(id);
+    }
 
     @Override
     public List<TipoPublicacion> findAll() {

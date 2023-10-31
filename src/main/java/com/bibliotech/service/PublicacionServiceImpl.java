@@ -7,6 +7,7 @@ import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
 import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,11 +27,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Log4j2
 public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
-    private final TipoPublicacionRepository tipoPublicacionRepository;
     private final LinkService linkService;
     private final EditorialRepository editorialRepository;
     private final EdicionRepository edicionRepository;
@@ -376,7 +377,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         }
 
         if(req.getIdEdicion()!=null) publicacion.setEdicion(edicionRepository.findById(req.getIdEdicion()).get());
-        if(req.getIdTipoPublicacion()!=null) publicacion.setTipoPublicacion(tipoPublicacionRepository.findById(req.getIdTipoPublicacion()).get());
+        if(req.getIdTipoPublicacion()!=null) publicacion.setTipoPublicacion(tipoPublicacionService.findById(req.getIdTipoPublicacion()).get());
 
         return publicacion;
     }

@@ -5,6 +5,7 @@ import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.entity.CategoriaValor;
 import com.bibliotech.repository.CategoriaValorRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Log4j2
 public class CategoriaValorServiceImpl implements CategoriaValorService {
