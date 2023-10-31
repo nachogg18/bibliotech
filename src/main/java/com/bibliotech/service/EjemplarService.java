@@ -27,4 +27,10 @@ public interface EjemplarService {
     List<ComentarioDTO> getAllComentarios(Long id);
 
     boolean exists(Long id);
+
+    EditEjemplarDTO repararEjemplar (Long id);
+
+    EditEjemplarDTO extraviarEjemplar (Long id);
+
+    EditEjemplarDTO habilitarEjemplar (Long id);
 }

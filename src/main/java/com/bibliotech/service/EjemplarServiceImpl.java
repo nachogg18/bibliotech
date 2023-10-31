@@ -2,6 +2,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
+import com.bibliotech.repository.EjemplarEstadoRepository;
 import com.bibliotech.repository.EjemplarRepository;
 import java.text.DecimalFormat;
 import java.time.Instant;
@@ -10,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class EjemplarServiceImpl implements EjemplarService {
     private final PublicacionService publicacionService;
 
     private final UbicacionService ubicacionService;
+
+    private final EjemplarEstadoRepository ejemplarEstadoRepository;
 
     @Override
     public List<EjemplarResponseDTO> findAll() {
@@ -198,4 +203,78 @@ public class EjemplarServiceImpl implements EjemplarService {
         return ejemplarRepository.existsById(id);
     }
 
+    @Override
+    public EditEjemplarDTO repararEjemplar(Long id){
+        Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe ejemplar con id %s", id)));
+        EjemplarEstado ejemplarEstado = ejemplar.getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin()==null)
+                .findFirst()
+                .orElse(null);
+
+        if (ejemplarEstado == null) throw new ValidationException("Error con el ejemplar");
+        if (ejemplarEstado.getEstadoEjemplar() != EstadoEjemplar.DISPONIBLE) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El ejemplar no está en disponible");
+
+        ejemplarEstado.setFechaFin(Instant.now());
+        EjemplarEstado nuevoEstado = new EjemplarEstado();
+        nuevoEstado.setEstadoEjemplar(EstadoEjemplar.EN_REPARACION);
+        ejemplarEstadoRepository.save(nuevoEstado);
+        ejemplar.getEjemplarEstadoList().add(nuevoEstado);
+        ejemplarRepository.save(ejemplar);
+
+        return EditEjemplarDTO.builder()
+                .idUbicacion(ejemplar.getUbicacion().getId())
+                .serialNFC(ejemplar.getSerialNFC())
+                .estadoEjemplar(nuevoEstado.getEstadoEjemplar().name())
+                .build();
+    }
+
+    @Override
+    public EditEjemplarDTO extraviarEjemplar(Long id){
+        Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe ejemplar con id %s", id)));
+        EjemplarEstado ejemplarEstado = ejemplar.getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin()==null)
+                .findFirst()
+                .orElse(null);
+
+        if (ejemplarEstado == null) throw new ValidationException("Error con el ejemplar");
+        if (ejemplarEstado.getEstadoEjemplar() != EstadoEjemplar.DISPONIBLE) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El ejemplar no está en disponible");
+
+        ejemplarEstado.setFechaFin(Instant.now());
+        EjemplarEstado nuevoEstado = new EjemplarEstado();
+        nuevoEstado.setEstadoEjemplar(EstadoEjemplar.EXTRAVIADO);
+        ejemplarEstadoRepository.save(nuevoEstado);
+        ejemplar.getEjemplarEstadoList().add(nuevoEstado);
+        ejemplarRepository.save(ejemplar);
+
+        return EditEjemplarDTO.builder()
+                .idUbicacion(ejemplar.getUbicacion().getId())
+                .serialNFC(ejemplar.getSerialNFC())
+                .estadoEjemplar(nuevoEstado.getEstadoEjemplar().name())
+                .build();
+    }
+
+    @Override
+    public EditEjemplarDTO habilitarEjemplar(Long id){
+        Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe ejemplar con id %s", id)));
+        EjemplarEstado ejemplarEstado = ejemplar.getEjemplarEstadoList().stream()
+                .filter(estado -> estado.getFechaFin()==null)
+                .findFirst()
+                .orElse(null);
+
+        if (ejemplarEstado == null) throw new ValidationException("Error con el ejemplar");
+        if (ejemplarEstado.getEstadoEjemplar() != EstadoEjemplar.EN_REPARACION && ejemplarEstado.getEstadoEjemplar() != EstadoEjemplar.EXTRAVIADO) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El ejemplar no está en disponible");
+
+        ejemplarEstado.setFechaFin(Instant.now());
+        EjemplarEstado nuevoEstado = new EjemplarEstado();
+        nuevoEstado.setEstadoEjemplar(EstadoEjemplar.DISPONIBLE);
+        ejemplarEstadoRepository.save(nuevoEstado);
+        ejemplar.getEjemplarEstadoList().add(nuevoEstado);
+        ejemplarRepository.save(ejemplar);
+
+        return EditEjemplarDTO.builder()
+                .idUbicacion(ejemplar.getUbicacion().getId())
+                .serialNFC(ejemplar.getSerialNFC())
+                .estadoEjemplar(nuevoEstado.getEstadoEjemplar().name())
+                .build();
+    }
 }

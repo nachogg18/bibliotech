@@ -27,7 +27,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     }
 
     @GetMapping("/detalle/{id}")
-    @PreAuthorize("@authenticacionService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRESTAMO')")
     public DetallePrestamoDTO getDetallePrestamo(@PathVariable Long id) {
         return prestamoService.getDetallePrestamo(id);
     }
@@ -57,31 +57,31 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
 
 
     @PatchMapping("/{id}/checkout")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> checkOutPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.checkOutPrestamo(id));
     }
 
     @PatchMapping("/{id}/checkin")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> checkInPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.checkInPrestamo(id));
     }
 
     @PatchMapping("/{id}/cancelar")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> cancelarPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.cancelarPrestamo(id));
     }
 
     @PatchMapping("/{id}/renovar")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> renovarPrestamo(@PathVariable Long id, @RequestBody RenovacionDTO req) {
         return ResponseEntity.ok().body(prestamoService.renovarPrestamo(id, req));
     }
 
     @PatchMapping("/{id}/extravio")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('MODIFY', 'PRESTAMO')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
     }
