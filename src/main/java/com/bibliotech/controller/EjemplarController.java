@@ -64,4 +64,21 @@ public class EjemplarController {
         ejemplarService.delete(id);
     }
 
+    @PatchMapping("/{id}/reparar")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
+    public ResponseEntity<EditEjemplarDTO> repararEjemplar(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ejemplarService.repararEjemplar(id));
+    }
+
+    @PatchMapping("/{id}/extraviar")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
+    public ResponseEntity<EditEjemplarDTO> extraviarEjemplar(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ejemplarService.extraviarEjemplar(id));
+    }
+
+    @PatchMapping("/{id}/habilitar")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
+    public ResponseEntity<EditEjemplarDTO> habilitarEjemplar(@PathVariable Long id) {
+        return ResponseEntity.ok().body(ejemplarService.habilitarEjemplar(id));
+    }
 }
