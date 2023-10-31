@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecificationExecutor<Multa> {
-    List<Multa> findMultasByUsuarioId(Long usuario_id);
+    List<Multa> findByUserId(Long user_id);
 }

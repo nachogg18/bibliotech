@@ -178,7 +178,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         } else {
             usuarioADevolver = userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
         }
-        if (multaService.isUsuarioHabilitado(usuarioADevolver.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario multado");
+        if (!multaService.isUsuarioHabilitado(usuarioADevolver.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario multado");
         return usuarioADevolver;
     }
 
