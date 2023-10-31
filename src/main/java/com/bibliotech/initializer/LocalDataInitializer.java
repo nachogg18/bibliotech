@@ -33,8 +33,6 @@ import org.springframework.stereotype.Component;
 @Profile({"local", "dockerlocal"})
 @RequiredArgsConstructor
 public class LocalDataInitializer implements ApplicationRunner {
-
-
   private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
 
   private final Environment env;
@@ -187,7 +185,6 @@ public class LocalDataInitializer implements ApplicationRunner {
   }
 
   private void createSuperAdminUser(Role superAdminRole) {
-
     // crea
     authenticationService.signupWithoutRequiredConfirmation(
         new SignUpWithoutRequiredConfirmationRequest(

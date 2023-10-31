@@ -13,7 +13,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
   web:
-    image: dockerdemo
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,7 +21,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_PROFILES_ACTIVE: dev
+      SPRING_PROFILES_ACTIVE: dockerlocal
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}

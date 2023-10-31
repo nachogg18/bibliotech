@@ -25,6 +25,18 @@ public class UbicacionController {
         return ubicacionService.findAll();
     }
 
+    @GetMapping("disponibles")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'UBICACION')")
+    public List<Ubicacion> findAllDisponibles() {
+        return ubicacionService.findAllDisponibles();
+    }
+
+    @GetMapping("disponibles-with/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'UBICACION')")
+    public List<Ubicacion> findAllDisponiblesWith(@PathVariable Long id) {
+        return ubicacionService.findAllDispoblesWith(id);
+    }
+
     @PostMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'UBICACION')")
     public Ubicacion post(@RequestBody Ubicacion ubicacion) {
