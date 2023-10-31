@@ -7,6 +7,7 @@ import com.bibliotech.dto.MostrarCategoriaValorDTO;
 import com.bibliotech.entity.Categoria;
 import com.bibliotech.mapper.FiltroCategoriaDTOMapper;
 import com.bibliotech.repository.CategoriaRepository;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Log4j2
 public class CategoriaServiceImpl implements CategoriaService {
 

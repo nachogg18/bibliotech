@@ -1,7 +1,9 @@
 package com.bibliotech.entity;
 
+import com.bibliotech.security.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.*;
@@ -22,4 +24,8 @@ public class Comentario extends Base {
     private Instant fechaAlta = Instant.now();
     @Column
     private Instant fechaBaja;
+    @ManyToOne
+    private User altaUsuario;
+    @ManyToOne
+    private User bajaUsuario;
 }

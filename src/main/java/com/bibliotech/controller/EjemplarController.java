@@ -1,10 +1,7 @@
 package com.bibliotech.controller;
 
-import com.bibliotech.dto.CrearEjemplarDTO;
+import com.bibliotech.dto.*;
 
-import com.bibliotech.dto.EditEjemplarDTO;
-import com.bibliotech.dto.EjemplarDetailDTO;
-import com.bibliotech.dto.EjemplarResponseDTO;
 import com.bibliotech.entity.Ejemplar;
 import com.bibliotech.service.EjemplarService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -64,6 +61,12 @@ public class EjemplarController {
         ejemplarService.delete(id);
     }
 
+    @GetMapping(path="{id}/comentarios")
+    //TODO cambiar la preautorizacion a lectura de comentarios
+    public ResponseEntity<List<ComentarioDTO>> getComentarios(@PathVariable Long id){
+        return ResponseEntity.ok().body(ejemplarService.getAllComentarios(id));
+    }
+
     @PatchMapping("/{id}/reparar")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
     public ResponseEntity<EditEjemplarDTO> repararEjemplar(@PathVariable Long id) {
@@ -81,4 +84,5 @@ public class EjemplarController {
     public ResponseEntity<EditEjemplarDTO> habilitarEjemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(ejemplarService.habilitarEjemplar(id));
     }
+
 }

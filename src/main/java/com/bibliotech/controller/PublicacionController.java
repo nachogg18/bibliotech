@@ -1,14 +1,12 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
-import com.bibliotech.entity.Autor;
-import com.bibliotech.entity.Edicion;
-import com.bibliotech.entity.Editorial;
-import com.bibliotech.entity.Publicacion;
+import com.bibliotech.entity.*;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -76,6 +74,12 @@ public class PublicacionController {
     return publicacionService.findAll();
   }
 
+  @GetMapping("one/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
+  public Optional<Publicacion> findOne(@PathVariable Long id) {
+    return publicacionService.findById(id);
+  }
+
   @GetMapping(path = "/paged")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
   public ResponseEntity<PageDTO<PublicacionPaginadaDTO>> getAllPublicacionPaged(
@@ -94,5 +98,11 @@ public class PublicacionController {
   public ResponseEntity<?> updatePublicacion(
       @RequestBody ModificarPublicacionDTO req, @PathVariable Long id) {
     return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
+  }
+
+  @GetMapping(path="{id}/comentarios")
+  //TODO cambiar la preautorizacion a lectura de comentarios
+  public ResponseEntity<List<ComentarioDTO>> getComentarios(@PathVariable Long id){
+    return ResponseEntity.ok().body(publicacionService.getAllComentarios(id));
   }
 }

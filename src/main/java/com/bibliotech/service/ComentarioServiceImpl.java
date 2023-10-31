@@ -10,12 +10,23 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
+import com.bibliotech.security.entity.User;
+import com.bibliotech.security.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ComentarioServiceImpl implements ComentarioService {
-    private final ComentarioRepository comentarioRepository;
+    
+    @Autowired
+    ComentarioRepository comentarioRepository;
+
+    @Autowired
+    AuthenticationService authenticationService;
 
     @Override
     public List<Comentario> findAll() {
@@ -41,18 +52,22 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
-    public Comentario delete(Long id) {
+    public Comentario delete(Long id){
+        Optional<User> user = authenticationService.getActiveUser();
+        if (!user.isPresent()){
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "No se encontro el usuario de la sesion activa");
+        }
         Comentario comentario = comentarioRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found")
+                () -> new HttpClientErrorException(HttpStatus.BAD_REQUEST,"No existe comentario con el id propocionado")
         );
-        comentario.setId(id);
         comentario.setFechaBaja(Instant.now());
-        return comentarioRepository.save(comentario);
+        comentario.setBajaUsuario(user.get());
+        comentarioRepository.save(comentario);
+        return comentario;
     }
 
     @Override
     public Optional<Comentario> findById(Long id) {
         return comentarioRepository.findById(id);
     }
-
 }
