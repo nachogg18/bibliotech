@@ -4,11 +4,12 @@ import com.bibliotech.dto.*;
 import com.bibliotech.entity.Autor;
 import com.bibliotech.entity.Edicion;
 import com.bibliotech.entity.Editorial;
+import com.bibliotech.entity.Publicacion;
 import com.bibliotech.service.PublicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -55,7 +56,7 @@ public class PublicacionController {
                                         .biografia(autor.getBiografia())
                                         .build())
                             .collect(Collectors.toList()))
-                    .edicion(Edicion.builder().nombre(Objects.nonNull(publicacion.getEdicion()) ? publicacion.getEdicion().getNombre(): "").build())
+                    .edicion(Edicion.builder().nombre(publicacion.getEdicion().getNombre()).build())
                     .tituloPublicacion(publicacion.getTitulo())
                     .anioPublicacion(publicacion.getAnio())
                     .build())
@@ -74,6 +75,12 @@ public class PublicacionController {
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
   public List<PublicacionResponseDTO> findAll() {
     return publicacionService.findAll();
+  }
+
+  @GetMapping("one/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
+  public Optional<Publicacion> findOne(@PathVariable Long id) {
+    return publicacionService.findById(id);
   }
 
   @GetMapping(path = "/paged")
