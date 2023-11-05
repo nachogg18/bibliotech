@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config-map
+data:
+  mysql-server: bibliotech-mysql-service    # The name of mysql service
+  mysql-database-name: demoDb     # The name of the database used by the demo app
+  mysql-user-username: myUser     # A new created user for the demo app
+  DB_USER: myUser
+  DB_PASSWORD: userpassword
+  DB_ROOT_PASSWORD: password
+  DB_NAME: demoDb
+  EMAIL_HOST: smtp.gmail.com
+  EMAIL_PORT: '587'
+  EMAIL_USERNAME: A
+  EMAIL_PASSWORD: A
+  SUPERADMIN_FIRSTNAME: superadmin
+  SUPERADMIN_LASTNAME: superadmin
+  SUPERADMIN_PASSWORD: superadmin
+  SUPERADMIN_EMAIL: iggatsc@gmail.com
+  JWT_KEY: test1352675ghjt7789798578455855seserewgweew
+  TOKEN_EXPIRATION_TIME: '5000'
+  REFRESH_TOKEN_EXPIRATION: '604800000'
+  DB_PORT: '3306'

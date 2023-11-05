@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bibliotech-spring-boot-deployment
+  labels:
+    app: bibliotech-spring-boot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bibliotech-spring-boot
+  template:
+    metadata:
+      labels:
+        app: bibliotech-spring-boot
+    spec:
+      containers:
+        - name: bibliotech-spring-boot
+          image: iggatsc/bibliotech-test:2.6
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_PORT
+                  name: mysql-config-map
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: mysql-user-password
+            - name: DB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: mysql-server
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: mysql-user-username
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: DB_USER
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: DB_NAME
+            - name: EMAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: EMAIL_HOST
+            - name: EMAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: EMAIL_PORT
+            - name: EMAIL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: EMAIL_USERNAME
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: EMAIL_PASSWORD
+            - name: SUPERADMIN_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: SUPERADMIN_PASSWORD
+            - name: SUPERADMIN_FIRSTNAME
+              valueFrom:
+                  configMapKeyRef:
+                    name: mysql-config-map
+                    key: SUPERADMIN_FIRSTNAME
+            - name: SUPERADMIN_LASTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: SUPERADMIN_LASTNAME
+            - name: SUPERADMIN_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: SUPERADMIN_EMAIL
+            - name: JWT_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: JWT_KEY
+            - name: TOKEN_EXPIRATION_TIME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: TOKEN_EXPIRATION_TIME
+            - name: REFRESH_TOKEN_EXPIRATION
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config-map
+                  key: REFRESH_TOKEN_EXPIRATION
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bibliotech-spring-boot-service
+  labels:
+    app: bibliotech-spring-boot
+spec:
+  type: LoadBalancer
+  selector:
+    app: demo-app-spring
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000

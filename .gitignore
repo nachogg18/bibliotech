@@ -35,3 +35,7 @@ build/
 
 ### ENV files ###
 *.env
+
+
+#kubernetes secrets
+**/*secret*.yaml
