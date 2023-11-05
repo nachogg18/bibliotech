@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: dockerlocal
 server:
   error:
     include-stacktrace: never
