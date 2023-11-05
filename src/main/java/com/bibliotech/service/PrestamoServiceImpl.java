@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -29,8 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> implements PrestamoService{
-    @Autowired
-    private static final Logger logger = LoggerFactory.getLogger(PrestamoServiceImpl.class);
     @Autowired
     private PrestamosRepository prestamosRepository;
     @Autowired
