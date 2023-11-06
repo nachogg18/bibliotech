@@ -14,6 +14,10 @@ spec:
       labels:
         app: bibliotech-spring-boot
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z bibliotech-mysql-service 3306; do sleep 1; done;' ]
       containers:
         - name: bibliotech-spring-boot
           image: iggatsc/bibliotech-test:2.6
@@ -33,10 +37,7 @@ spec:
                   name: mysql-pass
                   key: mysql-user-password
             - name: DB_SERVER
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-config-map
-                  key: mysql-server
+              value: bibliotech-mysql-service
             - name: DB_USERNAME
               valueFrom:
                 configMapKeyRef:
@@ -117,9 +118,9 @@ metadata:
   labels:
     app: bibliotech-spring-boot
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-    app: demo-app-spring
+    app: bibliotech-spring-boot
   ports:
     - protocol: TCP
       name: http
