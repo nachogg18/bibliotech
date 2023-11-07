@@ -67,7 +67,72 @@ public class PrestamoSpecifications {
             root.fetch("ejemplar");
 
             // Crea una condición para buscar por el ID del usuario
-            Predicate ejemplarIdPredicate = criteriaBuilder.equal(root.get("ejemplar").get("id"), ejemplarId);
+            Predicate predicate = criteriaBuilder.equal(root.get("ejemplar").get("id"), ejemplarId);
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasUsuarioWithLegajo(String legajo) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad User
+            root.fetch("usuario");
+
+            // Crea una condición para buscar por el ID del usuario
+            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("legajo"), legajo);
+
+            return predicate;
+        };
+    }
+
+
+    public static Specification<Prestamo> hasUsuarioWithEmail(String email) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad User
+            root.fetch("usuario");
+
+            // Crea una condición para buscar por el ID del usuario
+            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("email"), email);
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasUsuarioWithDNI(String dni) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            // Obtén la relación con la entidad User
+            root.fetch("usuario");
+
+            // Crea una condición para buscar por el ID del usuario
+            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("dni"), dni);
+
+            return predicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasEstadoPrestamoWithNameAndFechaBajaNull(String nombreEstadoPrestamo) {
+        return Specification.allOf(hasEstadoPrestamoWithName(nombreEstadoPrestamo), hasPrestamoEstadoWithFechaFinNull());
+    }
+
+    public static Specification<Prestamo> hasEstadoPrestamoWithName(String nombreEstadoPrestamo) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+
+            root.fetch("estado");
+
+
+            Predicate ejemplarIdPredicate = criteriaBuilder.equal(root.get("estado").get("estado"), EstadoPrestamo.valueOf(nombreEstadoPrestamo));
+
+            return ejemplarIdPredicate;
+        };
+    }
+
+    public static Specification<Prestamo> hasPrestamoEstadoWithFechaFinNull() {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+
+            root.fetch("estado");
+
+
+            Predicate ejemplarIdPredicate = criteriaBuilder.isNull(root.get("estado").get("fechaFin"));
 
             return ejemplarIdPredicate;
         };
