@@ -86,4 +86,5 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
     }
+
 }
