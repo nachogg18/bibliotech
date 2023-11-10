@@ -1,5 +1,6 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.UbicacionDTO;
 import com.bibliotech.entity.Ubicacion;
 import com.bibliotech.service.UbicacionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -39,7 +40,7 @@ public class UbicacionController {
 
     @PostMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'UBICACION')")
-    public Ubicacion post(@RequestBody Ubicacion ubicacion) {
+    public Ubicacion post(@RequestBody UbicacionDTO ubicacion) {
         return ubicacionService.save(ubicacion);
     }
 
