@@ -20,6 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "facultad")
 public class Facultad extends Base {
+
     @Column
     private String nombre;
 
