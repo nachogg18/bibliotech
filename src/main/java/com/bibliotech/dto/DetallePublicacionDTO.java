@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class DetallePublicacionDTO {
     private Long id;
     private String tituloPublicacion;
+    private String sinopsis;
     private String isbnPublicacion;
     private Integer nroPaginas;
     private Integer anioPublicacion;

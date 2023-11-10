@@ -15,6 +15,8 @@ public class ModificarPublicacionDTO {
     @NotEmpty
     private String isbnPublicacion;
     @NotEmpty
+    private String sinopsisPublicacion;
+    @NotEmpty
     private String tituloPublicacion;
     @Positive
     private Integer nroPaginas;
