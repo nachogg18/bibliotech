@@ -1,0 +1,65 @@
+[
+  {
+    "nombre": "Biblioteca Central",
+    "ubicacion": "Facultad de Ingeniería - Piso 2",
+    "contacto": "biblioteca@central.com",
+    "fechaAlta": "2023-01-01T08:00:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Tecnológica",
+    "ubicacion": "Facultad de Ciencias de la Computación - Piso 3",
+    "contacto": "biblioteca@tecnologica.com",
+    "fechaAlta": "2023-01-05T10:00:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Científica",
+    "ubicacion": "Facultad de Ciencias Naturales - Piso 1",
+    "contacto": "biblioteca@cientifica.com",
+    "fechaAlta": "2023-02-10T09:00:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Educativa",
+    "ubicacion": "Facultad de Pedagogía - Piso 2",
+    "contacto": "biblioteca@educativa.com",
+    "fechaAlta": "2023-03-15T08:30:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Histórica",
+    "ubicacion": "Facultad de Historia - Piso 1",
+    "contacto": "biblioteca@historica.com",
+    "fechaAlta": "2023-05-25T11:30:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Infantil",
+    "ubicacion": "Facultad de Educación Infantil - Piso 3",
+    "contacto": "biblioteca@infantil.com",
+    "fechaAlta": "2023-06-30T10:45:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca del Futuro",
+    "ubicacion": "Facultad de Innovación - Piso 2",
+    "contacto": "biblioteca@futuro.com",
+    "fechaAlta": "2023-07-01T09:45:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Pública",
+    "ubicacion": "Facultad de Ciencias Sociales - Piso 1",
+    "contacto": "biblioteca@publica.com",
+    "fechaAlta": "2023-08-05T08:15:00Z",
+    "fechaBaja": null
+  },
+  {
+    "nombre": "Biblioteca Médica",
+    "ubicacion": "Facultad de Medicina - Piso 2",
+    "contacto": "biblioteca@medica.com",
+    "fechaAlta": "2023-09-10T11:00:00Z",
+    "fechaBaja": null
+  }
+]
