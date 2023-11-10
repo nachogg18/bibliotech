@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.UbicacionDTO;
 import com.bibliotech.entity.Ubicacion;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UbicacionService {
 
     Optional<Ubicacion> findById(Long id);
 
-    Ubicacion save(Ubicacion ubicacion);
+    Ubicacion save(UbicacionDTO ubicacion);
 
     Ubicacion edit(Ubicacion ubicacion, Long id);
 
