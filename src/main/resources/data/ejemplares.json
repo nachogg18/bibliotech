@@ -1,0 +1,147 @@
+[
+  {
+    "idPublicacion": 1,
+    "idUbicacion": 1,
+    "serialNFC": 1254267910235481
+  },
+  {
+    "idPublicacion": 1,
+    "idUbicacion": 2,
+    "serialNFC": 3548112542679102
+  },
+  {
+    "idPublicacion": 1,
+    "idUbicacion": 3,
+    "serialNFC": 3545426811279102
+  },
+  {
+    "idPublicacion": 1,
+    "idUbicacion": 4,
+    "serialNFC": 3545426811279199
+  },
+  {
+    "idPublicacion": 2,
+    "idUbicacion": 5,
+    "serialNFC": 5428376811279102
+  },
+  {
+    "idPublicacion": 2,
+    "idUbicacion": 6,
+    "serialNFC": 35454268113779102
+  },
+  {
+    "idPublicacion": 3,
+    "idUbicacion": 7,
+    "serialNFC": 3545490811279102
+  },
+  {
+    "idPublicacion": 4,
+    "idUbicacion": 8,
+    "serialNFC": 3545426811270000
+  },
+  {
+    "idPublicacion": 4,
+    "idUbicacion": 9,
+    "serialNFC": 8712652735409823
+  },
+  {
+    "idPublicacion": 5,
+    "idUbicacion": 10,
+    "serialNFC": 8712652735011823
+  },
+  {
+    "idPublicacion": 6,
+    "idUbicacion": 11,
+    "serialNFC": 9002652735409823
+  },
+  {
+    "idPublicacion": 7,
+    "idUbicacion": 12,
+    "serialNFC": 8717772735409823
+  },
+  {
+    "idPublicacion": 8,
+    "idUbicacion": 13,
+    "serialNFC": 8712652700009823
+  },
+  {
+    "idPublicacion": 8,
+    "idUbicacion": 14,
+    "serialNFC": 8719992735409823
+  },
+  {
+    "idPublicacion": 9,
+    "idUbicacion": 15,
+    "serialNFC": 8712652735401209
+  },
+  {
+    "idPublicacion": 10,
+    "idUbicacion": 16,
+    "serialNFC": 8700002735409823
+  },
+  {
+    "idPublicacion": 11,
+    "idUbicacion": 17,
+    "serialNFC": 8712652701659823
+  },
+  {
+    "idPublicacion": 12,
+    "idUbicacion": 18,
+    "serialNFC": 8712653335408823
+  },
+  {
+    "idPublicacion": 13,
+    "idUbicacion": 19,
+    "serialNFC": 8712652730019823
+  },
+  {
+    "idPublicacion": 14,
+    "idUbicacion": 20,
+    "serialNFC": 8712772730009823
+  },
+  {
+    "idPublicacion": 15,
+    "idUbicacion": 21,
+    "serialNFC": 8712652735400101
+  },
+  {
+    "idPublicacion": 16,
+    "idUbicacion": 22,
+    "serialNFC": 8712600735422823
+  },
+  {
+    "idPublicacion": 17,
+    "idUbicacion": 23,
+    "serialNFC": 9012652739009823
+  },
+  {
+    "idPublicacion": 18,
+    "idUbicacion": 24,
+    "serialNFC": 8712652735409888
+  },
+  {
+    "idPublicacion": 19,
+    "idUbicacion": 25,
+    "serialNFC": 8712112739909823
+  },
+  {
+    "idPublicacion": 20,
+    "idUbicacion": 26,
+    "serialNFC": 1111652735409823
+  },
+  {
+    "idPublicacion": 21,
+    "idUbicacion": 27,
+    "serialNFC": 8712652737709823
+  },
+  {
+    "idPublicacion": 22,
+    "idUbicacion": 28,
+    "serialNFC": 8712601035404423
+  },
+  {
+    "idPublicacion": 23,
+    "idUbicacion": 29,
+    "serialNFC": 1112652711109823
+  }
+]

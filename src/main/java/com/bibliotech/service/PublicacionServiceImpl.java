@@ -116,6 +116,7 @@ public class PublicacionServiceImpl implements PublicacionService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
 
         detallePublicacionDTO.setId(publicacion.getId());
+        detallePublicacionDTO.setSinopsis(publicacion.getSinopsis());
         detallePublicacionDTO.setIsbnPublicacion(publicacion.getIsbn());
         detallePublicacionDTO.setTituloPublicacion(publicacion.getTitulo());
         detallePublicacionDTO.setNroPaginas(publicacion.getNroPaginas());
@@ -189,6 +190,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         Publicacion publicacion = publicacionRepository.save(
                 Publicacion.builder()
                         .anio(request.getAnioPublicacion())
+                        .sinopsis(request.getSinopsis())
                         .isbn(request.getIsbnPublicacion())
                         .titulo(request.getTituloPublicacion())
                         .nroPaginas(request.getNroPaginas())
@@ -327,6 +329,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         if (req.getAnioPublicacion() != null) publicacion.setAnio(req.getAnioPublicacion());
         if (req.getIsbnPublicacion() != null) publicacion.setIsbn(req.getIsbnPublicacion());
         if (req.getTituloPublicacion() != null) publicacion.setTitulo(req.getTituloPublicacion());
+        if (req.getSinopsisPublicacion() != null) publicacion.setSinopsis(req.getSinopsisPublicacion());
         if (req.getNroPaginas() != null) publicacion.setNroPaginas(req.getNroPaginas());
 
         if(req.getIdsAutores() != null) {

@@ -1,0 +1,32 @@
+[
+  {
+    "nombre": "Multa por retraso",
+    "descripcion": "Multa por devolución tardia de libros",
+    "cantidadDias": 7
+  },
+  {
+    "nombre": "Multa por deterioro de libro",
+    "descripcion": "Multa por deterioros severos en libros prestados",
+    "cantidadDias": 14
+  },
+  {
+    "nombre": "Multa por perdida de libro",
+    "descripcion": "Multa por perdida total de libros",
+    "cantidadDias": 30
+  },
+  {
+    "nombre": "Multa por devolucion de libro en mal estado",
+    "descripcion": "Multa por devolver libros con deterioros menores",
+    "cantidadDias": 10
+  },
+  {
+    "nombre": "Multa por reservar y no retirar libro",
+    "descripcion": "Multa por reservar libro y no retirarlo en el plazo establecido",
+    "cantidadDias": 3
+  },
+  {
+    "nombre": "Multa por devolución de libro a biblioteca equivocada",
+    "descripcion": "Multa por devolver un libro en una biblioteca diferente a la asignada",
+    "cantidadDias": 5
+  }
+]

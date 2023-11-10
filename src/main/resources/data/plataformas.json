@@ -1,0 +1,14 @@
+[
+  {
+    "nombre": "Google Libros",
+    "instrucciones": "Ingreso con username y password."
+  },
+  {
+    "nombre": "Amazon Books",
+    "instrucciones": "Ingreso con username y password."
+  },
+  {
+    "nombre": "ELibro",
+    "instrucciones": "Ingreso con username y password."
+  }
+]

@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
@@ -31,6 +32,6 @@ public class Autor extends Base {
     @Column
     private String nacionalidad;
 
-    @Column
+    @Column(length = 1000)
     private String biografia;
 }
