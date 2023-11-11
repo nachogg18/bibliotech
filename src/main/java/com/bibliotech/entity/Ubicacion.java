@@ -1,10 +1,8 @@
 package com.bibliotech.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -15,7 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ubicacion extends Base {
-    @Column
+    @Column(unique = true)
     private String descripcion;
     @Column
     private boolean ocupada;
@@ -24,5 +22,6 @@ public class Ubicacion extends Base {
     @Column
     private Instant fechaBaja;
     @ManyToOne
+    @NotNull
     private Biblioteca biblioteca;
 }

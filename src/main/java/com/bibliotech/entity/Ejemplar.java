@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Ejemplar extends Base {
-    @Column
+    @Column(unique = true)
     private String serialNFC;
     @Column(name = "fechaAlta")
     private Instant fechaAlta = Instant.now();

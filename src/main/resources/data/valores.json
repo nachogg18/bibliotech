@@ -1,0 +1,422 @@
+[
+  {
+    "nombre": "Ingenieria Mecanica",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria de Software",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Civil",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Electrica",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Quimica",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Biomedica",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Aeroespacial",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Industrial",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria de Telecomunicaciones",
+    "idCategoria": 1
+  },
+  {
+    "nombre": "Ingenieria Ambiental",
+    "idCategoria": 1
+  },
+
+
+
+  {
+    "nombre": "Biologia",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Quimica",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Fisica",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Geologia",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Astrofisica",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Ecologia",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Paleontologia",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Botanica",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Zoologia",
+    "idCategoria": 2
+  },
+  {
+    "nombre": "Oceanografia",
+    "idCategoria": 2
+  },
+
+
+
+  {
+    "nombre": "Medicina Interna",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Cirugia General",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Pediatria",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Ginecologia y Obstetricia",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Psiquiatria",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Oftalmologia",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Dermatologia",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Neurologia",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Anestesiologia",
+    "idCategoria": 3
+  },
+  {
+    "nombre": "Medicina de Emergencia",
+    "idCategoria": 3
+  },
+
+  {
+    "nombre": "Derecho Penal",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Civil",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Constitucional",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Laboral",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Internacional",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Administrativo",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Mercantil",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Tributario",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Procesal",
+    "idCategoria": 4
+  },
+  {
+    "nombre": "Derecho Ambiental",
+    "idCategoria": 4
+  },
+
+
+  {
+    "nombre": "Educacion Primaria",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Educacion Secundaria",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Educacion Especial",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Educacion Fisica",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Educacion Inicial",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Pedagogia",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Didactica",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Orientacion Educativa",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Tecnologia Educativa",
+    "idCategoria": 5
+  },
+  {
+    "nombre": "Gestion Educativa",
+    "idCategoria": 5
+  },
+
+  {
+    "nombre": "Urbano",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Arquitectura Sustentable",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Interiores",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Arquitectura del Paisaje",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Planificacion Urbana",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Historia de la Arquitectura",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Arquitectura Vernacula",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Teoria de la Arquitectura",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Arquitectura Moderna",
+    "idCategoria": 6
+  },
+  {
+    "nombre": "Tecnologia de la Construccion",
+    "idCategoria": 6
+  },
+
+
+  {
+    "nombre": "Antropologia",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Sociologia",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Economia",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Ciencia Politica",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Geografia Humana",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Historia",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Comunicacion",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Psicologia",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Trabajo Social",
+    "idCategoria": 7
+  },
+  {
+    "nombre": "Educacion Civica",
+    "idCategoria": 7
+  },
+
+
+
+  {
+    "nombre": "Macroeconomia",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Microeconomia",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Econometria",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Economia Internacional",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Finanzas",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Economia del Desarrollo",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Economia Monetaria",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Economia Ambiental",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Teoria Economica",
+    "idCategoria": 8
+  },
+  {
+    "nombre": "Politica Economica",
+    "idCategoria": 8
+  },
+
+
+  {
+    "nombre": "Filosofia",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Literatura",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Artes Visuales",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Lengua",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Historia del Arte",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Musica",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Religion",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Estudios Culturales",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Teatro",
+    "idCategoria": 9
+  },
+  {
+    "nombre": "Ciencias de la Educacion",
+    "idCategoria": 9
+  },
+
+
+  {
+    "nombre": "Pintura",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Escultura",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Dibujo",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Fotografia",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Digital",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Contemporaneo",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Conceptual",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Clasico",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Urbano",
+    "idCategoria": 10
+  },
+  {
+    "nombre": "Arte Multimedia",
+    "idCategoria": 10
+  }
+
+]

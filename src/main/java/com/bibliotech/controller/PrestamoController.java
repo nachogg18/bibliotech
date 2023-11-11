@@ -5,6 +5,7 @@ import com.bibliotech.entity.Prestamo;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
 
     @PostMapping(path = "/findByParams")
         public List<PrestamosByParamsResponse> findByParams(
-            @RequestBody PrestamosByParamsRequest request) {
+            @RequestBody PrestamosByParamsRequest request) throws ValidationException {
 
         request.validate();
 
@@ -85,4 +86,5 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
     }
+
 }

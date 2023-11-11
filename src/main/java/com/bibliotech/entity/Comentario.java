@@ -25,7 +25,7 @@ public class Comentario extends Base {
     @Column
     private Instant fechaBaja;
     @ManyToOne
-    private User altaUsuario;
+    private User altaUser;
     @ManyToOne
-    private User bajaUsuario;
+    private User bajaUser;
 }
