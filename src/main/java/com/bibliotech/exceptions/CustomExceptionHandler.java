@@ -20,14 +20,4 @@ public class CustomExceptionHandler {
                             request.getRequestURI()
                 ), HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleGenericException(Exception e,  HttpServletRequest request) {
-        return new ResponseEntity<>(new ErrorDto(
-                "Error de validacion de la request",
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                e.getMessage(),
-                request.getRequestURI()
-        ), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

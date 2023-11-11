@@ -5,19 +5,19 @@ import java.time.Instant;
 import lombok.*;
 
 @Entity
-@Table(name = "autor")
+@Table(name = "pais")
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Autor extends Base {
+public class Pais extends Base {
 
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "apellido")
-    private String apellido;
+    @Column(name = "siglas")
+    private String siglas;
 
     @Column(name = "fechaAlta")
     private Instant fechaAlta = Instant.now();
@@ -25,12 +25,5 @@ public class Autor extends Base {
     @Column(name = "fechaBaja")
     private Instant fechaBaja;
 
-    @Column
-    private Instant  fechaNacimiento;
 
-    @Column
-    private String nacionalidad;
-
-    @Column(length = 1000)
-    private String biografia;
 }

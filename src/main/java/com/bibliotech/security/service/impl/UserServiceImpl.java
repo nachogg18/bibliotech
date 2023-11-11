@@ -63,19 +63,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<FindUserDto> getUsers() {
         return userRepository.findAll()
-                .stream().map(user -> FindUserDto.builder()
-                            .id(user.getId())
-                            .legajo(user.getLegajo())
-                            .nombre(user.getFirstName())
-                            .apellido(user.getLastName())
-                            .dni(user.getDni())
-                            .build()).toList();
+                .stream().map(user -> FindUserDto.toDto(user)).toList();
     }
 
     @Override
     public User save(User user) {
         user.setLastUpdatedDate(Instant.now());
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        return user;
     }
 
     @Override
