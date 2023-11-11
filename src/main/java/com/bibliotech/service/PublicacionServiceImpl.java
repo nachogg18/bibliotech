@@ -404,7 +404,7 @@ public class PublicacionServiceImpl implements PublicacionService {
 
             dto.setFecha(formattedDateTime);
             dto.setCalificacion(comentario.getCalificacion());
-            dto.setAltaUsuario(comentario.getAltaUsuario().getFirstName() + ' ' + comentario.getAltaUsuario().getLastName());
+            dto.setAltaUsuario(comentario.getAltaUser().getFirstName() + ' ' + comentario.getAltaUser().getLastName());
             return dto;
         }).toList();
 

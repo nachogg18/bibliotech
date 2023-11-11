@@ -11,4 +11,5 @@ public interface ComentarioRepository extends BaseRepository<Comentario, Long> {
 
     List<Comentario> findByFechaBajaNull();
 
+    List<Comentario> findByAltaUserId(Long id);
 }
