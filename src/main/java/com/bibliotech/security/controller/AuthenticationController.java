@@ -24,9 +24,9 @@ public class AuthenticationController {
     private final UserVerificationService userVerificationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDetailDto> signup(@RequestBody @Valid SignUpRequest request) {
+    public ResponseEntity<UserDetailDto> signup(@RequestBody @Valid SignUpRequiredConfirmationRequest request) {
 
-        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signup(request)));
+        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signupRequiredConfirmation(request)));
     }
 
     @PostMapping("/signup-without-verfication")

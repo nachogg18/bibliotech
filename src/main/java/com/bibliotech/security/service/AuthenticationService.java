@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.springframework.security.core.Authentication;
 
 public interface AuthenticationService {
-    User signup(SignUpRequest request);
+    User signupRequiredConfirmation(SignUpRequiredConfirmationRequest request);
     User signupWithoutRequiredConfirmation(@Valid SignUpWithoutRequiredConfirmationRequest request);
     User setNewPassword(User user, String password);
     JwtAuthenticationResponse signin(SigninRequest request);

@@ -1,11 +1,13 @@
 package com.bibliotech.security.service.impl;
 
+import com.bibliotech.entity.Localidad;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
 import com.bibliotech.security.dao.response.ResetUserPasswordResponse;
 import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.service.*;
+import com.bibliotech.service.LocalidadService;
 import com.bibliotech.utils.Dupla;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
@@ -40,18 +42,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final AuthenticationManager authenticationManager;
   private final TokenRepository tokenRepository;
   private final UserVerificationService userVerificationService;
+  private final UserInfoService userInfoService;
+  private final LocalidadService localidadService;
 
   @Override
-  public User signup(@Valid SignUpRequest request) {
-    checkExistentUserWithRequestEmail(request.email());
+  public User signupRequiredConfirmation(@Valid SignUpRequiredConfirmationRequest request) {
+    checkExistentUserWithRequestEmail(request.signUpRequest().email());
 
     Role basicRole = assignBasicRole();
 
-    User savedUser = createUser(request, List.of(basicRole));
+    User savedUser = createUserRequiredConfirmation(request, List.of(basicRole));
 
     assignRolesToUser( List.of(basicRole), savedUser);
-
-    JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
 
     sendVerificationCodeForRegister(savedUser);
 
@@ -65,11 +67,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     List<Role> roles = findRoles(request);
 
-    User savedUser = createUser(request.signUpRequest(), roles);
+    User savedUser = createUser(request.signUpRequest(), roles, Optional.empty());
 
     assignRolesToUser(roles, savedUser);
-
-    JwtAuthenticationResponse authenticationResponse = generateTokens(savedUser);
 
     userVerificationService.bypassVerification(savedUser);
 
@@ -82,7 +82,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return user;
   }
 
-  private User createUser(SignUpRequest request, List<Role> roles) {
+  private User createUserRequiredConfirmation(SignUpRequiredConfirmationRequest request, List<Role> roles) {
+
+    Localidad localidad = localidadService.findByIdAndFechaBajaNull(request.userInfo().localidadId()).orElseThrow(() -> new ValidationException("Localidad no existente o habilitada"));
+
+
+    UserInfo userInfo = userInfoService.saveUserInfo(
+            UserInfo.builder()
+                    .dni(request.userInfo().dni())
+                    .legajo(request.userInfo().legajo())
+                    .emailContacto(request.signUpRequest().email())
+                    .direccionContacto(request.userInfo().direccionContacto())
+                    .telefono(request.userInfo().telefonoContacto())
+                    .localidad(localidad)
+                    .build()
+    );
+
+    return createUser(request.signUpRequest(), roles, Optional.of(userInfo));
+  }
+
+  private User createUser(SignUpRequest request, List<Role> roles, Optional<UserInfo> userInfo) {
     Instant creationInstant = Instant.now();
     return userService.save(
                     User.builder()
@@ -95,6 +114,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .confirmationDate(null)
                             .endDate(null)
                             .roles(roles)
+                            .userInfo(userInfo.isPresent() ? userInfo.get() : null)
                             .build());
   }
 

@@ -34,8 +34,8 @@ public class UserDetailDto {
         .nombre(Objects.nonNull(user.getFirstName()) ? user.getFirstName() : "")
         .apellido(Objects.nonNull(user.getLastName()) ? user.getLastName() : "")
         .email(Objects.nonNull(user.getEmail()) ? user.getEmail() : "")
-        .dni(Objects.nonNull(user.getDni()) ? user.getDni() : "")
-        .legajo(Objects.nonNull(user.getDni()) ? user.getLegajo() : "")
+        .dni(Objects.nonNull(user.getUserInfo().getDni()) ? user.getUserInfo().getDni() : "")
+        .legajo(Objects.nonNull(user.getUserInfo().getLegajo()) ? user.getUserInfo().getLegajo() : "")
         .startDate(user.getStartDate().toString())
         .lastUpdatedDate(
             Objects.nonNull(user.getLastUpdatedDate()) ? user.getLastUpdatedDate().toString() : "")

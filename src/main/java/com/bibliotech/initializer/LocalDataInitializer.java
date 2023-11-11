@@ -59,6 +59,12 @@ public class LocalDataInitializer implements ApplicationRunner {
 
   private final PrestamoService prestamoService;
 
+  private final LocalidadService localidadService;
+
+  private final ProvinciaService provinciaService;
+
+  private final PaisService paisService;
+
   private final PrestamoEstadoRepository prestamoEstadoRepository;
 
   @Override
@@ -91,6 +97,12 @@ public class LocalDataInitializer implements ApplicationRunner {
 //    Ejemplar ejemplar = createTestEjemplar(publicacionTest, comentarioTest);
 //
 //    createTestPrestamo(userTest, ejemplar);
+
+      Pais argentinaPais = createPais();
+
+      Provincia mendozaProvincia = createProvincia(argentinaPais);
+
+      Localidad gcLocalidad = createLocalidad(mendozaProvincia);
   }
 
   private Set<Resource> createResources() {
@@ -288,5 +300,37 @@ public class LocalDataInitializer implements ApplicationRunner {
             .ejemplar(ejemplar)
             .estado(List.of(prestamoEstado))
             .build());
+  }
+
+
+  private Pais createPais() {
+    return paisService.save(
+                    Pais.builder()
+                            .siglas("AR")
+                            .fechaAlta(Instant.now())
+                            .fechaBaja(null)
+                            .nombre("ARGENTINA")
+            .build());
+  }
+
+  private Provincia createProvincia(Pais pais) {
+    return provinciaService.save(
+            Provincia.builder()
+                    .fechaAlta(Instant.now())
+                    .fechaBaja(null)
+                    .nombre("Mendoza")
+                    .pais(pais)
+                    .build());
+  }
+
+  private Localidad createLocalidad(Provincia provincia) {
+    return localidadService.save(
+            Localidad.builder()
+                    .fechaAlta(Instant.now())
+                    .fechaBaja(null)
+                    .codigoPostal("5501")
+                    .nombre("Godoy Cruz")
+                    .provincia(provincia)
+                    .build());
   }
 }
