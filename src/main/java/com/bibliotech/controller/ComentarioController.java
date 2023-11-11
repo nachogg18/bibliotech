@@ -2,6 +2,7 @@ package com.bibliotech.controller;
 
 
 import com.bibliotech.dto.ComentarioDTO;
+import com.bibliotech.dto.CrearComentarioDTO;
 import com.bibliotech.entity.Comentario;
 import com.bibliotech.service.ComentarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,9 +38,24 @@ public class ComentarioController {
         return ResponseEntity.ok().body(comentarioService.findByEjemplarId(id));
     }
 
+    @GetMapping("/publicacion/{id}")
+    public ResponseEntity<List<ComentarioDTO>> getComentariosByPublicacion(@PathVariable Long id) {
+        return ResponseEntity.ok().body(comentarioService.findByPublicacionId(id));
+    }
+
     @GetMapping("")
     //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<List<ComentarioDTO>> getComentarios() {
         return ResponseEntity.ok().body(comentarioService.findAll());
+    }
+
+    @PostMapping("/ejemplar/{idEjemplar}")
+    public ResponseEntity<ComentarioDTO> crearComentarioEjemplar(@RequestBody CrearComentarioDTO crearComentarioDTO, @PathVariable Long idEjemplar){
+        return ResponseEntity.ok().body(comentarioService.saveComentarioEjemplar(crearComentarioDTO, idEjemplar));
+    }
+
+    @PostMapping("/publicacion/{idPublicacion}")
+    public ResponseEntity<ComentarioDTO> crearComentarioPublicacion(@RequestBody CrearComentarioDTO crearComentarioDTO, @PathVariable Long idPublicacion){
+        return ResponseEntity.ok().body(comentarioService.saveComentarioPublicacion(crearComentarioDTO, idPublicacion));
     }
 }

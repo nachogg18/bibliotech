@@ -1,6 +1,7 @@
 package com.bibliotech.service;
 
 import com.bibliotech.dto.ComentarioDTO;
+import com.bibliotech.dto.CrearComentarioDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.ComentarioRepository;
 import jakarta.validation.ValidationException;
@@ -16,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,10 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     @Autowired
     EjemplarService ejemplarService;
+
+    @Autowired
+    PublicacionService publicacionService;
+
 
     @Override
     public List<ComentarioDTO> findAll() {
@@ -53,8 +59,51 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
-    public Comentario save(Comentario comentario) {
-        return comentarioRepository.save(comentario);
+    public ComentarioDTO saveComentarioEjemplar(CrearComentarioDTO req, Long idEjemplar) {
+        Ejemplar ejemplar = ejemplarService.findById(idEjemplar).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe ejemplar con el id %s",idEjemplar)));
+
+        Comentario comentarioNuevo = Comentario.builder()
+                .comentario(req.getComentario())
+                .calificacion(req.getCalificacion())
+                .fechaAlta(Instant.now())
+                .altaUser(authenticationService.getActiveUser().orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Error con el usuario")))
+                .build();
+        comentarioRepository.save(comentarioNuevo);
+
+        ejemplar.getComentarios().add(comentarioNuevo);
+        ejemplarService.save(ejemplar);
+
+        return ComentarioDTO.builder()
+                .altaUsuario(comentarioNuevo.getAltaUser().getFirstName() + ' ' + comentarioNuevo.getAltaUser().getLastName())
+                .comentario(comentarioNuevo.getComentario())
+                .id(comentarioNuevo.getId())
+                .fecha(comentarioNuevo.getFechaAlta().atZone(ZoneId.of("America/Argentina/Buenos_Aires")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .calificacion(comentarioNuevo.getCalificacion())
+                .build();
+    }
+
+    @Override
+    public ComentarioDTO saveComentarioPublicacion(CrearComentarioDTO req, Long idPublicacion) {
+        Publicacion publicacion = publicacionService.findById(idPublicacion).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe publicacion con el id %s",idPublicacion)));
+
+        Comentario comentarioNuevo = Comentario.builder()
+                .comentario(req.getComentario())
+                .calificacion(req.getCalificacion())
+                .fechaAlta(Instant.now())
+                .altaUser(authenticationService.getActiveUser().orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Error con el usuario")))
+                .build();
+        comentarioRepository.save(comentarioNuevo);
+
+        publicacion.getComentarios().add(comentarioNuevo);
+        publicacionService.save(publicacion);
+
+        return ComentarioDTO.builder()
+                .altaUsuario(comentarioNuevo.getAltaUser().getFirstName() + ' ' + comentarioNuevo.getAltaUser().getLastName())
+                .comentario(comentarioNuevo.getComentario())
+                .id(comentarioNuevo.getId())
+                .fecha(comentarioNuevo.getFechaAlta().atZone(ZoneId.of("America/Argentina/Buenos_Aires")).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .calificacion(comentarioNuevo.getCalificacion())
+                .build();
     }
 
     @Override
@@ -90,6 +139,11 @@ public class ComentarioServiceImpl implements ComentarioService {
     }
 
     @Override
+    public Comentario save(Comentario comentario) {
+        return comentarioRepository.save(comentario);
+    }
+
+    @Override
     public List<ComentarioDTO> findByUserId(Long id) {
         List<Comentario> comentarios = comentarioRepository.findByAltaUserId(id);
 
@@ -115,6 +169,12 @@ public class ComentarioServiceImpl implements ComentarioService {
     @Override
     public List<ComentarioDTO> findByEjemplarId(Long id) {
         return ejemplarService.getAllComentarios(id);
+
+    }
+
+    @Override
+    public List<ComentarioDTO> findByPublicacionId(Long id) {
+        return publicacionService.getAllComentarios(id);
 
     }
 }
