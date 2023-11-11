@@ -237,6 +237,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         Specification<Prestamo> ejemplarIdSpec;
 
+        Specification<Prestamo> publicacionTituloSpec;
+
         Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
 
         Specification<Prestamo> fechaInicioEstimadaHastaSpec;
@@ -317,6 +319,16 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                             PrestamoSpecifications::hasEstadoPrestamoWithNameAndFechaBajaNull).collect(Collectors.toList());
             estadoPrestamoNombresSpec = Specification.anyOf(estadoPrestamoNombresEspecifications);
             specificationList.add(estadoPrestamoNombresSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> publicacionesTitulos = request.getPublicacionesTitulos();
+        if (Objects.nonNull(publicacionesTitulos) && !publicacionesTitulos.isEmpty()) {
+            List<Specification<Prestamo>> publicacionesTitulosEspecifications = publicacionesTitulos.stream()
+                    .map(
+                            PrestamoSpecifications::hasPublicacionWithTitulo).collect(Collectors.toList());
+            publicacionTituloSpec = Specification.anyOf(publicacionesTitulosEspecifications);
+            specificationList.add(publicacionTituloSpec);
             parametrosAdmitidos++;
         }
 

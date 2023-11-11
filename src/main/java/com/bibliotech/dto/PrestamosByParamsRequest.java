@@ -33,6 +33,7 @@ public class PrestamosByParamsRequest {
     List<String> usuariosLegajos;
     List<String> usuariosEmails;
     List<String> usuariosDNIs;
+    List<String> publicacionesTitulos;
 
 
     Boolean hasAnyFieldFilled() {
