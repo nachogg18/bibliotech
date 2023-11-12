@@ -211,7 +211,7 @@ public class PublicacionServiceImpl implements PublicacionService {
                                                         String.format("no existe edicion con id: %s", request.getIdEdicion())))
                         )
                         .link(
-
+                                (request.getLink() != null) ?
                                 Streams.of(request.getLink()).map( linkRequestDTO -> linkService.save(
                                         Link.builder()
                                                 .url(request.getLink().getUrl())
@@ -222,7 +222,7 @@ public class PublicacionServiceImpl implements PublicacionService {
                                                 )
                                                 .estadoLink(EstadoLink.valueOf(request.getLink().getEstado()))
                                                 .build()
-                                )).findAny().get()
+                                )).findAny().get() : null
 
                         )
                         .categoriaPublicacionList(
