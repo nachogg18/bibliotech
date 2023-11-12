@@ -16,6 +16,8 @@ public interface AuthenticationService {
     Optional<User> getActiveUser();
     Authentication getAuthentication();
     ResetUserPasswordResponse resetUserPassword(ResetUserPasswordRequest request);
+
+    ResetUserPasswordResponse generateVerificationCode(ResetUserPasswordRequest request);
     User setNewUserPassword(NewUserPasswordRequest request);
     Boolean hasPrivilegeOfDoActionForResource(String actionName, String resourceName);
 }

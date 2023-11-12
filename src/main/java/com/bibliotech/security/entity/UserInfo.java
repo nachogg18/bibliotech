@@ -19,6 +19,6 @@ public class UserInfo extends Base {
     private String emailContacto;
     private String direccionContacto;
     @ManyToOne
-    @JoinColumn(name = "provincia_id")
+    @JoinColumn(name = "localidad_id")
     private Localidad localidad;
 }
