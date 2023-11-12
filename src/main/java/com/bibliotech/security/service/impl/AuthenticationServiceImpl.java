@@ -55,7 +55,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     assignRolesToUser( List.of(basicRole), savedUser);
 
-    sendVerificationCodeForRegister(savedUser);
+    sendVerificationCodeForActivation(savedUser);
 
     return savedUser;
   }
@@ -118,8 +118,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             .build());
   }
 
-  private void sendVerificationCodeForRegister(User user) {
-    String subject = "Confirmación de cuenta";
+  private void sendVerificationCodeForActivation(User user) {
+    String subject = "Activación de cuenta";
     String message = "Confirme el registro de cuenta con el siguiente codigo de verificacion: ";
     sendVerificationCode(user, subject, message);
 
@@ -285,6 +285,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .status("CONFIRMATION_REQUIRED")
             .build();
 
+  }
+
+  @Override
+  public ResetUserPasswordResponse generateVerificationCode(ResetUserPasswordRequest request) {
+    Optional<User> user = this.userService.getUserToConfirmByEmail(request.email());
+
+    if (user.isEmpty()) {
+      throw new ValidationException("no existen usuarios a verificar asociados al mail");
+    }
+
+    this.sendVerificationCodeForActivation(user.get());
+
+    return ResetUserPasswordResponse.builder()
+            .email(user.get().getEmail())
+            .status("CONFIRMATION_REQUIRED")
+            .build();
   }
 
   @Override
