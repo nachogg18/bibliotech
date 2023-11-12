@@ -62,8 +62,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<FindUserDto> getUsers() {
-        return userRepository.findAll()
-                .stream().map(user -> FindUserDto.toDto(user)).toList();
+        List<User> allUsers = userRepository.findAll();
+        List<User> onlyUsers = allUsers.stream().filter(u -> u.getRoles().stream().map(r -> r.getName()).toList().contains("USER") && !Objects.nonNull(u.getEndDate())).toList();
+        return onlyUsers.stream().map(u -> FindUserDto.toDto(u)).toList();
     }
 
     @Override
