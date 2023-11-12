@@ -3,6 +3,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.Comentario;
+import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Publicacion;
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,8 @@ public interface PublicacionService{
     ModificarPublicacionResponse updatePublicacion(ModificarPublicacionDTO req, Long id);
 
     List<ComentarioDTO> getAllComentarios(Long id);
+
+    List<PublicacionMobileSearchItem> getPublicacionesMobile(String input);
+
+    LinkMobileDto getPublicacionLink(Long id);
 }
