@@ -107,7 +107,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .collect(Collectors.toList());
     }
 
-
     @Override
     @Transactional
     public PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) {
@@ -197,6 +196,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             ejemplar.setPrestamos(new ArrayList<>());
         }
     }
+
     @Override
     public List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario) {
         return prestamosRepository.findPrestamoByUsuarioId(idUsuario)
@@ -381,6 +381,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     }
 
+    @Override
+    public List<PrestamoSearchItemTablaDTO> searchPrestamos(PrestamoSearchDTO request){
+        return prestamosRepository.findPrestamosByFilters(request.getDni(), request.getTituloPublicacion(), request.getFechaDesde(), request.getFechaHasta());
+    }
     @Override
     public PrestamoResponse checkOutPrestamo(Long id) {
         Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));
