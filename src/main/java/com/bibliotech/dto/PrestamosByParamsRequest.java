@@ -50,6 +50,7 @@ public class PrestamosByParamsRequest {
                 || Objects.nonNull(ejemplaresIds)
                 || Objects.nonNull(prestamosEstadosIds)
                 || Objects.nonNull(prestamosEstadosNombres)
+                || Objects.nonNull(publicacionesTitulos)
                 || Objects.nonNull(multasIds)
                 || Objects.nonNull(usuariosIds)
                 || Objects.nonNull(usuariosLegajos)
