@@ -1,5 +1,7 @@
 package com.bibliotech.security.service.impl;
 
+import com.bibliotech.entity.Carrera;
+import com.bibliotech.entity.Facultad;
 import com.bibliotech.entity.Localidad;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.JwtAuthenticationResponse;
@@ -7,6 +9,8 @@ import com.bibliotech.security.dao.response.ResetUserPasswordResponse;
 import com.bibliotech.security.entity.*;
 import com.bibliotech.security.repository.TokenRepository;
 import com.bibliotech.security.service.*;
+import com.bibliotech.service.CarreraService;
+import com.bibliotech.service.FacultadService;
 import com.bibliotech.service.LocalidadService;
 import com.bibliotech.utils.Dupla;
 import com.bibliotech.utils.RoleUtils;
@@ -44,6 +48,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserVerificationService userVerificationService;
   private final UserInfoService userInfoService;
   private final LocalidadService localidadService;
+  private final FacultadService facultadService;
+  private final CarreraService carreraService;
 
   @Override
   public User signupRequiredConfirmation(@Valid SignUpRequiredConfirmationRequest request) {
@@ -86,7 +92,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     Localidad localidad = localidadService.findByIdAndFechaBajaNull(request.userInfo().localidadId()).orElseThrow(() -> new ValidationException("Localidad no existente o habilitada"));
 
+    Facultad facultad = facultadService.findByIdAndFechaBajaNull(request.userInfo().facultadId()).orElseThrow(() -> new ValidationException("Facultad no existente o habilitada"));
 
+    Carrera carrera = carreraService.findByIdAndFechaBajaNull(request.userInfo().carreraId()).orElseThrow(() -> new ValidationException("Carrera no existente o habilitada"));
+    
     UserInfo userInfo = userInfoService.saveUserInfo(
             UserInfo.builder()
                     .dni(request.userInfo().dni())
@@ -95,6 +104,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .direccionContacto(request.userInfo().direccionContacto())
                     .telefono(request.userInfo().telefonoContacto())
                     .localidad(localidad)
+                    .carrera(carrera)
+                    .facultad(facultad)
                     .build()
     );
 

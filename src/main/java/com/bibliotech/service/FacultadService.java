@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface FacultadService {
     List<Facultad> findAll();
 
+    Optional<Facultad> findByIdAndFechaBajaNull(Long id);
+
     Facultad save(Facultad facultad);
 
     Facultad edit(Facultad facultad, Long id);
