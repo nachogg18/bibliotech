@@ -28,19 +28,19 @@ public class CarreraController {
     }
 
     @PostMapping("")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'EDICION')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'CARRERA')")
     public Carrera post(@RequestBody Carrera carrera) {
         return carreraService.save(carrera);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EDICION')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'CARRERA')")
     public Carrera edit(@RequestBody Carrera carrera, @PathVariable Long id) {
         return carreraService.edit(carrera, id);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'EDICION')")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'CARRERA')")
     public ResponseEntity<Carrera> delete(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(carreraService.delete(id)
