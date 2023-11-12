@@ -1,5 +1,8 @@
 package com.bibliotech.security.controller;
 
+import com.bibliotech.dto.CarreraDTO;
+import com.bibliotech.dto.FacultadDTO;
+import com.bibliotech.dto.LocalidadDTO;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.*;
 import com.bibliotech.security.entity.Role;
@@ -55,6 +58,13 @@ public class UserController {
                         role ->
                             RoleDto.builder().roleId(role.getId()).roleName(role.getName()).build())
                     .collect(Collectors.toList()))
+                .legajo(user.getUserInfo().getLegajo())
+                .dni(user.getUserInfo().getDni())
+                .telefono(user.getUserInfo().getTelefono())
+                .direccion(user.getUserInfo().getDireccionContacto())
+                .localidad(LocalidadDTO.toDto(user.getUserInfo().getLocalidad()))
+                .facultad(FacultadDTO.toDto(user.getUserInfo().getFacultad()))
+                .carrera(CarreraDTO.toDto(user.getUserInfo().getCarrera()))
             .build());
   }
 
