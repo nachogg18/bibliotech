@@ -1,10 +1,9 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.entity.Carrera;
-import com.bibliotech.entity.Edicion;
 import com.bibliotech.service.CarreraService;
-import com.bibliotech.service.EdicionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -12,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/carreras")
@@ -25,7 +22,7 @@ public class CarreraController {
     private final CarreraService carreraService;
 
     @GetMapping(path = "")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EDICION')")
+   
     public List<Carrera> findAll() {
         return carreraService.findAll();
     }

@@ -20,7 +20,6 @@ public class FacultadController {
     private final FacultadService facultadService;
 
     @GetMapping
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'FACULTAD')")
     public List<Facultad> findAll() {
         return facultadService.findAll();
     }
