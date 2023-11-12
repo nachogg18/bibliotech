@@ -5,7 +5,9 @@ import com.bibliotech.repository.ParametroRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,16 +23,16 @@ public class ParametroServiceImpl implements ParametroService {
         return parametroRepository.findAll();
     }
 
-    public Optional<Parametro> obtenerParametroPorNombre(String nombre) {
-        return parametroRepository.findByNombre(nombre);
+    public Parametro obtenerParametroPorNombre(String nombre) {
+        Optional<Parametro> optionalParametro = parametroRepository.findByNombre(nombre);
+        if (optionalParametro.isPresent()) return optionalParametro.get();
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Parámetro no encontrado");
     }
 
     public Parametro  actualizarParametro(String nombre, String valor) {
-        Parametro parametro = parametroRepository.findByNombre(nombre).orElseThrow(() -> new ValidationException("parametro no encontrado"));
-
+        Parametro parametro = this.obtenerParametroPorNombre(nombre);
         parametro.setValor(valor);
         return parametroRepository.save(parametro);
-
     }
 
     public Parametro guardarParametro(Parametro parametro) {

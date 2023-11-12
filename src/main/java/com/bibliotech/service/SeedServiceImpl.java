@@ -37,6 +37,7 @@ public class SeedServiceImpl implements SeedService{
     UbicacionService ubicacionService;
     AuthenticationService authenticationService;
     EjemplarService ejemplarService;
+    ParametroService parametroService;
 
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
@@ -59,7 +60,8 @@ public class SeedServiceImpl implements SeedService{
             PublicacionService publicacionService,
             UbicacionService ubicacionService,
             AuthenticationService authenticationService,
-            EjemplarService ejemplarService
+            EjemplarService ejemplarService,
+            ParametroService parametroService
     ) {
         this.bibliotecaService = bibliotecaService;
         this.autorService = autorService;
@@ -77,6 +79,7 @@ public class SeedServiceImpl implements SeedService{
         this.authenticationService = authenticationService;
         this.ejemplarService = ejemplarService;
         this.resourceLoader = resourceLoader;
+        this.parametroService = parametroService;
         this.objectMapper = objectMapper;
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -298,6 +301,18 @@ public class SeedServiceImpl implements SeedService{
         }
         return "Usuarios cargados";
     }
+    public String cargarParametros(){
+        try {
+            Resource parametrosJsonFile = resourceLoader.getResource("classpath:data/parametros.json");
+            Parametro[] parametros = objectMapper.readValue(parametrosJsonFile.getInputStream(), Parametro[].class);
+            for (Parametro parametro : parametros) {
+                parametroService.guardarParametro(parametro);
+            }
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al cargar los parámetros -> "+e.getMessage());
+        }
+        return "Parámetros cargados";
+    }
 
     public String cargaMasiva(){
         try {
@@ -316,6 +331,7 @@ public class SeedServiceImpl implements SeedService{
             this.cargarPublicaciones();
             this.cargarEjemplares();
             this.cargarUsuarios();
+            this.cargarParametros();
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al realizar la carga masiva -> "+e.getMessage());
         }

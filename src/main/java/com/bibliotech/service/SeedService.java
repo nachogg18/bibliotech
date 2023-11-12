@@ -38,5 +38,7 @@ public interface SeedService {
     @Transactional
     String cargarUsuarios();
     @Transactional
+    String cargarParametros();
+    @Transactional
     String cargaMasiva();
 }

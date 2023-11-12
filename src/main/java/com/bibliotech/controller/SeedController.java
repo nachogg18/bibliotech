@@ -91,6 +91,10 @@ public class SeedController {
     public ResponseEntity<String> cargarEjemplares() {
         return ResponseEntity.ok().body(seedService.cargarEjemplares());
     }
+    @GetMapping(path = "parametro")
+    public ResponseEntity<String> cargarParametros() {
+        return ResponseEntity.ok().body(seedService.cargarParametros());
+    }
 
     @GetMapping(path = "carga-masiva")
     public ResponseEntity<String> cargaMasiva() {

@@ -1,11 +1,13 @@
 package com.bibliotech.repository;
 
+import com.bibliotech.dto.PrestamoSearchItemTablaDTO;
 import com.bibliotech.entity.Prestamo;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -86,5 +88,26 @@ public interface PrestamosRepository extends BaseRepository<Prestamo, Long>, Jpa
     List<Map<String, Object>> obtenerDiasPrestamo(
             @Param("fechaInicio") String fechaInicio,
             @Param("fechaFin") String fechaFin
+    );
+
+
+
+    @Query("SELECT NEW com.bibliotech.dto.PrestamoSearchItemTablaDTO(p.id, pu.titulo, ej.id, us.id, p.fechaInicioEstimada, p.fechaFinEstimada, pe.estado) " +
+            "FROM Prestamo p " +
+            "LEFT JOIN p.ejemplar ej " +
+            "LEFT JOIN ej.publicacion pu " +
+            "LEFT JOIN p.usuario us " +
+            "LEFT JOIN us.userInfo usi " +
+            "LEFT JOIN p.estado pe " +
+            "WHERE (:dni IS NULL OR usi.dni = :dni) " +
+            "AND (:titulo IS NULL OR pu.titulo LIKE %:titulo%) " +
+            "AND (:fechaInicioEstimada IS NULL OR p.fechaInicioEstimada = :fechaInicioEstimada) " +
+            "AND (:fechaFinEstimada IS NULL OR p.fechaFinEstimada = :fechaFinEstimada)" +
+            "AND pe.fechaFin IS NULL")
+    List<PrestamoSearchItemTablaDTO> findPrestamosByFilters(
+            @Param("dni") String dni,
+            @Param("titulo") String titulo,
+            @Param("fechaInicioEstimada") Instant fechaInicioEstimada,
+            @Param("fechaFinEstimada") Instant fechaFinEstimada
     );
 }

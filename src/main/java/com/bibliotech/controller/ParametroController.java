@@ -26,20 +26,19 @@ public class ParametroController {
 
     @GetMapping(path = "/{nombre}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PARAMETRO')")
-    public Optional<Parametro> obtenerParametro(@PathVariable String nombre) {
+    public Parametro obtenerParametro(@PathVariable String nombre) {
         return parametroService.obtenerParametroPorNombre(nombre);
     }
 
     @PostMapping(path = "")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'PARAMETRO')")
-    public Parametro actualizarParametro(@RequestBody Parametro request) {
-        Optional<Parametro> parametro = parametroService.obtenerParametroPorNombre(request.getNombre());
-        if (parametro.isPresent()) {
-            parametro.get().setValor(request.getValor());
-            Parametro parametroActualizado = parametroService.actualizarParametro(request.getNombre(), request.getValor());
-            return parametroActualizado;
-        }
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PARAMETRO')")
+    public Parametro crearParametro(@PathVariable Parametro parametro) {
+        return parametroService.guardarParametro(parametro);
+    }
 
-        return parametroService.guardarParametro(request);
+    @PostMapping(path = "/{nombre}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'PARAMETRO')")
+    public Parametro actualizarParametro(@PathVariable String nombre, @RequestBody String valor) {
+        return parametroService.actualizarParametro(nombre, valor);
     }
 }

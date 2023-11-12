@@ -38,7 +38,6 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public List<PrestamoItemTablaDTO> getPrestamosListTable() {
         return prestamoService.getPrestamosListTable();
     }
-
     @PostMapping(path = "/findByParams")
         public List<PrestamoDTO> findByParams(
             @RequestBody PrestamosByParamsRequest request) throws ValidationException {
@@ -49,6 +48,11 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
                 .map(
                         PrestamoDTO::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping(path = "/search")
+    public List<PrestamoSearchItemTablaDTO> searchPrestamos(@RequestBody PrestamoSearchDTO request) {
+        return prestamoService.searchPrestamos(request);
     }
 
     @PostMapping("/crearPrestamo")

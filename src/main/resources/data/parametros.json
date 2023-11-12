@@ -1,0 +1,14 @@
+[
+  {
+    "nombre": "cantidadMaxDiasPrestamo",
+    "valor": 20
+  },
+  {
+    "nombre": "cantidadMaxDiasRenovacion",
+    "valor": 4
+  },
+  {
+    "nombre": "cantidadMaxRenovaciones",
+    "valor": 2
+  }
+]
