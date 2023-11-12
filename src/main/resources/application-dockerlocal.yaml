@@ -3,7 +3,6 @@ application:
     jwt:
       refresh-token:
         expiration: ${REFRESH_TOKEN_EXPIRATION}
-
 spring:
   mail:
     host: ${EMAIL_HOST}
@@ -12,7 +11,7 @@ spring:
     password: ${EMAIL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect

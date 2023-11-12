@@ -70,10 +70,6 @@ public class LocalDataInitializer implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
-//    List<Link> enabledLinks = List.of(createLink());
-//
-//    createPlataformas(enabledLinks);
-//
     Set<Resource> resources = createResources();
 
     Set<Privilege> privileges = createBasicPrivileges(resources);
@@ -85,24 +81,15 @@ public class LocalDataInitializer implements ApplicationRunner {
     createBibliotecarioRole(privileges);
 
     createSuperAdminUser(superAdminRole);
-//
-//    User userTest = createTestBasicUser(userBasicRole);
-//
-//    Autor autor = createAutor();
-//
-//    Publicacion publicacionTest = createPublicacion(List.of(autor));
-//
-//    Comentario comentarioTest = createComentarioRegular();
-//
-//    Ejemplar ejemplar = createTestEjemplar(publicacionTest, comentarioTest);
-//
-//    createTestPrestamo(userTest, ejemplar);
 
-      Pais argentinaPais = createPais();
+    User userTest = createTestBasicUser(userBasicRole);
 
-      Provincia mendozaProvincia = createProvincia(argentinaPais);
+    Pais argentinaPais = createPais();
 
-      Localidad gcLocalidad = createLocalidad(mendozaProvincia);
+    Provincia mendozaProvincia = createProvincia(argentinaPais);
+
+    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
+
   }
 
   private Set<Resource> createResources() {
