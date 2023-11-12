@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BibliotecaRepository extends BaseRepository<Biblioteca, Long> {
+    Biblioteca findOneById(Long id);
 }

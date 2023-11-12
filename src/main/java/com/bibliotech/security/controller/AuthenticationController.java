@@ -24,9 +24,9 @@ public class AuthenticationController {
     private final UserVerificationService userVerificationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDetailDto> signup(@RequestBody @Valid SignUpRequest request) {
+    public ResponseEntity<UserDetailDto> signup(@RequestBody @Valid SignUpRequiredConfirmationRequest request) {
 
-        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signup(request)));
+        return ResponseEntity.ok(UserDetailDto.userToUserDetailDto(authenticationService.signupRequiredConfirmation(request)));
     }
 
     @PostMapping("/signup-without-verfication")
@@ -42,7 +42,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity verifyAccount(@RequestBody @Valid VerificationCode verificationCode) {
+    public ResponseEntity verifyCode(@RequestBody @Valid VerificationCode verificationCode) {
 
         Dupla<Boolean, Optional<User>> verifyCodeForRegisterResult = userVerificationService.verifyCodeForRegister(
                 verificationCode.getEmail(),
@@ -56,9 +56,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity verifyAccount(@RequestBody @Valid ResetUserPasswordRequest request) {
+    public ResponseEntity resetUserPassword(@RequestBody @Valid ResetUserPasswordRequest request) {
 
         return ResponseEntity.ok(authenticationService.resetUserPassword(request));
+    }
+
+    @PostMapping("/generate-activation-code")
+    public ResponseEntity generateVerificationCode(@RequestBody @Valid ResetUserPasswordRequest request) {
+
+        return ResponseEntity.ok(authenticationService.generateVerificationCode(request));
     }
 
     @PostMapping("/confirm-new-password")

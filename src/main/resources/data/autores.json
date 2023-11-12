@@ -1,0 +1,37 @@
+[
+  {
+    "nombre": "Andrew",
+    "apellido": "Tanenbaum",
+    "fechaNacimiento": "1944-03-16T00:00:00Z",
+    "nacionalidad": "Estadounidense",
+    "biografia": "Andrew Stuart Tanenbaum es un cientifico de la computacion estadounidense. Es conocido por escribir libros de texto sobre informatica."
+  },
+  {
+    "nombre": "Donald",
+    "apellido": "Knuth",
+    "fechaNacimiento": "1938-01-10T00:00:00Z",
+    "nacionalidad": "Estadounidense",
+    "biografia": "Donald Ervin Knuth es un informatico, matematico y profesor de la Universidad de Stanford."
+  },
+  {
+    "nombre": "Linus",
+    "apellido": "Torvalds",
+    "fechaNacimiento": "1969-12-28T00:00:00Z",
+    "nacionalidad": "Finlandes",
+    "biografia": "Linus Benedict Torvalds es un ingeniero de software y autor del kernel Linux, que se convirtio en el nucle del sistema operativo Linux."
+  },
+  {
+    "nombre": "Vint",
+    "apellido": "Cerf",
+    "fechaNacimiento": "1943-06-23T00:00:00Z",
+    "nacionalidad": "Estadounidense",
+    "biografia": "Vinton Gray Cerf es uno de los 'padres de internet'. Parte de los inventores de TCP/IP y contribuyente al desarrollo de internet."
+  },
+  {
+    "nombre": "Ada",
+    "apellido": "Lovelace",
+    "fechaNacimiento": "1815-12-10T00:00:00Z",
+    "nacionalidad": "Britanica",
+    "biografia": "Ada Lovelace fue una matematica y escritora conocida por su trabajo en la máquina analítica de Charles Babbage, un precursor de la computadora."
+  }
+]

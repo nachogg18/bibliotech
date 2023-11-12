@@ -72,7 +72,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         return DetallePrestamoDTO.builder()
                 .nombreApellidoUsuario(prestamo.getUsuario().getFirstName() + " " + prestamo.getUsuario().getLastName())
                 .idUsuario(prestamo.getUsuario().getId())
-                .legajoUsuario(prestamo.getUsuario().getLegajo())
+                .legajoUsuario(Objects.nonNull(prestamo.getUsuario().getUserInfo()) ? prestamo.getUsuario().getUserInfo().getLegajo() : "")
                 .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
                 .idEjemplar(prestamo.getEjemplar().getId())
                 .fechaInicioPrestamo(prestamo.getFechaInicioEstimada())
@@ -223,11 +223,21 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         Specification<Prestamo> prestamoEstadoIdSpec;
 
+        Specification<Prestamo> estadoPrestamoNombresSpec;
+
         Specification<Prestamo> userIdSpec;
+
+        Specification<Prestamo> userDNISpec;
+
+        Specification<Prestamo> userLegajoSpec;
+
+        Specification<Prestamo> userEmailSpec;
 
         Specification<Prestamo> multaIdSpec;
 
         Specification<Prestamo> ejemplarIdSpec;
+
+        Specification<Prestamo> publicacionTituloSpec;
 
         Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
 
@@ -242,7 +252,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             parametrosAdmitidos++;
         }
 
-        List<Long> userIds= request.getUsuariosIds();
+        List<Long> userIds = request.getUsuariosIds();
         if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
                 List<Specification<Prestamo>> userIdSpecifications = userIds.stream()
               .map(
@@ -250,6 +260,36 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 userIdSpec = Specification.anyOf(userIdSpecifications);
                 specificationList.add(userIdSpec);
                 parametrosAdmitidos++;
+        }
+
+        List<String> userDNIs = request.getUsuariosDNIs();
+        if (Objects.nonNull(userDNIs) && !userDNIs.isEmpty()) {
+            List<Specification<Prestamo>> userDNISpecifications = userDNIs.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithDNI).collect(Collectors.toList());
+            userDNISpec = Specification.anyOf(userDNISpecifications);
+            specificationList.add(userDNISpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> userLegajos = request.getUsuariosLegajos();
+        if (Objects.nonNull(userLegajos) && !userLegajos.isEmpty()) {
+            List<Specification<Prestamo>> userLegajoSpecifications = userDNIs.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithLegajo).collect(Collectors.toList());
+            userLegajoSpec = Specification.anyOf(userLegajoSpecifications);
+            specificationList.add(userLegajoSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> userEmails = request.getUsuariosEmails();
+        if (Objects.nonNull(userEmails) && !userEmails.isEmpty()) {
+            List<Specification<Prestamo>> userEmailSpecifications = userEmails.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithDNI).collect(Collectors.toList());
+            userEmailSpec = Specification.anyOf(userEmailSpecifications);
+            specificationList.add(userEmailSpec);
+            parametrosAdmitidos++;
         }
 
         List<Long> ejemplaresIds= request.getEjemplaresIds();
@@ -269,6 +309,26 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                             PrestamoSpecifications::hasMultaWithId).collect(Collectors.toList());
             multaIdSpec = Specification.anyOf(multaIdSpecifications);
             specificationList.add(multaIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> estadoPrestamoNombres = request.getPrestamosEstadosNombres();
+        if (Objects.nonNull(estadoPrestamoNombres) && !estadoPrestamoNombres.isEmpty()) {
+            List<Specification<Prestamo>> estadoPrestamoNombresEspecifications = estadoPrestamoNombres.stream()
+                    .map(
+                            PrestamoSpecifications::hasEstadoPrestamoWithNameAndFechaBajaNull).collect(Collectors.toList());
+            estadoPrestamoNombresSpec = Specification.anyOf(estadoPrestamoNombresEspecifications);
+            specificationList.add(estadoPrestamoNombresSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> publicacionesTitulos = request.getPublicacionesTitulos();
+        if (Objects.nonNull(publicacionesTitulos) && !publicacionesTitulos.isEmpty()) {
+            List<Specification<Prestamo>> publicacionesTitulosEspecifications = publicacionesTitulos.stream()
+                    .map(
+                            PrestamoSpecifications::hasPublicacionWithTitulo).collect(Collectors.toList());
+            publicacionTituloSpec = Specification.anyOf(publicacionesTitulosEspecifications);
+            specificationList.add(publicacionTituloSpec);
             parametrosAdmitidos++;
         }
 

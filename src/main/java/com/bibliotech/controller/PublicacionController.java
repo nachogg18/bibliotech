@@ -43,7 +43,8 @@ public class PublicacionController {
                             .collect(Collectors.toList()))
                     .anioPublicacion(publicacion.getAnio().intValue())
                     .autores(
-                        publicacion.getAutores().stream()
+                        publicacion.getAutores()
+                                .stream()
                             .map(
                                 autor ->
                                     Autor.builder()
@@ -52,7 +53,8 @@ public class PublicacionController {
                                         .nacionalidad(autor.getNacionalidad())
                                         .biografia(autor.getBiografia())
                                         .build())
-                            .collect(Collectors.toList()))
+                            .toList()
+                    )
                     .edicion(Edicion.builder().nombre(publicacion.getEdicion().getNombre()).build())
                     .tituloPublicacion(publicacion.getTitulo())
                     .anioPublicacion(publicacion.getAnio())

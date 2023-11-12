@@ -17,11 +17,14 @@ public class Publicacion extends Base {
     @Column
     private Integer anio;
 
-    @Column
+    @Column(unique = true)
     private String isbn;
 
     @Column
     private String titulo;
+
+    @Column(columnDefinition = "TEXT")
+    private String sinopsis;
 
     @Column
     private Integer nroPaginas;

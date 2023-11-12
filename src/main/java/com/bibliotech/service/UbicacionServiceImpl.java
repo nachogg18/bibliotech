@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.UbicacionDTO;
 import com.bibliotech.entity.Ubicacion;
 import com.bibliotech.repository.UbicacionRepository;
 import java.time.Instant;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionRepository ubicacionRepository;
+    private final BibliotecaService bibliotecaService;
 
     @Override
     public List<Ubicacion> findAll() {
@@ -42,10 +44,13 @@ public class UbicacionServiceImpl implements UbicacionService {
         return ubicacionRepository.findById(id);
     }
 
-
     @Override
-    public Ubicacion save(Ubicacion ubicacion) {
-        return ubicacionRepository.save(ubicacion);
+    public Ubicacion save(UbicacionDTO ubicacion) {
+        Ubicacion u = new Ubicacion();
+        u.setOcupada(false);
+        u.setBiblioteca(bibliotecaService.findOne(ubicacion.getBibliotecaId()));
+        u.setDescripcion(ubicacion.getDescripcion());
+        return ubicacionRepository.save(u);
     }
 
     @Override

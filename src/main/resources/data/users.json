@@ -1,0 +1,38 @@
+[
+  {
+    "signUpRequest": {
+      "firstName": "Ignacio",
+      "lastName": "Valente",
+      "email": "iv@email.com",
+      "password": "Ignacio01"
+    },
+    "roleIds": [2]
+  },
+  {
+    "signUpRequest": {
+      "firstName": "Ignacio",
+      "lastName": "Galvez",
+      "email": "ig@email.com",
+      "password": "Ignacio01"
+    },
+    "roleIds": [2]
+  },
+  {
+    "signUpRequest": {
+      "firstName": "Juan Pablo",
+      "lastName": "Rojas",
+      "email": "jpr@email.com",
+      "password": "Juan01"
+    },
+    "roleIds": [2]
+  },
+  {
+    "signUpRequest": {
+      "firstName": "Facundo",
+      "lastName": "Herrero",
+      "email": "fh@email.com",
+      "password": "Facundo01"
+    },
+    "roleIds": [2]
+  }
+]

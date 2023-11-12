@@ -1,0 +1,518 @@
+[
+  {
+    "anioPublicacion": 1992,
+    "isbnPublicacion": "9780136386776",
+    "tituloPublicacion": "Computer Networks",
+    "sinopsis": "El libro 'Computer Networks' aborda los fundamentos de redes informaticas, explorando conceptos, protocolos y seguridad en comunicaciones.",
+    "nroPaginas": 688,
+    "idsAutores": [1],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/computer_networks",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3, 9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 1987,
+    "isbnPublicacion": "9780136627090",
+    "tituloPublicacion": "Structured Computer Organization",
+    "sinopsis": "El libro 'Structured Computer Organization' analiza la estructura de computadoras, desde componentes basicos hasta arquitecturas avanzadas de sistemas.",
+    "nroPaginas": 800,
+    "idsAutores": [1],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/structured_computer_organization",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 2006,
+    "isbnPublicacion": "9780136006633",
+    "tituloPublicacion": "Modern Operating Systems",
+    "sinopsis": "El libro 'Modern Operating Systems' cubre sistemas operativos contemporaneos, explorando su funcionamiento, estructuras y gestion de recursos.",
+    "nroPaginas": 1100,
+    "idsAutores": [1],
+    "idEdicion": 3,
+    "link": {
+      "url": "https://www.google-libros.com/modern_operating_systems",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 1997,
+    "isbnPublicacion": "9780135085209",
+    "tituloPublicacion": "Distributed Systems: Principles and Paradigms",
+    "sinopsis": "El libro 'Distributed Systems: Principles and Paradigms' examina sistemas distribuidos, explorando principios, modelos y arquitecturas de redes.",
+    "nroPaginas": 704,
+    "idsAutores": [1],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/distributed_systems",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [1, 2]
+  },
+  {
+    "anioPublicacion": 1988,
+    "isbnPublicacion": "9780135005406",
+    "tituloPublicacion": "Operating Systems: Design and Implementation",
+    "sinopsis": "El libro 'Operating Systems: Design and Implementation' aborda la creacion e implementacion de sistemas operativos, analizando estructuras, algoritmos y funcionalidades clave en su desarrollo.",
+    "nroPaginas": 1096,
+    "idsAutores": [1],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/operating_systems_design",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+
+
+
+  {
+    "anioPublicacion": 1968,
+    "isbnPublicacion": "9780201038011",
+    "tituloPublicacion": "The Art of Computer Programming, Vol. 1",
+    "sinopsis": "El libro 'The Art of Computer Programming, Vol. 1' explora algoritmos, estructuras y tecnicas fundamentales en computacion, ofreciendo un enfoque detallado y profundo en la programacion y sus conceptos.",
+    "nroPaginas": 672,
+    "idsAutores": [2],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/art_of_computer_programming_vol1",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 1969,
+    "isbnPublicacion": "9780201038042",
+    "tituloPublicacion": "The Art of Computer Programming, Vol. 2",
+    "sinopsis": "El libro 'The Art of Computer Programming, Vol. 2' continua explorando algoritmos, estructuras y metodos esenciales en computacion, proporcionando una perspectiva detallada y completa sobre temas de programacion avanzados.",
+    "nroPaginas": 784,
+    "idsAutores": [2],
+    "idEdicion": 2,
+    "link": {
+      "url": "https://www.google-libros.com/art_of_computer_programming_vol2",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 1973,
+    "isbnPublicacion": "9780201896831",
+    "tituloPublicacion": "The Art of Computer Programming, Vol. 3",
+    "sinopsis": "El libro 'The Art of Computer Programming, Vol. 3' se sumerge en algoritmos, estructuras y metodologias esenciales en computacion, proporcionando una exploracion detallada y exhaustiva de temas avanzados en programacion y teoria de la computacion.",
+    "nroPaginas": 784,
+    "idsAutores": [2],
+    "idEdicion": 3,
+    "link": {
+      "url": "https://www.google-libros.com/art_of_computer_programming_vol3",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 2011,
+    "isbnPublicacion": "9780321751041",
+    "tituloPublicacion": "The Art of Computer Programming, Vol. 4A",
+    "sinopsis": "El libro 'The Art of Computer Programming, Vol. 4A' profundiza en algoritmos, estructuras y enfoques avanzados en la computacion, ofreciendo un analisis detallado y exhaustivo de temas relevantes en la teoria de la computacion y la programacion.",
+    "nroPaginas": 912,
+    "idsAutores": [2],
+    "idEdicion": 4,
+    "link": {
+      "url": "https://www.google-libros.com/art_of_computer_programming_vol4a",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 2023,
+    "isbnPublicacion": "9780367358692",
+    "tituloPublicacion": "The Art of Computer Programming, Vol. 4B",
+    "sinopsis": "El libro 'The Art of Computer Programming, Vol. 4A' profundiza en algoritmos, estructuras y enfoques avanzados en la computacion, ofreciendo un analisis detallado y exhaustivo de temas relevantes en la teoria de la computacion y la programacion.",
+    "nroPaginas": 1000,
+    "idsAutores": [2],
+    "idEdicion": 5,
+    "link": {
+      "url": "https://www.google-libros.com/art_of_computer_programming_vol4b",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2, 3]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+
+
+  {
+    "anioPublicacion": 2001,
+    "isbnPublicacion": "9780130893476",
+    "tituloPublicacion": "Just for Fun: The Story of an Accidental Revolutionary",
+    "sinopsis": "El libro 'Just for Fun: The Story of an Accidental Revolutionary' relata la historia de un revolucionario accidental, explorando su vida, sus contribuciones inesperadas y su impacto en el mundo tecnologico.",
+    "nroPaginas": 272,
+    "idsAutores": [3],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/just_for_fun",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 7,
+        "idValores": [66]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 1996,
+    "isbnPublicacion": "9780471963558",
+    "tituloPublicacion": "Linux Kernel Development",
+    "sinopsis": "El libro 'Linux Kernel Development' aborda el desarrollo del nucleo de Linux, explorando su evolucion, arquitectura y contribuciones clave al sistema operativo de codigo abierto.",
+    "nroPaginas": 440,
+    "idsAutores": [3],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/linux_kernel_development",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 2012,
+    "isbnPublicacion": "9780133099653",
+    "tituloPublicacion": "Understanding the Linux Kernel",
+    "sinopsis": "El libro 'Understanding the Linux Kernel' explora en detalle la arquitectura, el funcionamiento interno y los mecanismos fundamentales del nucleo del sistema operativo Linux.",
+    "nroPaginas": 952,
+    "idsAutores": [3],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/understanding_linux_kernel",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 2005,
+    "isbnPublicacion": "9780131857487",
+    "tituloPublicacion": "Linux Programming Interface",
+    "sinopsis": "El libro 'Linux Programming Interface' explora la interfaz de programacion de Linux, cubriendo aspectos clave para el desarrollo de software en este sistema operativo, abordando sus mecanismos y funcionalidades.",
+    "nroPaginas": 1552,
+    "idsAutores": [3],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/linux_programming_interface",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [2]
+  },
+  {
+    "anioPublicacion": 2002,
+    "isbnPublicacion": "9780201719759",
+    "tituloPublicacion": "Open Sources: Voices from the Open Source Revolution",
+    "sinopsis": "El libro 'Open Sources: Voices from the Open Source Revolution' presenta perspectivas y reflexiones sobre el movimiento de codigo abierto, ofreciendo visiones variadas de sus protagonistas y su impacto en la industria tecnologica.",
+    "nroPaginas": 288,
+    "idsAutores": [3],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/open_sources",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 7,
+        "idValores": [66]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+
+
+  {
+    "anioPublicacion": 2005,
+    "isbnPublicacion": "9780262033428",
+    "tituloPublicacion": "The Internet Galaxy: Reflections on the Internet, Business, and Society",
+    "sinopsis": "El libro 'The Internet Galaxy: Reflections on the Internet, Business, and Society' ofrece reflexiones sobre el internet, explorando su impacto en los negocios y la sociedad desde una perspectiva amplia y global.",
+    "nroPaginas": 304,
+    "idsAutores": [4],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/internet_galaxy",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+  {
+    "anioPublicacion": 2000,
+    "isbnPublicacion": "9780201889710",
+    "tituloPublicacion": "The Invisible Web: Uncovering Information Sources Search Engines Can't See",
+    "sinopsis": "El libro 'The Invisible Web: Uncovering Information Sources Search Engines Can't See' explora la web invisible, revelando fuentes de informacion que los motores de busqueda convencionales no pueden indexar, y ofrece metodos para acceder a esta informacion.",
+    "nroPaginas": 352,
+    "idsAutores": [4],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/invisible_web",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+  {
+    "anioPublicacion": 2012,
+    "isbnPublicacion": "9780300188233",
+    "tituloPublicacion": "How the Internet Happened: From Netscape to the iPhone",
+    "sinopsis": "El libro 'How the Internet Happened: From Netscape to the iPhone' narra la evolucion del internet desde los primeros dias de Netscape hasta la era del iPhone, explorando los hitos, innovaciones y personas clave que moldearon su desarrollo.",
+    "nroPaginas": 304,
+    "idsAutores": [4],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/internet_happened",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+  {
+    "anioPublicacion": 1997,
+    "isbnPublicacion": "9780139894995",
+    "tituloPublicacion": "Internet Collaboration",
+    "sinopsis": "El libro 'Internet Collaboration' aborda la colaboracion en la red, explorando herramientas, metodologias y el impacto de la colaboracion en línea en diversos ambitos y entornos.",
+    "nroPaginas": 328,
+    "idsAutores": [4],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/internet_collaboration",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+  {
+    "anioPublicacion": 2003,
+    "isbnPublicacion": "9780470862858",
+    "tituloPublicacion": "The Emerging Internet",
+    "sinopsis": "El libro 'The Emerging Internet' explora el surgimiento y desarrollo de Internet, analizando su evolucion, impacto en la sociedad y las perspectivas futuras de esta red global.",
+    "nroPaginas": 240,
+    "idsAutores": [4],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/emerging_internet",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [9]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [5]
+  },
+
+
+  {
+    "anioPublicacion": 2015,
+    "isbnPublicacion": "9781408706125",
+    "tituloPublicacion": "Ada's Algorithm: How Lord Byron's Daughter Ada Lovelace Launched the Digital Age",
+    "sinopsis": "El libro 'Ada's Algorithm: How Lord Byron's Daughter Ada Lovelace Launched the Digital Age' narra como Ada Lovelace, hija de Lord Byron, desencadeno la era digital a traves de su trabajo pionero en la programacion y las computadoras, revelando su influencia significativa en la historia de la tecnologia.",
+    "nroPaginas": 320,
+    "idsAutores": [5],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/adas_algorithm",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 1,
+        "idValores": [2]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 2018,
+    "isbnPublicacion": "9781476753827",
+    "tituloPublicacion": "The Innovators: How a Group of Hackers, Geniuses, and Geeks Created the Digital Revolution",
+    "sinopsis": "El libro 'The Innovators: How a Group of Hackers, Geniuses, and Geeks Created the Digital Revolution' relata como un grupo de hackers, genios y entusiastas creo la revolucion digital, explorando sus contribuciones y avances tecnologicos que transformaron el mundo.",
+    "nroPaginas": 560,
+    "idsAutores": [5],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/the_innovators",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 7,
+        "idValores": [66]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  },
+  {
+    "anioPublicacion": 2004,
+    "isbnPublicacion": "9781400063573",
+    "tituloPublicacion": "The Man Who Knew Too Much: Alan Turing and the Invention of the Computer",
+    "sinopsis": "El libro 'The Man Who Knew Too Much: Alan Turing and the Invention of the Computer' narra la historia de Alan Turing y su contribucion al desarrollo de la computacion, explorando su impacto en la invencion y evolucion de las computadoras.",
+    "nroPaginas": 560,
+    "idsAutores": [5],
+    "idEdicion": 1,
+    "link": {
+      "url": "https://www.google-libros.com/the_man_who_knew_too_much",
+      "estado": "ACTIVO",
+      "plataformaId": 1
+    },
+    "categorias": [
+      {
+        "idCategoria": 7,
+        "idValores": [66]
+      }
+    ],
+    "idTipoPublicacion": 1,
+    "idsEditoriales": [6]
+  }
+]
+
