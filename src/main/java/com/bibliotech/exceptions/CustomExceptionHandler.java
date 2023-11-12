@@ -20,4 +20,15 @@ public class CustomExceptionHandler {
                             request.getRequestURI()
                 ), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDto> handleNotValidationException(ValidationException e, HttpServletRequest request) {
+        return new ResponseEntity<>(
+                new ErrorDto(
+                        e.getMessage(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        e.getStackTrace().toString(),
+                        request.getRequestURI()
+                ), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
