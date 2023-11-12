@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ParametroService {
 
     List<Parametro> obtenerParametros();
-    Optional<Parametro> obtenerParametroPorNombre(String nombre);
+    Parametro obtenerParametroPorNombre(String nombre);
 
     Parametro actualizarParametro(String nombre, String valor);
 
