@@ -4,19 +4,20 @@ import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarEstadoRepository;
 import com.bibliotech.repository.EjemplarRepository;
+
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -175,20 +176,21 @@ public class EjemplarServiceImpl implements EjemplarService {
 
     @Override
     public List<ComentarioDTO> getAllComentarios(Long id){
-        List<Comentario> comentarios = ejemplarRepository.findComentariosByEjemplarId(id);
+        List<Comentario> comentarios = ejemplarRepository.findComentariosByEjemplarId(id).stream().filter(comentario -> !Objects.nonNull(comentario.getFechaBaja())).toList();
         List<ComentarioDTO> comentarioDTOS = comentarios.stream().map( comentario -> {
             ComentarioDTO dto = new ComentarioDTO();
             dto.setId(comentario.getId());
             dto.setComentario(comentario.getComentario());
 
-            Instant fecha = comentario.getFechaAlta();
-            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
-            // Crear un formateador de fecha y hora
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            // Formatear el Instant en la zona horaria de Argentina
-            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
-
-            dto.setFecha(formattedDateTime);
+//            Instant fecha = comentario.getFechaAlta();
+//            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
+//            // Crear un formateador de fecha y hora
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+//            // Formatear el Instant en la zona horaria de Argentina
+//            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
+//
+//            dto.setFecha(formattedDateTime);
+            dto.setFecha(comentario.getFechaAlta());
             dto.setCalificacion(comentario.getCalificacion());
             dto.setAltaUsuario(comentario.getAltaUser().getFirstName() + ' ' + comentario.getAltaUser().getLastName());
             return dto;
@@ -276,5 +278,48 @@ public class EjemplarServiceImpl implements EjemplarService {
                 .serialNFC(ejemplar.getSerialNFC())
                 .estadoEjemplar(nuevoEstado.getEstadoEjemplar().name())
                 .build();
+    }
+
+    @Override
+    public EjemplarNFCDTO busquedaEjemplarNFC(String serialNFC){
+        try{
+            List<Object[]> ejemplaresNFC = ejemplarRepository.obtenerEjemplarNFC(serialNFC);
+            List<EjemplarNFCDTO> ejemplares = new ArrayList<EjemplarNFCDTO>();
+
+            ejemplaresNFC.forEach(po -> {
+                Long idEjemplar = (Long) po[0]; //ID EJEMPLAR
+                float valoracion = ((BigDecimal) po[1]).floatValue(); //VALORACION
+                String ubicacion = (String) po[2]; //UBICACION
+                String biblioteca = (String) po[3]; //BIBLIOTECA
+                Long idPublicacion = (Long) po[4]; //ID PUBLICACION
+                String titulo = (String) po[5]; //TITULO
+                String sinopsis = (String) po[6]; //SINOPSIS
+                Integer anio = (Integer) po[7];//AÑO
+                String tipo = (String) po[8];//TIPO PUBLICACION
+                String isbn = (String) po[9];//ISBN
+                List<String> editoriales = Arrays.stream(((String) po[10]).split(";")).toList();//EDITORIALES
+                List<String> autores = Arrays.stream(((String) po[11]).split(";")).toList();//AUTOR
+                String edicion = (String) po[12];
+                ejemplares.add(EjemplarNFCDTO.builder()
+                        .idEjemplar(idEjemplar)
+                        .valoracion(valoracion)
+                        .ubicacion(ubicacion)
+                        .biblioteca(biblioteca)
+                        .idPublicacion(idPublicacion)
+                        .nombrePublicacion(titulo)
+                        .sinopsisPublicacion(sinopsis)
+                        .anio(anio)
+                        .tipoPublicacion(tipo)
+                        .isbn(isbn)
+                        .editoriales(editoriales)
+                        .autores(autores)
+                        .edicion(edicion)
+                        .build());
+            });
+
+            return ejemplares.get(0);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al buscar ejemplar -> "+e.getMessage());
+        }
     }
 }
