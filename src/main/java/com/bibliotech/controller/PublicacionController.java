@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -102,9 +103,20 @@ public class PublicacionController {
     return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
   }
 
-  @GetMapping(path="{id}/comentarios")
+  @GetMapping(path="/{id}/comentarios")
   //TODO cambiar la preautorizacion a lectura de comentarios
   public ResponseEntity<List<ComentarioDTO>> getComentarios(@PathVariable Long id){
     return ResponseEntity.ok().body(publicacionService.getAllComentarios(id));
   }
+
+  @GetMapping(path = "/mobile/search")
+  public ResponseEntity<List<PublicacionMobileSearchItem>> getPublicacionesMobile(@RequestParam(name = "input") String input){
+    return ResponseEntity.ok().body(publicacionService.getPublicacionesMobile(input));
+  }
+
+  @GetMapping(path = "/{id}/link")
+  public ResponseEntity<LinkMobileDto> getPublicacionLink(@PathVariable Long id){
+    return ResponseEntity.ok().body(publicacionService.getPublicacionLink(id));
+  }
+
 }

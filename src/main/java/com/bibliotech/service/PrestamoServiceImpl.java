@@ -205,9 +205,11 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                                 .builder()
                                 .id(prestamo.getId())
                                 .publicacion(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getPublicacion().getTitulo())
+                                .publicacionId(prestamo.getEjemplar().getPublicacion().getId())
                                 .ejemplar(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getId())
                                 .estado(prestamo.getEstado().size() == 0 ? null : prestamo.getEstado().stream().filter(pe -> pe.getFechaFin() == null).toList().get(0).getEstado().name())
                                 .fechaInicio(prestamo.getFechaInicioEstimada())
+                                .fechaHasta(prestamo.getFechasRenovaciones().isEmpty() ? prestamo.getFechaFinEstimada() : prestamo.getFechasRenovaciones().get(prestamo.getFechasRenovaciones().toArray().length-1))
                                 .build()
                 ).toList();
     }

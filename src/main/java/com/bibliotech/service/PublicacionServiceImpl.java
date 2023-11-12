@@ -12,10 +12,7 @@ import jakarta.validation.ValidationException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -389,26 +387,68 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     @Override
     public List<ComentarioDTO> getAllComentarios(Long id){
-        List<Comentario> comentarios = publicacionRepository.findComentariosByPublicacionId(id);
+        List<Comentario> comentarios = publicacionRepository.findComentariosByPublicacionId(id).stream().filter(comentario -> !Objects.nonNull(comentario.getFechaBaja())).toList();
         List<ComentarioDTO> comentarioDTOS = comentarios.stream().map( comentario -> {
             ComentarioDTO dto = new ComentarioDTO();
             dto.setId(comentario.getId());
             dto.setComentario(comentario.getComentario());
 
-            Instant fecha = comentario.getFechaAlta();
-            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
-            // Crear un formateador de fecha y hora
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-            // Formatear el Instant en la zona horaria de Argentina
-            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
-
-            dto.setFecha(formattedDateTime);
+//            Instant fecha = comentario.getFechaAlta();
+//            ZoneId zonaArgentina = ZoneId.of("America/Argentina/Buenos_Aires");
+//            // Crear un formateador de fecha y hora
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+//            // Formatear el Instant en la zona horaria de Argentina
+//            String formattedDateTime = fecha.atZone(zonaArgentina).format(formatter);
+//
+//            dto.setFecha(formattedDateTime);
+            dto.setFecha(comentario.getFechaAlta());
             dto.setCalificacion(comentario.getCalificacion());
             dto.setAltaUsuario(comentario.getAltaUser().getFirstName() + ' ' + comentario.getAltaUser().getLastName());
             return dto;
         }).toList();
 
         return comentarioDTOS;
-    };
+    }
 
+    @Override
+    public List<PublicacionMobileSearchItem> getPublicacionesMobile(String input) {
+        List<Object[]> publicacionesObject = publicacionRepository.obtenerPublicacionesItemMobile(input);
+        List<PublicacionMobileSearchItem> publicacionesMobile = new ArrayList<PublicacionMobileSearchItem>();
+
+        publicacionesObject.forEach(po -> {
+            Long id = (Long) po[0]; //ID
+            String nombre = (String) po[1]; //TITULO
+            String sinopsis = (String) po[2]; //SINOPSIS
+            Integer anio = (Integer) po[3];//AÑO
+            String tipo = (String) po[4];//TIPO PUBLICACION
+            String isbn = (String) po[5];//ISBN
+            List<String> editoriales = Arrays.stream(((String) po[6]).split(";")).toList();//EDITORIALES
+            List<String> autores = Arrays.stream(((String) po[7]).split(";")).toList();//AUTOR
+            String edicion = (String) po[8];
+            publicacionesMobile.add(PublicacionMobileSearchItem.builder()
+                            .id(id)
+                            .isbn(isbn)
+                            .nombrePublicacion(nombre)
+                            .sinopsisPublicacion(sinopsis)
+                            .tipoPublicacion(tipo)
+                            .anio(Math.toIntExact(anio))
+                            .editoriales(editoriales)
+                            .autores(autores)
+                            .edicion(edicion)
+                    .build());
+        });
+
+        return publicacionesMobile;
+    }
+
+    @Override
+    public LinkMobileDto getPublicacionLink(Long id){
+        Optional<Publicacion> publicacion = this.publicacionRepository.findById(id);
+        if(publicacion.isEmpty()) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Publicación no encontrada");
+        if(!Objects.nonNull(publicacion.get().getLink())) return null;
+        return LinkMobileDto.builder()
+                .url(publicacion.get().getLink().getUrl())
+                .instrucciones(publicacion.get().getLink().getPlataforma().getInstrucciones())
+                .build();
+    }
 }

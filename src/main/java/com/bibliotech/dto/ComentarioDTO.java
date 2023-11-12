@@ -6,20 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ComentarioDTO {
-    @NotNull
     private Long id;
-    @NotNull
+    private String publicacion;
+    private Long ejemplar;
     private int calificacion;
-    @NotNull
     private String comentario;
-    @NotNull
-    private String fecha;
-    @NotNull
+    private Instant fecha;
     private String altaUsuario;
 //    private String bajaUsuario;
 }

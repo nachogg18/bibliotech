@@ -15,6 +15,8 @@ public class FindPrestamoDTO {
     private Long id;
     private String publicacion;
     private Long ejemplar;
+    private Long publicacionId;
     private String estado;
     private Instant fechaInicio;
+    private Instant fechaHasta;
 }
