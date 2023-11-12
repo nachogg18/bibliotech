@@ -42,7 +42,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity resetUserPassword(@RequestBody @Valid VerificationCode verificationCode) {
+    public ResponseEntity verifyCode(@RequestBody @Valid VerificationCode verificationCode) {
 
         Dupla<Boolean, Optional<User>> verifyCodeForRegisterResult = userVerificationService.verifyCodeForRegister(
                 verificationCode.getEmail(),
