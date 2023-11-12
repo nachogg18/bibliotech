@@ -40,14 +40,14 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     }
 
     @PostMapping(path = "/findByParams")
-        public List<PrestamosByParamsResponse> findByParams(
+        public List<PrestamoDTO> findByParams(
             @RequestBody PrestamosByParamsRequest request) throws ValidationException {
 
         request.validate();
 
         return prestamoService.findByParams(request).stream()
                 .map(
-                        prestamo -> PrestamosByParamsResponse.prestamoToPrestamoByParamsResponse(prestamo))
+                        PrestamoDTO::toDto)
                 .collect(Collectors.toList());
     }
 

@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
-@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+//@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class PrestamosByParamsRequest {
     List<Long> prestamosIds;
     Instant fechaInicioEstimadaDesde;
