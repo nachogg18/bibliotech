@@ -10,7 +10,9 @@ public record UserInfoRequest(
         @NotNull String direccionContacto,
         String emailContacto,
         @NotNull Long localidadId,
-        @NotBlank String telefonoContacto
+        @NotBlank String telefonoContacto,
+        @NotNull Long carreraId,
+        @NotNull Long facultadId
 ) {
 }
 

@@ -1,6 +1,8 @@
 package com.bibliotech.security.entity;
 
 import com.bibliotech.entity.Base;
+import com.bibliotech.entity.Carrera;
+import com.bibliotech.entity.Facultad;
 import com.bibliotech.entity.Localidad;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,4 +23,12 @@ public class UserInfo extends Base {
     @ManyToOne
     @JoinColumn(name = "localidad_id")
     private Localidad localidad;
+
+    @ManyToOne
+    @JoinColumn(name = "carrera_id")
+    private Carrera carrera;
+
+    @ManyToOne
+    @JoinColumn(name = "facultad_id")
+    private Facultad facultad;
 }

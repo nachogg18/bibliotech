@@ -21,6 +21,11 @@ public class FacultadServiceImpl implements FacultadService {
         return facultadRepository.findByFechaBajaNull();
     }
 
+    @Override
+    public Optional<Facultad> findByIdAndFechaBajaNull(Long id) {
+        return facultadRepository.findByIdAndAndFechaBajaNull(id);
+    }
+
 
     @Override
     public Facultad save(Facultad facultad) {

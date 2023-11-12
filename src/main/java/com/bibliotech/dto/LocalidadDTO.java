@@ -29,6 +29,10 @@ public class LocalidadDTO {
                 Objects.nonNull(localidad.getFechaAlta())
                     ? localidad.getFechaAlta().toString()
                     : "")
+            .fechaBaja(
+                    Objects.nonNull(localidad.getFechaBaja())
+                            ? localidad.getFechaBaja().toString()
+                            : "")
             .provincia(
                 Objects.nonNull(ProvinciaDTO.toDto(localidad.getProvincia()))
                     ? ProvinciaDTO.toDto(localidad.getProvincia())
@@ -43,6 +47,7 @@ public class LocalidadDTO {
                 .nombre("")
                 .codigoPostal("")
                 .fechaAlta("")
+                .fechaBaja("")
                 .provincia(ProvinciaDTO.emptyDTO())
                 .build();
     }

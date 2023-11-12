@@ -16,6 +16,8 @@ public class UserInfoDTO {
     private String emailContacto;
     private String direccionContacto;
     private LocalidadDTO localidad;
+    private CarreraDTO carrera;
+    private FacultadDTO facultad;
 
 
     public static UserInfoDTO toDto(UserInfo userInfo) {
@@ -27,6 +29,8 @@ public class UserInfoDTO {
             .telefono(Objects.nonNull(userInfo.getTelefono()) ? userInfo.getTelefono() : "")
             .emailContacto(Objects.nonNull(userInfo.getEmailContacto()) ? userInfo.getEmailContacto() : "")
             .localidad(LocalidadDTO.toDto(userInfo.getLocalidad()))
+            .carrera(CarreraDTO.toDto(userInfo.getCarrera()))
+            .facultad(FacultadDTO.toDto(userInfo.getFacultad()))
             .build()
         : emptyDTO();
     }
