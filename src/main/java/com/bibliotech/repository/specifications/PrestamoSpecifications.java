@@ -88,10 +88,10 @@ public class PrestamoSpecifications {
     public static Specification<Prestamo> hasUsuarioWithLegajo(String legajo) {
         return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             // Obtén la relación con la entidad User
-            root.fetch("usuario");
+            root.fetch("usuario").fetch("userInfo");
 
             // Crea una condición para buscar por el ID del usuario
-            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("legajo"), legajo);
+            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("userInfo").get("legajo"), legajo);
 
             return predicate;
         };
@@ -113,10 +113,10 @@ public class PrestamoSpecifications {
     public static Specification<Prestamo> hasUsuarioWithDNI(String dni) {
         return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             // Obtén la relación con la entidad User
-            root.fetch("usuario");
+            root.fetch("usuario").fetch("userInfo");
 
             // Crea una condición para buscar por el ID del usuario
-            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("dni"), dni);
+            Predicate predicate = criteriaBuilder.equal(root.get("usuario").get("userInfo").get("dni"), dni);
 
             return predicate;
         };

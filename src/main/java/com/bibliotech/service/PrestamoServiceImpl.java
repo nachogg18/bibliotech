@@ -276,7 +276,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         List<String> userLegajos = request.getUsuariosLegajos();
         if (Objects.nonNull(userLegajos) && !userLegajos.isEmpty()) {
-            List<Specification<Prestamo>> userLegajoSpecifications = userDNIs.stream()
+            List<Specification<Prestamo>> userLegajoSpecifications = userLegajos.stream()
                     .map(
                             PrestamoSpecifications::hasUsuarioWithLegajo).collect(Collectors.toList());
             userLegajoSpec = Specification.anyOf(userLegajoSpecifications);
