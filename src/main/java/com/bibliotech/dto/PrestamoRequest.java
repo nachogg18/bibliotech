@@ -18,8 +18,8 @@ public class PrestamoRequest {
     @NotBlank (message = "fecha inicio estimada obligatorio")
     private Instant fechaInicioEstimada;
     @NotBlank (message = "usuarioID obligatorio")
-    private Long UsuarioID;
+    private Long usuarioID;
     @NotBlank (message = "ejemplarID obligatorio")
-    private Long EjemplarID;
+    private Long ejemplarID;
     //private Date fechaBaja;
 }
