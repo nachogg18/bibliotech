@@ -1,18 +1,15 @@
 package com.bibliotech.service;
 
 import com.bibliotech.entity.Carrera;
-import com.bibliotech.entity.Edicion;
 import com.bibliotech.repository.CarreraRepository;
-import com.bibliotech.repository.EdicionRepository;
 import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,8 +24,8 @@ public class CarreraServiceImpl implements CarreraService {
     }
 
     @Override
-    public Optional<Carrera> findById(Long id) {
-        return carreraRepository.findById(id);
+    public Optional<Carrera> findByIdAndFechaBajaNull(Long id) {
+        return carreraRepository.findByIdAndFechaBajaNull(id);
     }
 
 
