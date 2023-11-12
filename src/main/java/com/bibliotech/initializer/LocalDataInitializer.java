@@ -70,25 +70,25 @@ public class LocalDataInitializer implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
-    Set<Resource> resources = createResources();
-
-    Set<Privilege> privileges = createBasicPrivileges(resources);
-
-    Role superAdminRole = createSuperAdminRole(privileges);
-
-    Role userBasicRole = createUserRole(privileges);
-
-    createBibliotecarioRole(privileges);
-
-    createSuperAdminUser(superAdminRole);
-
-    User userTest = createTestBasicUser(userBasicRole);
-
-    Pais argentinaPais = createPais();
-
-    Provincia mendozaProvincia = createProvincia(argentinaPais);
-
-    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
+//    Set<Resource> resources = createResources();
+//
+//    Set<Privilege> privileges = createBasicPrivileges(resources);
+//
+//    Role superAdminRole = createSuperAdminRole(privileges);
+//
+//    Role userBasicRole = createUserRole(privileges);
+//
+//    createBibliotecarioRole(privileges);
+//
+//    createSuperAdminUser(superAdminRole);
+//
+//    User userTest = createTestBasicUser(userBasicRole);
+//
+//    Pais argentinaPais = createPais();
+//
+//    Provincia mendozaProvincia = createProvincia(argentinaPais);
+//
+//    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
 
   }
 
