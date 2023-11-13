@@ -125,6 +125,13 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .ejemplar(ejemplarService.findById(prestamoRequest.getEjemplarID()).get())
                 .build();
 
+        //cambio de estado de ejemplar
+        ejemplar.getEjemplarEstadoList().stream().filter(ejemplarEstado -> ejemplarEstado.getFechaFin()==null).findFirst().orElse(null).setFechaFin(null);
+        ejemplar.getEjemplarEstadoList().add(EjemplarEstado.builder()
+                        .estadoEjemplar(EstadoEjemplar.PRESTADO)
+                        .fechaInicio(Instant.now())
+                .build());
+
         //prestamo presente o futuro
         PrestamoEstado prestamoEstado = new PrestamoEstado();
         prestamoEstado.setEstado(EstadoPrestamo.EN_ESPERA);
