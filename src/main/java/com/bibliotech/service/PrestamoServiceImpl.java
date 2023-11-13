@@ -328,7 +328,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         if (Objects.nonNull(publicacionesTitulos) && !publicacionesTitulos.isEmpty()) {
             List<Specification<Prestamo>> publicacionesTitulosEspecifications = publicacionesTitulos.stream()
                     .map(
-                            PrestamoSpecifications::hasPublicacionWithTitulo).collect(Collectors.toList());
+                            PrestamoSpecifications::hasPublicacionWithTituloLike).collect(Collectors.toList());
             publicacionTituloSpec = Specification.anyOf(publicacionesTitulosEspecifications);
             specificationList.add(publicacionTituloSpec);
             parametrosAdmitidos++;

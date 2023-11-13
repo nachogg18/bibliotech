@@ -61,13 +61,12 @@ public class PrestamoSpecifications {
         };
     }
 
-    public static Specification<Prestamo> hasPublicacionWithTitulo(String titulo) {
+    public static Specification<Prestamo> hasPublicacionWithTituloLike(String titulo) {
         return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             // Obtén la relación con la entidad publicacion
             root.fetch("ejemplar").fetch("publicacion");
 
-            // Crea una condición para buscar por el ID del usuario
-            Predicate publicacionTituloPredicate = criteriaBuilder.equal(root.get("ejemplar").get("publicacion").get("titulo"), titulo);
+            Predicate publicacionTituloPredicate = criteriaBuilder.like(root.get("ejemplar").get("publicacion").get("titulo"), titulo.toLowerCase());
 
             return publicacionTituloPredicate;
         };
