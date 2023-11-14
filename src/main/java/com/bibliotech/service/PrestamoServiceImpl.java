@@ -51,22 +51,25 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         List<RenovacionDTO> renovaciones = new ArrayList<>();
 
         if (prestamo.getFechasRenovaciones() != null && !prestamo.getFechasRenovaciones().isEmpty()) {
-            Instant lastInstant = prestamo.getFechaInicioEstimada();
 
-            for (Instant instant : prestamo.getFechasRenovaciones()) {
+            Instant fechaInicioRenovacion;
+            Instant fechaFinRenovacion;
+
+            for (var i = 0; i < prestamo.getFechasRenovaciones().size() - 1; i++) {
+                if (i==0) {
+                    fechaInicioRenovacion = prestamo.getFechaFinEstimada();
+                    fechaFinRenovacion = prestamo.getFechasRenovaciones().get(i);
+                } else {
+                    fechaInicioRenovacion = prestamo.getFechasRenovaciones().get(i-1);
+                    fechaFinRenovacion = prestamo.getFechasRenovaciones().get(i);
+                }
                 renovaciones.add(RenovacionDTO.builder()
-                        .fechaInicioRenovacion(lastInstant)
-                        .fechaFinRenovacion(instant)
+                        .fechaInicioRenovacion(fechaInicioRenovacion)
+                        .fechaFinRenovacion(fechaFinRenovacion)
                         .build());
-                lastInstant = instant;
+
             }
-        } else {
-            if (prestamo.getFechaFinEstimada() != null) {
-                renovaciones.add(RenovacionDTO.builder()
-                        .fechaInicioRenovacion(prestamo.getFechaInicioEstimada())
-                        .fechaFinRenovacion(prestamo.getFechaFinEstimada())
-                        .build());
-            }
+
         }
 
         return DetallePrestamoDTO.builder()
