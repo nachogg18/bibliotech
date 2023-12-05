@@ -40,6 +40,11 @@ public class EjemplarController {
     public List<EjemplarResponseDTO> findEjemplaresByPublicacionId(@PathVariable Long publicacionId) {
         return ejemplarService.findEjemplaresByPublicacionId(publicacionId);
     }
+    @GetMapping("/serial/{serialNFC}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EJEMPLAR')")
+    public EjemplarNFCDTO findEjemplarByNFC(@PathVariable String serialNFC) {
+        return ejemplarService.busquedaEjemplarNFC(serialNFC);
+    }
 
     @GetMapping("/{id}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'EJEMPLAR')")

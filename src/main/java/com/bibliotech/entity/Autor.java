@@ -31,6 +31,6 @@ public class Autor extends Base {
     @Column
     private String nacionalidad;
 
-    @Column
+    @Column(length = 1000)
     private String biografia;
 }

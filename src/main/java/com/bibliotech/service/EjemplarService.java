@@ -3,6 +3,7 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.Ejemplar;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +34,7 @@ public interface EjemplarService {
     EditEjemplarDTO extraviarEjemplar (Long id);
 
     EditEjemplarDTO habilitarEjemplar (Long id);
+
+    @Transactional
+    EjemplarNFCDTO busquedaEjemplarNFC(String serialNFC);
 }

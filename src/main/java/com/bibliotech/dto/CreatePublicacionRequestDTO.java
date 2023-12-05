@@ -20,6 +20,8 @@ public class CreatePublicacionRequestDTO {
     private String isbnPublicacion;
     @NotEmpty
     private String tituloPublicacion;
+    @NotEmpty
+    private String sinopsis;
     @Positive
     private Integer nroPaginas;
     @NotEmpty

@@ -51,28 +51,31 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         List<RenovacionDTO> renovaciones = new ArrayList<>();
 
         if (prestamo.getFechasRenovaciones() != null && !prestamo.getFechasRenovaciones().isEmpty()) {
-            Instant lastInstant = prestamo.getFechaInicioEstimada();
 
-            for (Instant instant : prestamo.getFechasRenovaciones()) {
+            Instant fechaInicioRenovacion;
+            Instant fechaFinRenovacion;
+
+            for (var i = 0; i < prestamo.getFechasRenovaciones().size() - 1; i++) {
+                if (i==0) {
+                    fechaInicioRenovacion = prestamo.getFechaFinEstimada();
+                    fechaFinRenovacion = prestamo.getFechasRenovaciones().get(i);
+                } else {
+                    fechaInicioRenovacion = prestamo.getFechasRenovaciones().get(i-1);
+                    fechaFinRenovacion = prestamo.getFechasRenovaciones().get(i);
+                }
                 renovaciones.add(RenovacionDTO.builder()
-                        .fechaInicioRenovacion(lastInstant)
-                        .fechaFinRenovacion(instant)
+                        .fechaInicioRenovacion(fechaInicioRenovacion)
+                        .fechaFinRenovacion(fechaFinRenovacion)
                         .build());
-                lastInstant = instant;
+
             }
-        } else {
-            if (prestamo.getFechaFinEstimada() != null) {
-                renovaciones.add(RenovacionDTO.builder()
-                        .fechaInicioRenovacion(prestamo.getFechaInicioEstimada())
-                        .fechaFinRenovacion(prestamo.getFechaFinEstimada())
-                        .build());
-            }
+
         }
 
         return DetallePrestamoDTO.builder()
                 .nombreApellidoUsuario(prestamo.getUsuario().getFirstName() + " " + prestamo.getUsuario().getLastName())
                 .idUsuario(prestamo.getUsuario().getId())
-                .legajoUsuario(prestamo.getUsuario().getLegajo())
+                .legajoUsuario(Objects.nonNull(prestamo.getUsuario().getUserInfo()) ? prestamo.getUsuario().getUserInfo().getLegajo() : "")
                 .tituloPublicacion(prestamo.getEjemplar().getPublicacion().getTitulo())
                 .idEjemplar(prestamo.getEjemplar().getId())
                 .fechaInicioPrestamo(prestamo.getFechaInicioEstimada())
@@ -106,7 +109,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                         })
                 .collect(Collectors.toList());
     }
-
 
     @Override
     @Transactional
@@ -197,6 +199,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             ejemplar.setPrestamos(new ArrayList<>());
         }
     }
+
     @Override
     public List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario) {
         return prestamosRepository.findPrestamoByUsuarioId(idUsuario)
@@ -205,9 +208,11 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                                 .builder()
                                 .id(prestamo.getId())
                                 .publicacion(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getPublicacion().getTitulo())
+                                .publicacionId(prestamo.getEjemplar().getPublicacion().getId())
                                 .ejemplar(prestamo.getEjemplar() == null ? null : prestamo.getEjemplar().getId())
                                 .estado(prestamo.getEstado().size() == 0 ? null : prestamo.getEstado().stream().filter(pe -> pe.getFechaFin() == null).toList().get(0).getEstado().name())
                                 .fechaInicio(prestamo.getFechaInicioEstimada())
+                                .fechaHasta(prestamo.getFechasRenovaciones().isEmpty() ? prestamo.getFechaFinEstimada() : prestamo.getFechasRenovaciones().get(prestamo.getFechasRenovaciones().toArray().length-1))
                                 .build()
                 ).toList();
     }
@@ -223,11 +228,21 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         Specification<Prestamo> prestamoEstadoIdSpec;
 
+        Specification<Prestamo> estadoPrestamoNombresSpec;
+
         Specification<Prestamo> userIdSpec;
+
+        Specification<Prestamo> userDNISpec;
+
+        Specification<Prestamo> userLegajoSpec;
+
+        Specification<Prestamo> userEmailSpec;
 
         Specification<Prestamo> multaIdSpec;
 
         Specification<Prestamo> ejemplarIdSpec;
+
+        Specification<Prestamo> publicacionTituloSpec;
 
         Specification<Prestamo> fechaInicioEstimadaDesdeSpec;
 
@@ -242,7 +257,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             parametrosAdmitidos++;
         }
 
-        List<Long> userIds= request.getUsuariosIds();
+        List<Long> userIds = request.getUsuariosIds();
         if (Objects.nonNull(userIds) && !userIds.isEmpty()) {
                 List<Specification<Prestamo>> userIdSpecifications = userIds.stream()
               .map(
@@ -250,6 +265,36 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 userIdSpec = Specification.anyOf(userIdSpecifications);
                 specificationList.add(userIdSpec);
                 parametrosAdmitidos++;
+        }
+
+        List<String> userDNIs = request.getUsuariosDNIs();
+        if (Objects.nonNull(userDNIs) && !userDNIs.isEmpty()) {
+            List<Specification<Prestamo>> userDNISpecifications = userDNIs.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithDNI).collect(Collectors.toList());
+            userDNISpec = Specification.anyOf(userDNISpecifications);
+            specificationList.add(userDNISpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> userLegajos = request.getUsuariosLegajos();
+        if (Objects.nonNull(userLegajos) && !userLegajos.isEmpty()) {
+            List<Specification<Prestamo>> userLegajoSpecifications = userLegajos.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithLegajo).collect(Collectors.toList());
+            userLegajoSpec = Specification.anyOf(userLegajoSpecifications);
+            specificationList.add(userLegajoSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> userEmails = request.getUsuariosEmails();
+        if (Objects.nonNull(userEmails) && !userEmails.isEmpty()) {
+            List<Specification<Prestamo>> userEmailSpecifications = userEmails.stream()
+                    .map(
+                            PrestamoSpecifications::hasUsuarioWithDNI).collect(Collectors.toList());
+            userEmailSpec = Specification.anyOf(userEmailSpecifications);
+            specificationList.add(userEmailSpec);
+            parametrosAdmitidos++;
         }
 
         List<Long> ejemplaresIds= request.getEjemplaresIds();
@@ -269,6 +314,26 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                             PrestamoSpecifications::hasMultaWithId).collect(Collectors.toList());
             multaIdSpec = Specification.anyOf(multaIdSpecifications);
             specificationList.add(multaIdSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> estadoPrestamoNombres = request.getPrestamosEstadosNombres();
+        if (Objects.nonNull(estadoPrestamoNombres) && !estadoPrestamoNombres.isEmpty()) {
+            List<Specification<Prestamo>> estadoPrestamoNombresEspecifications = estadoPrestamoNombres.stream()
+                    .map(
+                            PrestamoSpecifications::hasEstadoPrestamoWithNameAndFechaBajaNull).collect(Collectors.toList());
+            estadoPrestamoNombresSpec = Specification.anyOf(estadoPrestamoNombresEspecifications);
+            specificationList.add(estadoPrestamoNombresSpec);
+            parametrosAdmitidos++;
+        }
+
+        List<String> publicacionesTitulos = request.getPublicacionesTitulos();
+        if (Objects.nonNull(publicacionesTitulos) && !publicacionesTitulos.isEmpty()) {
+            List<Specification<Prestamo>> publicacionesTitulosEspecifications = publicacionesTitulos.stream()
+                    .map(
+                            PrestamoSpecifications::hasPublicacionWithTituloLike).collect(Collectors.toList());
+            publicacionTituloSpec = Specification.anyOf(publicacionesTitulosEspecifications);
+            specificationList.add(publicacionTituloSpec);
             parametrosAdmitidos++;
         }
 
@@ -319,6 +384,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     }
 
+    @Override
+    public List<PrestamoSearchItemTablaDTO> searchPrestamos(PrestamoSearchDTO request){
+        return prestamosRepository.findPrestamosByFilters(request.getDni(), request.getTituloPublicacion(), request.getFechaDesde(), request.getFechaHasta());
+    }
     @Override
     public PrestamoResponse checkOutPrestamo(Long id) {
         Prestamo prestamo = prestamosRepository.findById(id).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id %s", id)));

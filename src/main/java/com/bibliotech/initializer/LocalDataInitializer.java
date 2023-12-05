@@ -59,38 +59,37 @@ public class LocalDataInitializer implements ApplicationRunner {
 
   private final PrestamoService prestamoService;
 
+  private final LocalidadService localidadService;
+
+  private final ProvinciaService provinciaService;
+
+  private final PaisService paisService;
+
   private final PrestamoEstadoRepository prestamoEstadoRepository;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
-    List<Link> enabledLinks = List.of(createLink());
+//    Set<Resource> resources = createResources();
+//
+//    Set<Privilege> privileges = createBasicPrivileges(resources);
+//
+//    Role superAdminRole = createSuperAdminRole(privileges);
+//
+//    Role userBasicRole = createUserRole(privileges);
+//
+//    createBibliotecarioRole(privileges);
+//
+//    createSuperAdminUser(superAdminRole);
+//
+//    User userTest = createTestBasicUser(userBasicRole);
+//
+//    Pais argentinaPais = createPais();
+//
+//    Provincia mendozaProvincia = createProvincia(argentinaPais);
+//
+//    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
 
-    createPlataformas(enabledLinks);
-
-    Set<Resource> resources = createResources();
-
-    Set<Privilege> privileges = createBasicPrivileges(resources);
-
-    Role superAdminRole = createSuperAdminRole(privileges);
-
-    Role userBasicRole = createUserRole(privileges);
-
-    createBibliotecarioRole(privileges);
-
-    createSuperAdminUser(superAdminRole);
-
-    User userTest = createTestBasicUser(userBasicRole);
-
-    Autor autor = createAutor();
-
-    Publicacion publicacionTest = createPublicacion(List.of(autor));
-
-    Comentario comentarioTest = createComentarioRegular();
-
-    Ejemplar ejemplar = createTestEjemplar(publicacionTest, comentarioTest);
-
-    createTestPrestamo(userTest, ejemplar);
   }
 
   private Set<Resource> createResources() {
@@ -288,5 +287,37 @@ public class LocalDataInitializer implements ApplicationRunner {
             .ejemplar(ejemplar)
             .estado(List.of(prestamoEstado))
             .build());
+  }
+
+
+  private Pais createPais() {
+    return paisService.save(
+                    Pais.builder()
+                            .siglas("AR")
+                            .fechaAlta(Instant.now())
+                            .fechaBaja(null)
+                            .nombre("ARGENTINA")
+            .build());
+  }
+
+  private Provincia createProvincia(Pais pais) {
+    return provinciaService.save(
+            Provincia.builder()
+                    .fechaAlta(Instant.now())
+                    .fechaBaja(null)
+                    .nombre("Mendoza")
+                    .pais(pais)
+                    .build());
+  }
+
+  private Localidad createLocalidad(Provincia provincia) {
+    return localidadService.save(
+            Localidad.builder()
+                    .fechaAlta(Instant.now())
+                    .fechaBaja(null)
+                    .codigoPostal("5501")
+                    .nombre("Godoy Cruz")
+                    .provincia(provincia)
+                    .build());
   }
 }

@@ -1,17 +1,21 @@
 package com.bibliotech.dto;
 
+import com.bibliotech.entity.EstadoPrestamo;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
-@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+//@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public class PrestamosByParamsRequest {
     List<Long> prestamosIds;
     Instant fechaInicioEstimadaDesde;
@@ -27,6 +31,10 @@ public class PrestamosByParamsRequest {
     List<String> prestamosEstadosNombres;
     List<Long> multasIds;
     List<Long> usuariosIds;
+    List<String> usuariosLegajos;
+    List<String> usuariosEmails;
+    List<String> usuariosDNIs;
+    List<String> publicacionesTitulos;
 
 
     Boolean hasAnyFieldFilled() {
@@ -42,15 +50,45 @@ public class PrestamosByParamsRequest {
                 || Objects.nonNull(ejemplaresIds)
                 || Objects.nonNull(prestamosEstadosIds)
                 || Objects.nonNull(prestamosEstadosNombres)
+                || Objects.nonNull(publicacionesTitulos)
                 || Objects.nonNull(multasIds)
-                || Objects.nonNull(usuariosIds);
-                
+                || Objects.nonNull(usuariosIds)
+                || Objects.nonNull(usuariosLegajos)
+                || Objects.nonNull(usuariosEmails)
+                || Objects.nonNull(usuariosDNIs);
     }
 
     public void validate() {
         if (!hasAnyFieldFilled()) {
             throw new ValidationException("Algún parámetro debe venir completo");
         }
+        
+        if (!validateEstadoPrestamoNombres().isEmpty()) {
+            throw new ValidationException(String.format("Los estado prestamo nombres son incorrectos: %s", validateEstadoPrestamoNombres()));
+        }
+    }
+    
+    private List<String> validateEstadoPrestamoNombres() {
+        if (Objects.isNull(prestamosEstadosNombres)) {
+            return List.of();
+        }
+
+        List<String> valoresIncorrectos = new ArrayList<>();
+        prestamosEstadosNombres
+                .stream()
+                .forEach(
+                        nombre -> {
+                            if (Arrays.stream(EstadoPrestamo.values()).map(
+                                EstadoPrestamo::name
+                        ).filter(estadoPrestamoNombre -> estadoPrestamoNombre.equals(nombre)).findAny().isEmpty()) {
+                                valoresIncorrectos.add(nombre);
+                            }
+
+                        }
+
+                );
+        
+        return valoresIncorrectos;
     }
 }
 

@@ -25,6 +25,29 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long>,
 
     Publicacion save(Publicacion publicacion);
 
+
+    @Query(nativeQuery = true, value = "SELECT p.id, p.titulo, p.sinopsis, p.anio, " +
+            "tp.nombre AS tipo, p.isbn, " +
+            "GROUP_CONCAT(DISTINCT e.nombre SEPARATOR ';') AS editoriales, " +
+            "GROUP_CONCAT(DISTINCT CONCAT(a.nombre, ' ', a.apellido) SEPARATOR ';') as autores, " +
+            "ed.nombre " +
+            "FROM publicacion p " +
+            "LEFT JOIN edicion ed ON p.edicion_id = ed.id " +
+            "LEFT JOIN tipo_publicacion tp ON p.tipo_publicacion_id = tp.id " +
+            "LEFT JOIN publicacion_editorial pe ON pe.publicacion_id = p.id " +
+            "LEFT JOIN editorial e ON e.id = pe.editorial_id " +
+            "LEFT JOIN publicacion_autor pa ON pa.publicacion_id = p.id " +
+            "LEFT JOIN autor a ON a.id = pa.autor_id " +
+            "WHERE p.anio = :input OR " +
+            "      LOWER(p.titulo) LIKE CONCAT('%', :input, '%') OR " +
+            "      LOWER(tp.nombre) LIKE CONCAT('%', :input, '%') OR " +
+            "      p.isbn LIKE CONCAT('%', :input, '%') OR " +
+            "      LOWER(e.nombre) LIKE CONCAT('%', :input, '%') OR " +
+            "      LOWER(a.nombre) LIKE CONCAT('%', :input, '%') OR " +
+            "      LOWER(a.apellido) LIKE CONCAT('%', :input, '%') " +
+            "GROUP BY p.id, p.titulo, p.sinopsis, p.anio, tp.nombre, p.isbn")
+    List<Object[]> obtenerPublicacionesItemMobile(@Param("input") String input);
+
 //    Page<Publicacion> findAllByFechaBajaIsNullAndAutoresIdInAndEditorialesIdInAndAnioAndTituloAndEdicionNombre
 //            (Pageable pageable, Collection<Long> autores_id, Collection<Long> editoriales_id, Integer anio, String titulo, String edicion_nombre);
 

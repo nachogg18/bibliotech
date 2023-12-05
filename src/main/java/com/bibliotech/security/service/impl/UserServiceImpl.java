@@ -62,20 +62,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<FindUserDto> getUsers() {
-        return userRepository.findAll()
-                .stream().map(user -> FindUserDto.builder()
-                            .id(user.getId())
-                            .legajo(user.getLegajo())
-                            .nombre(user.getFirstName())
-                            .apellido(user.getLastName())
-                            .dni(user.getDni())
-                            .build()).toList();
+        List<User> allUsers = userRepository.findAll();
+        List<User> onlyUsers = allUsers.stream().filter(u -> u.getRoles().stream().map(r -> r.getName()).toList().contains("USER") && !Objects.nonNull(u.getEndDate())).toList();
+        return onlyUsers.stream().map(u -> FindUserDto.toDto(u)).toList();
     }
 
     @Override
     public User save(User user) {
         user.setLastUpdatedDate(Instant.now());
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        return user;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bibliotech.security.dao.response;
 
+import com.bibliotech.dto.UserInfoDTO;
 import com.bibliotech.security.entity.Role;
 import com.bibliotech.security.entity.User;
 import java.util.List;
@@ -24,8 +25,7 @@ public class UserDetailDto {
     private String lastUpdatedDate;
     private String endDate;
     private String confirmationDate;
-    private String dni;
-    private String legajo;
+    private UserInfoDTO userInfoDTO;
 
 
     public static UserDetailDto userToUserDetailDto(User user) {
@@ -34,8 +34,6 @@ public class UserDetailDto {
         .nombre(Objects.nonNull(user.getFirstName()) ? user.getFirstName() : "")
         .apellido(Objects.nonNull(user.getLastName()) ? user.getLastName() : "")
         .email(Objects.nonNull(user.getEmail()) ? user.getEmail() : "")
-        .dni(Objects.nonNull(user.getDni()) ? user.getDni() : "")
-        .legajo(Objects.nonNull(user.getDni()) ? user.getLegajo() : "")
         .startDate(user.getStartDate().toString())
         .lastUpdatedDate(
             Objects.nonNull(user.getLastUpdatedDate()) ? user.getLastUpdatedDate().toString() : "")
@@ -45,6 +43,7 @@ public class UserDetailDto {
                 ? user.getConfirmationDate().toString()
                 : "")
         .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+            .userInfoDTO(UserInfoDTO.toDto(user.getUserInfo()))
         .build();
     }
 }

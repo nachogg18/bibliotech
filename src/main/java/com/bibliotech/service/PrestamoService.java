@@ -7,12 +7,16 @@ import java.util.List;
 
 public interface PrestamoService extends BaseService<Prestamo, Long>{
     PrestamoResponse crearPrestamo(PrestamoRequest prestamoRequest) throws Exception;
-    List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario);
-    List<Prestamo> findByParams(PrestamosByParamsRequest request);
 
-    DetallePrestamoDTO getDetallePrestamo(Long id);
+    List<FindPrestamoDTO> getPrestamosByUserId(Long idUsuario);
 
     List<PrestamoItemTablaDTO> getPrestamosListTable();
+
+    List<Prestamo> findByParams(PrestamosByParamsRequest request);
+
+    List<PrestamoSearchItemTablaDTO> searchPrestamos(PrestamoSearchDTO request);
+
+    DetallePrestamoDTO getDetallePrestamo(Long id);
 
     PrestamoResponse checkOutPrestamo(Long id);
 

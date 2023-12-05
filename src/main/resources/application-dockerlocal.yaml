@@ -3,7 +3,6 @@ application:
     jwt:
       refresh-token:
         expiration: ${REFRESH_TOKEN_EXPIRATION}
-
 spring:
   mail:
     host: ${EMAIL_HOST}

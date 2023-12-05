@@ -5,6 +5,7 @@ import com.bibliotech.entity.Prestamo;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +38,21 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public List<PrestamoItemTablaDTO> getPrestamosListTable() {
         return prestamoService.getPrestamosListTable();
     }
-
     @PostMapping(path = "/findByParams")
-        public List<PrestamosByParamsResponse> findByParams(
-            @RequestBody PrestamosByParamsRequest request) {
+        public List<PrestamoDTO> findByParams(
+            @RequestBody PrestamosByParamsRequest request) throws ValidationException {
 
         request.validate();
 
         return prestamoService.findByParams(request).stream()
                 .map(
-                        prestamo -> PrestamosByParamsResponse.prestamoToPrestamoByParamsResponse(prestamo))
+                        PrestamoDTO::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping(path = "/search")
+    public List<PrestamoSearchItemTablaDTO> searchPrestamos(@RequestBody PrestamoSearchDTO request) {
+        return prestamoService.searchPrestamos(request);
     }
 
     @PostMapping("/crearPrestamo")
@@ -85,4 +90,5 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
     }
+
 }
