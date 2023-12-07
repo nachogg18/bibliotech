@@ -43,4 +43,11 @@ public class NotificacionServiceImpl implements NotificacionService{
                         .leido(false)
                 .build());
     }
+
+    @Override
+    public Notificacion setNotificacionRead(Long id) {
+        Notificacion notificacion = notificacionRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe notificación con id %s", id)));
+        notificacion.setLeido(true);
+        return notificacionRepository.save(notificacion);
+    }
 }
