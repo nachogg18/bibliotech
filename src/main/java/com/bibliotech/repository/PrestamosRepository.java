@@ -111,5 +111,5 @@ public interface PrestamosRepository extends BaseRepository<Prestamo, Long>, Jpa
             @Param("fechaFinEstimada") Instant fechaFinEstimada
     );
 
-    List<Prestamo> findAllByFechaBajaNullAAndFechaFinEstimadaBefore(Instant currentInstant);
+    List<Prestamo> findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant currentInstant);
 }

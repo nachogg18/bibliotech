@@ -640,7 +640,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
     @Override
     public List<Prestamo> findAllByFechaBajaNullAndFechaFinBefore(Instant instant) {
-        return prestamosRepository.findAllByFechaBajaNullAAndFechaFinEstimadaBefore(instant);
+        return prestamosRepository.findAllByFechaBajaNullAndFechaFinEstimadaBefore(instant);
     }
 
 }
