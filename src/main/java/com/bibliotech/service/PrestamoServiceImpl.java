@@ -39,6 +39,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     private AuthenticationService authenticationService;
     @Autowired
     private EjemplarEstadoRepository ejemplarEstadoRepository;
+    @Autowired
+    private MultaService multaService;
 
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
         super(baseRepository);
@@ -163,17 +165,19 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         //usuario existente, rol correspondiente y habilitado
         User usuarioAutenticado = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
-
+        User usuarioADevolver;
         if (!usuarioAutenticado.isEnabled()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El usuario no está habilitado"));
         Role rolActual = usuarioAutenticado.getRoles().stream()
                 .filter(rol -> rol.getEndDate() == null)
                 .findFirst()
                 .orElse(null);
         if (rolActual.equals(RoleUtils.DEFAULT_ROLE_USER)) {
-            return usuarioAutenticado;
+            usuarioADevolver = usuarioAutenticado;
         } else {
-            return userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
+            usuarioADevolver = userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
         }
+        if (!multaService.isUsuarioHabilitado(usuarioADevolver.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario multado");
+        return usuarioADevolver;
     }
 
     private void verifyFechaPrestamos (Instant fechaInicio, Instant fechaFin, Ejemplar ejemplar) {

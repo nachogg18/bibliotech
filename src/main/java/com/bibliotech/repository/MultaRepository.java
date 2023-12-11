@@ -38,4 +38,6 @@ public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecific
             @Param("fechaFin") String fechaFin
     );
 
+    List<Multa> findByUserId(Long user_id);
+
 }

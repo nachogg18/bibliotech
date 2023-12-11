@@ -7,7 +7,9 @@ import com.bibliotech.entity.EstadoMulta;
 import com.bibliotech.entity.Multa;
 import com.bibliotech.entity.MultaEstado;
 import com.bibliotech.repository.MultaRepository;
+import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
+import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
     private final UserService userService;
-    private final PrestamoService prestamoService;
+    private final PrestamosRepository prestamosRepository;
     private final TipoMultaService tipoMultaService;
 
     @Override
@@ -68,7 +71,7 @@ public class MultaServiceImpl implements MultaService {
     public boolean createMulta(CreateMultaDTO request) throws Exception {
         Multa multa = Multa.builder()
                 .prestamo(
-                        prestamoService.findById(request.getIdPrestamo())
+                        prestamosRepository.findById(request.getIdPrestamo()).get()
                 )
                 .user(
                         userService.findById(request.getIdUsuario())
@@ -92,5 +95,36 @@ public class MultaServiceImpl implements MultaService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<MultaItemTablaDTO> getMultasByUserId(Long idUsuario) {
+        return multaRepository.findByUserId(idUsuario)
+                .stream().map(
+                        multa -> MultaItemTablaDTO
+                                .builder()
+                                .id(multa.getId())
+                                .idPrestamo(multa.getPrestamo().getId())
+                                .idUsuario(multa.getUser().getId())
+                                .fechaDesde(multa.getFechaInicio())
+                                .fechaHasta(multa.getFechaFin())
+                                .estado(multa.getMultaEstados().stream()
+                                        .filter(estado -> estado.getFechaFin() == null)
+                                        .findFirst()
+                                        .orElse(null)
+                                                .getNombre()
+                                        )
+                                .tipo(multa.getTipoMulta().getNombre())
+                                .build()
+                ).toList();
+    }
+
+    @Override
+    public boolean isUsuarioHabilitado(Long id) {
+        User usuario = userService.findById(id).get();
+        List<MultaItemTablaDTO> multasUsuario = getMultasByUserId(usuario.getId());
+        return multasUsuario.stream().filter(
+                multa -> Objects.equals(multa.getEstado(), "ACTIVA")
+        ).findAny().orElse(null) == null;
     }
 }
