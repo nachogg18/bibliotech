@@ -6,7 +6,6 @@ import com.bibliotech.dto.MultaItemTablaDTO;
 import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.MultaRepository;
-import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
@@ -29,7 +28,6 @@ public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
     private final UserService userService;
     private final PrestamoService prestamoService;
-    private final PrestamosRepository prestamosRepository;
     private final NotificacionService notificacionService;
     private final TipoMultaService tipoMultaService;
 
@@ -65,7 +63,7 @@ public class MultaServiceImpl implements MultaService {
                                 .idUsuario(multa.getUser().getId())
                                 .fechaDesde(multa.getFechaInicio())
                                 .fechaHasta(multa.getFechaFin())
-                                .estado(multa.getMultaEstados().size() == 0 ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getNombre())
+                                .estado(multa.getMultaEstados().isEmpty() ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getNombre())
                                 .tipo(multa.getTipoMulta() == null ? null : multa.getTipoMulta().getNombre())
                                 .build()
                 ).toList();
@@ -100,7 +98,8 @@ public class MultaServiceImpl implements MultaService {
         notificacionService.crearNotificacion(
                 usuarioMultado,
                 String.format("Fue multado por el préstamo con la publicación %s",
-                        prestamoMultado.getEjemplar().getPublicacion().getTitulo()), TipoNotificacion.MULTA_CREADA
+                        prestamoMultado.getEjemplar().getPublicacion().getTitulo()),
+                TipoNotificacion.MULTA_CREADA
         );
 
         return true;
@@ -130,7 +129,7 @@ public class MultaServiceImpl implements MultaService {
 
     @Override
     public boolean isUsuarioHabilitado(Long id) {
-        User usuario = userService.findById(id).get();
+        User usuario = userService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Usuario con id %s inhabilitado", id)));
         List<MultaItemTablaDTO> multasUsuario = getMultasByUserId(usuario.getId());
         return multasUsuario.stream().filter(
                 multa -> Objects.equals(multa.getEstado(), "ACTIVA")
@@ -235,7 +234,7 @@ public class MultaServiceImpl implements MultaService {
         for (Prestamo prestamo : prestamos) {
             prestamo.setFechaBaja(Instant.now());
             PrestamoEstado estadoActual = prestamo.getEstado().stream().filter(
-                            multaEstado -> multaEstado.getFechaFin() == null
+                            prestamoEstado -> prestamoEstado.getFechaFin() == null
                     )
                     .findFirst().
                     orElseThrow(() -> new RuntimeException("Error con la multa"));
@@ -246,11 +245,19 @@ public class MultaServiceImpl implements MultaService {
                             .estado(EstadoPrestamo.VENCIDO)
                             .build()
             );
+
             try {
+                createMulta(CreateMultaDTO.builder()
+                        //.idMotivoMulta());
+                        .fechaInicioMulta(Instant.now())
+                        .idUsuario(prestamo.getUsuario().getId())
+                        .idPrestamo(prestamo.getId())
+                        .build());
                 prestamoService.save(prestamo);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+
             notificacionService.crearNotificacion(
                     prestamo.getUsuario(),
                     String.format("Préstamo con publicación %s vencido, multa aplicada", prestamo.getEjemplar().getPublicacion().getTitulo()),
