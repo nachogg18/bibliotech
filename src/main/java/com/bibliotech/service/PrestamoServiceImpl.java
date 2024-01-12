@@ -15,7 +15,6 @@ import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,8 +41,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     private EjemplarEstadoRepository ejemplarEstadoRepository;
     @Autowired
     private ParametroService parametroService;
+    @Autowired
+    private MultaService multaService;
 
-    public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository) {
+    public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
         super(baseRepository);
     }
 
@@ -131,6 +132,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .ejemplar(ejemplarService.findById(prestamoRequest.getEjemplarID()).get())
                 .build();
 
+        //prestamo presente o futuro
         PrestamoEstado prestamoEstado = new PrestamoEstado();
         prestamoEstado.setEstado(EstadoPrestamo.EN_ESPERA);
 
@@ -165,17 +167,19 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         //usuario existente, rol correspondiente y habilitado
         User usuarioAutenticado = authenticationService.getActiveUser().orElseThrow(() -> new ValidationException("no authenticated user"));
-
-        if (!usuarioAutenticado.isEnabled()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario no está habilitado");
+        User usuarioADevolver;
+        if (!usuarioAutenticado.isEnabled()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("El usuario no está habilitado"));
         Role rolActual = usuarioAutenticado.getRoles().stream()
                 .filter(rol -> rol.getEndDate() == null)
                 .findFirst()
                 .orElse(null);
         if (rolActual.equals(RoleUtils.DEFAULT_ROLE_USER)) {
-            return usuarioAutenticado;
+            usuarioADevolver = usuarioAutenticado;
         } else {
-            return userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
+            usuarioADevolver = userService.findById(prestamoRequest.getUsuarioID()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,String.format("No existe usuario con id %s", prestamoRequest.getUsuarioID())));
         }
+        if (!multaService.isUsuarioHabilitado(usuarioADevolver.getId())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario multado");
+        return usuarioADevolver;
     }
 
     private void verifyFechaPrestamos (Instant fechaInicio, Instant fechaFin, Ejemplar ejemplar) {
@@ -184,8 +188,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         if(Instant.now().isAfter(fechaFin)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fecha fin debe estar en el futuro");
 
         //comparar con dias maximos y minimos parametrizados
-        if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > Integer.parseInt(parametroService.obtenerParametroPorNombre("cantidadMaxDiasPrestamo").getValor()))
-            throw new ValidationException("El periodo de tiempo supera el permitido");
+        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) < días min parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
 
         //comparar overlap con otras fechas
         if (!ejemplar.getPrestamos().isEmpty()) {
@@ -407,6 +411,9 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             throw new ValidationException("Préstamo aún no comienza");
         }
 
+        //if (!currentTime.isBefore(prestamo.getFechaInicioEstimada()))
+
+
         //verificacion estado ejemplar
         EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
                 .filter(estado -> estado.getFechaFin() == null)
@@ -459,7 +466,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .findFirst()
                 .orElse(null);
         if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
-        if (!(estadoPrestamo.getEstado() == EstadoPrestamo.ACTIVO || estadoPrestamo.getEstado() == EstadoPrestamo.RENOVADO || estadoPrestamo.getEstado() == EstadoPrestamo.VENCIDO)) throw new ValidationException("El préstamo no está activo");
+        if (!(estadoPrestamo.getEstado() == EstadoPrestamo.ACTIVO || estadoPrestamo.getEstado() == EstadoPrestamo.RENOVADO || estadoPrestamo.getEstado() == EstadoPrestamo.VENCIDO)) throw new ValidationException("El préstamo no activo");
         if (currentTime.isBefore(prestamo.getFechaInicioEstimada())) {
             throw new ValidationException("Préstamo aún no comienza");
         }

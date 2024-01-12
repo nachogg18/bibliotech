@@ -1,6 +1,7 @@
 package com.bibliotech.repository;
 
 import com.bibliotech.entity.Multa;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface MultaRepository extends BaseRepository<Multa, Long>, JpaSpecificationExecutor<Multa> {
+public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecificationExecutor<Multa> {
 
     @Query(nativeQuery = true, value = "SELECT tipo_multa.nombre AS 'TIPO DE MULTA', count(*) AS 'CANTIDAD' " +
             "FROM multa " +
@@ -37,5 +38,8 @@ public interface MultaRepository extends BaseRepository<Multa, Long>, JpaSpecifi
             @Param("fechaInicio") String fechaInicio,
             @Param("fechaFin") String fechaFin
     );
+
+    List<Multa> findByUserId(Long user_id);
+
     List<Multa> findAllByFechaFinBefore(Instant currentInstant);
 }

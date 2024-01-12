@@ -6,6 +6,7 @@ import com.bibliotech.dto.MultaItemTablaDTO;
 import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.MultaRepository;
+import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
@@ -28,8 +29,9 @@ public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
     private final UserService userService;
     private final PrestamoService prestamoService;
-    private final TipoMultaService tipoMultaService;
+    private final PrestamosRepository prestamosRepository;
     private final NotificacionService notificacionService;
+    private final TipoMultaService tipoMultaService;
 
     @Override
     public List<MultaItemTablaDTO> findByParams(FindMultaByParamsDTO request) {
@@ -63,18 +65,17 @@ public class MultaServiceImpl implements MultaService {
                                 .idUsuario(multa.getUser().getId())
                                 .fechaDesde(multa.getFechaInicio())
                                 .fechaHasta(multa.getFechaFin())
-                                .estado(multa.getMultaEstados().isEmpty() ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getNombre())
+                                .estado(multa.getMultaEstados().size() == 0 ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getNombre())
                                 .tipo(multa.getTipoMulta() == null ? null : multa.getTipoMulta().getNombre())
                                 .build()
                 ).toList();
     }
 
     @Override
-    public boolean createMultaPrestamo(CreateMultaDTO request) throws Exception {
+    public boolean createMulta(CreateMultaDTO request) throws Exception {
         User usuarioMultado = userService.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ValidationException(String.format("no existe User con id: %s", request.getIdUsuario())));
         Prestamo prestamoMultado = prestamoService.findById(request.getIdPrestamo());
-
         Multa multa = Multa.builder()
                 .prestamo(prestamoMultado)
                 .user(usuarioMultado)
@@ -104,6 +105,38 @@ public class MultaServiceImpl implements MultaService {
 
         return true;
     }
+
+    @Override
+    public List<MultaItemTablaDTO> getMultasByUserId(Long idUsuario) {
+        return multaRepository.findByUserId(idUsuario)
+                .stream().map(
+                        multa -> MultaItemTablaDTO
+                                .builder()
+                                .id(multa.getId())
+                                .idPrestamo(multa.getPrestamo().getId())
+                                .idUsuario(multa.getUser().getId())
+                                .fechaDesde(multa.getFechaInicio())
+                                .fechaHasta(multa.getFechaFin())
+                                .estado(Objects.requireNonNull(multa.getMultaEstados().stream()
+                                                        .filter(estado -> estado.getFechaFin() == null)
+                                                        .findFirst()
+                                                        .orElse(null))
+                                                .getNombre()
+                                        )
+                                .tipo(multa.getTipoMulta().getNombre())
+                                .build()
+                ).toList();
+    }
+
+    @Override
+    public boolean isUsuarioHabilitado(Long id) {
+        User usuario = userService.findById(id).get();
+        List<MultaItemTablaDTO> multasUsuario = getMultasByUserId(usuario.getId());
+        return multasUsuario.stream().filter(
+                multa -> Objects.equals(multa.getEstado(), "ACTIVA")
+        ).findAny().orElse(null) == null;
+    }
+
 
     @Override
     public MultaResponse finalizarMulta(Long id) {
@@ -176,8 +209,8 @@ public class MultaServiceImpl implements MultaService {
         for (Multa multa : multas) {
             multa.setFechaBaja(Instant.now());
             MultaEstado estadoActual = multa.getMultaEstados().stream().filter(
-                    multaEstado -> multaEstado.getFechaFin() == null
-            )
+                            multaEstado -> multaEstado.getFechaFin() == null
+                    )
                     .findFirst().
                     orElseThrow(() -> new RuntimeException("Error con la multa"));
             estadoActual.setFechaFin(Instant.now());
