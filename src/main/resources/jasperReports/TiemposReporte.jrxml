@@ -123,7 +123,7 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="110" y="109" width="220" height="212" uuid="4ceeb2cc-1953-44ce-a1e1-e0f76f72ef7e"/>
+					<reportElement x="110" y="109" width="220" height="212" uuid="03197c47-dc27-4eb5-8db7-da9eb5d73256"/>
 					<box>
 						<pen lineWidth="1.0"/>
 					</box>
@@ -133,7 +133,7 @@
 				</chart>
 				<pieDataset>
 					<dataset>
-						<datasetRun subDataset="dataset_renovaciones" uuid="2a2e746e-e420-497a-856a-485345abdbfb">
+						<datasetRun subDataset="dataset_renovaciones" uuid="7ef7d018-569e-431e-a17a-df9d62a1afa3">
 							<dataSourceExpression><![CDATA[$P{ds_renovacion}]]></dataSourceExpression>
 						</datasetRun>
 					</dataset>
@@ -175,7 +175,7 @@
 			</staticText>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="480" y="109" width="220" height="211" uuid="9753ffa6-9660-49d4-8b3e-3d5bb269c471"/>
+					<reportElement x="401" y="109" width="368" height="211" uuid="fa2d29a3-b85d-45c6-8039-1f9db23d057e"/>
 					<box>
 						<pen lineWidth="1.0"/>
 					</box>
@@ -185,13 +185,13 @@
 				</chart>
 				<pieDataset>
 					<dataset>
-						<datasetRun subDataset="dataset_tiempos" uuid="cd1eaad3-7499-43b8-99c5-702ef59db40e">
+						<datasetRun subDataset="dataset_tiempos" uuid="c566df46-9ce5-44f2-a09b-443f93bb8924">
 							<dataSourceExpression><![CDATA[$P{ds_tiempo}]]></dataSourceExpression>
 						</datasetRun>
 					</dataset>
 					<keyExpression><![CDATA[$F{dias}+" DÍAS"]]></keyExpression>
-					<valueExpression><![CDATA[$F{cantidad}]]></valueExpression>
-					<labelExpression><![CDATA[($F{cantidad}*100/$F{total_prestamos})+"%"]]></labelExpression>
+					<valueExpression><![CDATA[($F{cantidad})]]></valueExpression>
+					<labelExpression><![CDATA[($F{cantidad})+" PRÉSTAMO/S"]]></labelExpression>
 				</pieDataset>
 				<piePlot>
 					<plot/>

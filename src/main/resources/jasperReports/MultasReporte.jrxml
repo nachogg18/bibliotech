@@ -66,7 +66,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20"/>
 				</textElement>
-				<text><![CDATA[BILBIOTECH]]></text>
+				<text><![CDATA[BIBLIOTECH]]></text>
 			</staticText>
 			<line>
 				<reportElement x="280" y="0" width="1" height="50" uuid="bb24106e-7fc0-4121-b816-4062518b46a6"/>
