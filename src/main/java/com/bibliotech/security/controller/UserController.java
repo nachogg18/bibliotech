@@ -71,8 +71,7 @@ public class UserController {
 
   @PostMapping("/assign-roles")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('UPDATE', 'USER')")
-  public ResponseEntity<AssignRoleRequest> assignRoles(
-      @RequestBody @Valid AssignRoleRequest request) {
+  public ResponseEntity<AssignRoleRequest> assignRoles(@RequestBody @Valid AssignRoleRequest request) {
     Optional<User> user = userService.findById(request.userId());
 
     return ResponseEntity.ok(
@@ -91,8 +90,7 @@ public class UserController {
 
   @PutMapping("/remove-roles")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('UPDATE', 'USER')")
-  public ResponseEntity<AssignRoleRequest> removeRoles(
-      @RequestBody @Valid AssignRoleRequest request) {
+  public ResponseEntity<AssignRoleRequest> removeRoles(@RequestBody @Valid AssignRoleRequest request) {
     Optional<User> user = userService.findById(request.userId());
 
     return ResponseEntity.ok(
@@ -118,7 +116,7 @@ public class UserController {
                     .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
                     .nombre(user.getFirstName() + user.getLastName())
                     .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of())).build()
-                            
+
         ).collect(Collectors.toList()));
     }
 
@@ -131,6 +129,14 @@ public class UserController {
                         user -> UserDetailDto.userToUserDetailDto(user)
                 ).get()
         );
+    }
+
+    @GetMapping("/dni")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+    public ResponseEntity<List<String>> getUserDnis() {
+        return ResponseEntity.ok(userService.getUsers().stream().map(findUserDto -> {
+            return findUserDto.getDni();
+        }).toList());
     }
 
 
