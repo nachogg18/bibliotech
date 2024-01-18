@@ -12,4 +12,6 @@ public interface AutorService {
     Autor edit(Autor autor, Long id);
 
     Optional<Autor> delete(Long id);
+
+    List<String> obtenerNombres();
 }
