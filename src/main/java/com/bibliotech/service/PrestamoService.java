@@ -3,6 +3,9 @@ import com.bibliotech.dto.*;
 import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamosByParamsRequest;
 import com.bibliotech.entity.Prestamo;
+import com.bibliotech.entity.PrestamoEstado;
+
+import java.time.Instant;
 import java.util.List;
 
 public interface PrestamoService extends BaseService<Prestamo, Long>{
@@ -27,4 +30,8 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     PrestamoResponse renovarPrestamo(Long id, RenovacionDTO req);
 
     PrestamoResponse extravioPrestamo(Long id);
+
+    List<PrestamoEstado> getHistorial(Long id);
+
+    List<Instant> getRenovaciones(Long id);
 }
