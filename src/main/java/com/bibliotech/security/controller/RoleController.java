@@ -48,6 +48,16 @@ public class RoleController {
             ).toList());
   }
 
+  @GetMapping()
+//  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'ROLE')")
+  public ResponseEntity getPrivilegesForRoles() {
+    return ResponseEntity.ok(roleService.getRoles());
+  }
+
+  @GetMapping("/{id}")
+  //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'ROLE')")
+  public ResponseEntity getOne(@PathVariable Long id) { return ResponseEntity.ok(roleService.findOne(id)); }
+
   @PostMapping("/create")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('CREATE', 'ROLE')")
   @Secured("SUPERADMIN")

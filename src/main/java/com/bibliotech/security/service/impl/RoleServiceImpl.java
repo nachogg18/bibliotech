@@ -12,16 +12,15 @@ import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @Transactional
@@ -49,34 +48,52 @@ public class RoleServiceImpl implements RoleService {
         return map;
     }
 
+    public List<Role> getRoles(){
+        List<Role> roles = new ArrayList<Role>();
+        roles = roleRepository.findByEndDateNull();
+        return roles;
+    }
+
     @Override
     public CreateRoleResponse create(CreateRoleRequest createRolerequest) {
         if (!roleRepository.findByNameAndEndDateNull(createRolerequest.name()).isEmpty()) {
-            throw  new RuntimeException("El rol ya existe");
+            throw new RuntimeException("El rol ya existe");
         }
 
-    Role role = Role.builder()
-            .name(createRolerequest.name())
-            .build();
+        Role role = Role.builder()
+                .name(createRolerequest.name())
+                .startDate(Instant.now())
+                .privileges(new ArrayList<Privilege>())
+                .build();
 
+        List<Privilege> privilegios = new ArrayList<Privilege>();
+        createRolerequest.privilegesIdsToAssign().stream().forEach(aLong -> {
+            Optional<Privilege> privilegeNew = privilegeService.getPrivilegeById(aLong);
+            if (privilegeNew.isEmpty()) {
+                throw new RuntimeException("El privilegio no existe");
+            } else {
+                privilegios.add(privilegeNew.get());
+            }
+        });
+        role.setPrivileges(privilegios);
         role = roleRepository.save(role);
 
-        Role finalRole = role;
-        
-        if (createRolerequest.privilegesIdsToAssign() == null || createRolerequest.privilegesIdsToAssign().isEmpty()) {
-            Optional<Privilege> privilege = privilegeService.getPrivilegeByName(PrivilegeUtils.DEFAULT_PRIVILEGE);
-            if (privilege.isPresent()) {
-                assignPrivilegeToRole(finalRole.getId(), privilege.get()); 
-            }
-            
-        } else {
-            createRolerequest.privilegesIdsToAssign().stream()
-                    .peek(
-                            privilegeId -> {
-                                Privilege privilege = privilegeService.addRoleToPrivilege(privilegeId, finalRole);
-                                assignPrivilegeToRole(finalRole.getId(), privilege);
-                            });
-        }
+//        Role finalRole = role;
+//
+//        if (createRolerequest.privilegesIdsToAssign() == null || createRolerequest.privilegesIdsToAssign().isEmpty()) {
+//            Optional<Privilege> privilege = privilegeService.getPrivilegeByName(PrivilegeUtils.DEFAULT_PRIVILEGE);
+//            if (privilege.isPresent()) {
+//                assignPrivilegeToRole(finalRole.getId(), privilege.get());
+//            }
+//
+//        } else {
+//            createRolerequest.privilegesIdsToAssign().stream()
+//                    .peek(
+//                            privilegeId -> {
+//                                Privilege privilege = privilegeService.addRoleToPrivilege(privilegeId, finalRole);
+//                                assignPrivilegeToRole(finalRole.getId(), privilege);
+//                            });
+//        }
         
         return CreateRoleResponse.fromRole(role);
     }
@@ -95,7 +112,21 @@ public class RoleServiceImpl implements RoleService {
             throw  new RuntimeException("No se encontró el rol");
         }
 
-        Role role = roleRepository.save(updateRoleRequest.toRole(existingRole.get()));
+        Role role = existingRole.get();
+        role.setName(updateRoleRequest.name());
+        role.setPrivileges(new ArrayList<Privilege>());
+
+        updateRoleRequest.privileges().stream().forEach(aLong -> {
+            Optional<Privilege> privilegeNew = privilegeService.getPrivilegeById(aLong);
+            if (privilegeNew.isEmpty()) {
+                throw new RuntimeException("El privilegio no existe");
+            } else {
+                role.getPrivileges().add(privilegeNew.get());
+            }
+        });
+
+        roleRepository.save(role);
+        //Role role = roleRepository.save(updateRoleRequest.toRole(existingRole.get()));
 
         return CreateRoleResponse.fromRole(role);
     }
@@ -105,6 +136,15 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findById(roleId);
     }
 
+    @Override
+    public Role findOne(Long roleId) {
+        Optional<Role> isRolePresent = roleRepository.findById(roleId);
+        if (isRolePresent.isPresent()){
+            return isRolePresent.get();
+        } else {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Role con id no econtrado.");
+        }
+    }
     @Override
     public Optional<Role> findByIdAndEndDateNull(Long roleId) {
         return roleRepository.findByIdAndEndDateNull(roleId);
