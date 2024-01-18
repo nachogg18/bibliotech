@@ -10,6 +10,7 @@ import java.time.Instant;
 public class AutorDTO {
     private Long id;
     private String nombre;
+    private String apellido;
     private Instant fechaNacimiento;
     private String biografia;
     private String nacionalidad;
