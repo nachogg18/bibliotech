@@ -14,4 +14,5 @@ public class CreateMultaDTO {
     private Long idPrestamo;
     private Long idMotivoMulta;
     private Instant fechaInicioMulta;
+    private String descripcion;
 }
