@@ -23,4 +23,8 @@ public interface PrivilegeService {
     Privilege addRoleToPrivilege(Long privilegeId, Role role);
 
     Privilege editPrivilege(EditPrivilegeRequest editPrivilegeRequest);
+
+    Privilege getOne(Long id);
+
+    boolean deleteOne(Long id);
 }
