@@ -1,6 +1,7 @@
 package com.bibliotech.repository;
 
 import com.bibliotech.entity.Multa;
+import com.bibliotech.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecificationExecutor<Multa> {
@@ -40,4 +42,16 @@ public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecific
 
     List<Multa> findByUserId(Long user_id);
 
+    @Query( "SELECT m FROM Multa m "+
+            "WHERE m.user = :user "+
+            "AND EXISTS( "+
+                "SELECT 1 FROM m.multaEstados me "+
+                "WHERE me.fechaFin IS NULL "+
+                "AND me.estadoMulta = com.bibliotech.entity.EstadoMulta.ACTIVA "+
+            ")"
+    )
+    Optional<Multa> obtenerMultaActivaByUser(@Param("user") User user);
+
+    @Query(" SELECT m FROM Multa m WHERE m.user.id = :userID ")
+    List<Multa> obtenerMultasByUserId(@Param("userID") Long userID);
 }
