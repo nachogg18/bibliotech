@@ -40,12 +40,13 @@ public class EjemplarServiceImpl implements EjemplarService {
 
     @Override
     public EjemplarDetailDTO findOne(Long id) {
-        Ejemplar ejemplar = ejemplarRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(String.format("No existe ejemplar con id %s", id)));
+        Ejemplar ejemplar = ejemplarRepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("No existe ejemplar con id %s", id)));
         EjemplarDetailDTO dto = new EjemplarDetailDTO();
         dto.setId(ejemplar.getId());
+        dto.setEjemplarEstadoList(ejemplar.getEjemplarEstadoList());
         dto.setNombrePublicacion(ejemplar.getPublicacion().getTitulo());
-        dto.setNombreUbicacion(ejemplar.getUbicacion().getBiblioteca().getNombre());
+        dto.setIdUbicacion(ejemplar.getUbicacion().getId());
+        dto.setNombreUbicacion(ejemplar.getUbicacion().getBiblioteca().getNombre() + " - " + ejemplar.getUbicacion().getDescripcion());
         dto.setSerialNFC(ejemplar.getSerialNFC());
 
         return dto;
