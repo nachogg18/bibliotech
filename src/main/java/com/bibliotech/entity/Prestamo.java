@@ -1,6 +1,7 @@
 package com.bibliotech.entity;
 
 import com.bibliotech.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.*;
@@ -45,9 +46,10 @@ public class Prestamo extends Base {
     @JoinColumn(name = "estado_prestamo")
     private List<PrestamoEstado> estado = new ArrayList<PrestamoEstado>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("multa_id")
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "multa_id")
-    private Multa multa;
+    private List<Multa> multa;
 
     public boolean overlapsWith(Instant periodStart, Instant periodEnd) {
         return !this.fechaFinEstimada.isBefore(periodStart) && !periodEnd.isBefore(this.fechaInicioEstimada);
