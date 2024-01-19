@@ -107,10 +107,4 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
         return ResponseEntity.ok().body(prestamoService.getRenovaciones(id));
     }
 
-    @GetMapping("/a-multar")
-    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
-    public ResponseEntity<List<Prestamo>> prestamosVencidos() {
-        return ResponseEntity.ok().body(prestamoService.getPrestamosAMultar());
-    }
-
 }
