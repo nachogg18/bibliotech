@@ -119,40 +119,8 @@
 		</band>
 	</title>
 	<summary>
-		<band height="370" splitType="Stretch">
+		<band height="468" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
-			<pieChart>
-				<chart evaluationTime="Report">
-					<reportElement x="110" y="109" width="220" height="212" uuid="03197c47-dc27-4eb5-8db7-da9eb5d73256"/>
-					<box>
-						<pen lineWidth="1.0"/>
-					</box>
-					<chartTitle/>
-					<chartSubtitle/>
-					<chartLegend/>
-				</chart>
-				<pieDataset>
-					<dataset>
-						<datasetRun subDataset="dataset_renovaciones" uuid="7ef7d018-569e-431e-a17a-df9d62a1afa3">
-							<dataSourceExpression><![CDATA[$P{ds_renovacion}]]></dataSourceExpression>
-						</datasetRun>
-					</dataset>
-					<pieSeries>
-						<keyExpression><![CDATA["PRESTAMOS RENOVADOS"]]></keyExpression>
-						<valueExpression><![CDATA[$F{prestamos_renovados}]]></valueExpression>
-						<labelExpression><![CDATA[(($F{prestamos_renovados}/($F{prestanos_no_renovados}+$F{prestamos_renovados}))*100)+"%"]]></labelExpression>
-					</pieSeries>
-					<pieSeries>
-						<keyExpression><![CDATA["PRÉSTAMOS NO RENOVADOS"]]></keyExpression>
-						<valueExpression><![CDATA[$F{prestanos_no_renovados}]]></valueExpression>
-						<labelExpression><![CDATA[(($F{prestanos_no_renovados}/($F{prestanos_no_renovados}+$F{prestamos_renovados}))*100)+"%"]]></labelExpression>
-					</pieSeries>
-				</pieDataset>
-				<piePlot>
-					<plot/>
-					<itemLabel/>
-				</piePlot>
-			</pieChart>
 			<staticText>
 				<reportElement mode="Opaque" x="110" y="60" width="220" height="30" backcolor="#DEDEDE" uuid="b6563992-e023-443e-ab57-88d76a50525a"/>
 				<box>
@@ -211,6 +179,41 @@
 				</textElement>
 				<text><![CDATA[REPORTES DE TIEMPOS]]></text>
 			</staticText>
+			<barChart>
+				<chart evaluationTime="Report">
+					<reportElement x="110" y="109" width="220" height="211" uuid="ffddcb05-58dd-47e9-8c78-2214b615c26c"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="dataset_renovaciones" uuid="d95d5567-6f05-4688-87ab-e49d03d6b025">
+							<dataSourceExpression><![CDATA[$P{ds_renovacion}]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["PRÉSTAMOS RENOVADOS "+$F{prestamos_renovados}]]></seriesExpression>
+						<categoryExpression><![CDATA["Prestamo renovados"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{prestamos_renovados}]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["PRESTAMOS NO RENOVADOS "+$F{prestanos_no_renovados}]]></seriesExpression>
+						<categoryExpression><![CDATA["Prestamo no renovados"]]></categoryExpression>
+						<valueExpression><![CDATA[$F{prestanos_no_renovados}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<barPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</barPlot>
+			</barChart>
 		</band>
 	</summary>
 </jasperReport>
