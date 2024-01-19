@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotNull;
+
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,9 +24,11 @@ import org.apache.commons.lang3.stream.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -108,28 +113,30 @@ public class UserController {
   }
 
 
-    @GetMapping("")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+  @GetMapping("")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+  public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll().stream().map(
             user -> UserDto.builder()
                     .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
-                    .nombre(user.getFirstName() + user.getLastName())
+                    .nombre(user.getFirstName())
+                    .apellido(user.getLastName())
+                    .email(user.getEmail())
                     .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of())).build()
 
         ).collect(Collectors.toList()));
-    }
+  }
 
 
-    @GetMapping("/{id}")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
-    public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable Long id) {
+  @GetMapping("/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
+  public ResponseEntity<UserDetailDto> getUserDetailById(@PathVariable Long id) {
         return ResponseEntity.ok(
                 userService.findById(id).map(
                         user -> UserDetailDto.userToUserDetailDto(user)
                 ).get()
         );
-    }
+  }
 
     @GetMapping("/dni")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
@@ -158,6 +165,70 @@ public class UserController {
 
         );
 
+    }
+
+    @PutMapping("/edit/{userId}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'USER')")
+    public ResponseEntity<UserDetailDto> editOneUser(@PathVariable @Valid @NotNull Long userId, @RequestBody @Valid EditUserRequest editUserRequest){
+      Optional<User> user = userService.findById(userId);
+      if (!user.isPresent()) {
+          throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User no enconcado con el id correspondiente");
+      }
+      user.get().setEmail(editUserRequest.email());
+      user.get().setFirstName(editUserRequest.firstName());
+      user.get().setLastName(editUserRequest.lastName());
+      List<Role> rolesToAssing = new ArrayList<>();
+      editUserRequest.roleIds().forEach(aLong -> {
+          Role role = roleService.findOne(aLong);
+          rolesToAssing.add(role);
+      });
+      user.get().setRoles(rolesToAssing);
+      userService.save(user.get());
+      return ResponseEntity.ok(UserDetailDto.builder()
+                      .apellido(user.get().getLastName())
+                      .nombre(user.get().getFirstName())
+                      .email(user.get().getEmail())
+                      .roles(user.get().getRoles().stream().map(role -> role.getName()).toList())
+              .build());
+    }
+
+    @PutMapping("/edit/my")
+    public ResponseEntity<UserDetailDto> editMyUser(@RequestBody @Valid EditUserRequest editUserRequest){
+        Optional<User> user = authenticationService.getActiveUser();
+        if (!user.isPresent()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Usuario no encontrado.");
+        }
+        user.get().setEmail(editUserRequest.email());
+        user.get().setFirstName(editUserRequest.firstName());
+        user.get().setLastName(editUserRequest.lastName());
+        if (Objects.nonNull(editUserRequest.password())){
+            user.get().setPassword(editUserRequest.password());
+        }
+        List<Role> rolesToAssing = new ArrayList<>();
+        editUserRequest.roleIds().forEach(aLong -> {
+            Role role = roleService.findOne(aLong);
+            rolesToAssing.add(role);
+        });
+        user.get().setRoles(rolesToAssing);
+        userService.save(user.get());
+        return ResponseEntity.ok(UserDetailDto.builder()
+                .apellido(user.get().getLastName())
+                .nombre(user.get().getFirstName())
+                .email(user.get().getEmail())
+                .roles(user.get().getRoles().stream().map(role -> role.getName()).toList())
+                .build());
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'USER')")
+    public ResponseEntity<Boolean> deleteOneUser(@PathVariable @Valid @NotNull Long userId){
+        Optional<User> user = userService.findById(userId);
+        if (!user.isPresent()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User no enconcado con el id correspondiente");
+        }
+        user.get().setEndDate(Instant.now());
+        userService.save(user.get());
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("/getUsers")
