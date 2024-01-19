@@ -1,5 +1,6 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.ParametroDTO;
 import com.bibliotech.entity.Parametro;
 import com.bibliotech.service.ParametroService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -38,7 +39,7 @@ public class ParametroController {
 
     @PostMapping(path = "/{nombre}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'PARAMETRO')")
-    public Parametro actualizarParametro(@PathVariable String nombre, @RequestBody String valor) {
-        return parametroService.actualizarParametro(nombre, valor);
+    public Parametro actualizarParametro(@PathVariable String nombre, @RequestBody ParametroDTO body) {
+        return parametroService.actualizarParametro(nombre, body);
     }
 }

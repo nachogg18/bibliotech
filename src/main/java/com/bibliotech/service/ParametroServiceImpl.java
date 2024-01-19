@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.ParametroDTO;
 import com.bibliotech.entity.Parametro;
 import com.bibliotech.repository.ParametroRepository;
 import jakarta.transaction.Transactional;
@@ -23,18 +24,21 @@ public class ParametroServiceImpl implements ParametroService {
         return parametroRepository.findAll();
     }
 
+    @Override
     public Parametro obtenerParametroPorNombre(String nombre) {
         Optional<Parametro> optionalParametro = parametroRepository.findByNombre(nombre);
         if (optionalParametro.isPresent()) return optionalParametro.get();
         throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Parámetro no encontrado");
     }
 
-    public Parametro  actualizarParametro(String nombre, String valor) {
+    @Override
+    public Parametro actualizarParametro(String nombre, ParametroDTO body) {
         Parametro parametro = this.obtenerParametroPorNombre(nombre);
-        parametro.setValor(valor);
+        parametro.setValor(body.getValor());
         return parametroRepository.save(parametro);
     }
 
+    @Override
     public Parametro guardarParametro(Parametro parametro) {
         return parametroRepository.save(parametro);
     }
