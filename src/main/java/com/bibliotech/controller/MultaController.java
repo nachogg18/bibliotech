@@ -4,6 +4,7 @@ import com.bibliotech.dto.CreateMultaDTO;
 import com.bibliotech.dto.FindMultaByParamsDTO;
 import com.bibliotech.dto.MultaDetalleDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
+import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.service.MultaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -51,6 +52,18 @@ public class MultaController {
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
     public ResponseEntity<MultaDetalleDTO> detalleMulta(@PathVariable Long id) {
         return ResponseEntity.ok(multaService.getMultaDetalle(id));
+    }
+        
+    @PostMapping("{id}/finalizar")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'MULTA')")
+    public ResponseEntity<MultaResponse> finalizarMulta(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok().body(multaService.finalizarMulta(id));
+    }
+
+    @PostMapping("{id}/cancelar")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'MULTA')")
+    public ResponseEntity<MultaResponse> cancelarMulta(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok().body(multaService.cancelarMulta(id));
     }
 
 }

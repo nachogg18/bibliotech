@@ -140,7 +140,14 @@ public class EjemplarServiceImpl implements EjemplarService {
         }
         ejemplar.setId(id);
         ejemplar.setFechaBaja(Instant.now());
+
+        ubicacionService.findById(ejemplar.getUbicacion().getId()).orElseThrow(() -> new RuntimeException("Error en la ubicación")).setOcupada(false);
+
         ejemplarRepository.save(ejemplar);
+
+        Ubicacion ubicacion = ejemplar.getUbicacion();
+        ubicacion.setOcupada(false);
+        ubicacionService.saveChanges(ubicacion);
     }
 
     @Override

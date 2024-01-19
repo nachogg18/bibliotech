@@ -2,15 +2,13 @@ package com.bibliotech.dto;
 
 
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UbicacionDTO {
     @NonNull
     @NotEmpty
