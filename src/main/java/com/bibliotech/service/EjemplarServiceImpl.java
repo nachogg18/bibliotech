@@ -140,6 +140,10 @@ public class EjemplarServiceImpl implements EjemplarService {
         ejemplar.setId(id);
         ejemplar.setFechaBaja(Instant.now());
         ejemplarRepository.save(ejemplar);
+
+        Ubicacion ubicacion = ejemplar.getUbicacion();
+        ubicacion.setOcupada(false);
+        ubicacionService.saveChanges(ubicacion);
     }
 
     @Override

@@ -23,4 +23,6 @@ public interface UbicacionService {
     Ubicacion changeOcupada(Long id, boolean state);
 
     Optional<Ubicacion> delete(Long id);
+
+    Ubicacion saveChanges(Ubicacion ubicacion);
 }

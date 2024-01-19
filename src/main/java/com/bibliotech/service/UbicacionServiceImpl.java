@@ -85,4 +85,9 @@ public class UbicacionServiceImpl implements UbicacionService {
         }
         return ubicacionOptional;
     }
+
+    @Override
+    public Ubicacion saveChanges(Ubicacion ubicacion) {
+        return ubicacionRepository.save(ubicacion);
+    }
 }
