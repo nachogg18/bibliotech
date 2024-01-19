@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -40,4 +41,5 @@ public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecific
 
     List<Multa> findByUserId(Long user_id);
 
+    List<Multa> findAllByFechaBajaNullAndFechaFinBefore(Instant currentInstant);
 }

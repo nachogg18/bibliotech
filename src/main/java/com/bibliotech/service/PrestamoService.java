@@ -3,6 +3,8 @@ import com.bibliotech.dto.*;
 import com.bibliotech.dto.FindPrestamoDTO;
 import com.bibliotech.dto.PrestamosByParamsRequest;
 import com.bibliotech.entity.Prestamo;
+
+import java.time.Instant;
 import java.util.List;
 
 public interface PrestamoService extends BaseService<Prestamo, Long>{

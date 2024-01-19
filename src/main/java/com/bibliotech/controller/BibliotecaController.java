@@ -1,5 +1,7 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.BibliotecaDetalleDTO;
+import com.bibliotech.dto.UbicacionResponseDTO;
 import com.bibliotech.entity.Biblioteca;
 import com.bibliotech.service.BibliotecaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -28,4 +30,15 @@ public class BibliotecaController {
         return bibliotecaService.save(biblioteca);
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'BIBLIOTECA')")
+    public BibliotecaDetalleDTO findBibliotecaDetalle(@PathVariable Long id) {
+        return bibliotecaService.findBibliotecaDetalle(id);
+    }
+
+    @GetMapping("/{id}/ubicaciones")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'BIBLIOTECA')")
+    public List<UbicacionResponseDTO> findBibliotecaUbicaciones(@PathVariable Long id) {
+        return bibliotecaService.findBibliotecaUbicaciones(id);
+    }
 }

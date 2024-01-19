@@ -40,6 +40,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     @Autowired
     private EjemplarEstadoRepository ejemplarEstadoRepository;
     @Autowired
+    private ParametroService parametroService;
+    @Autowired
     private MultaService multaService;
 
     public PrestamoServiceImpl (BaseRepository<Prestamo, Long> baseRepository, UserService userService) {
@@ -409,9 +411,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             throw new ValidationException("Préstamo aún no comienza");
         }
 
-        //if (!currentTime.isBefore(prestamo.getFechaInicioEstimada()))
-
-
         //verificacion estado ejemplar
         EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
                 .filter(estado -> estado.getFechaFin() == null)
@@ -564,14 +563,14 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
 
         verifyFechaPrestamos(req.getFechaInicioRenovacion(), req.getFechaFinRenovacion(), prestamo.getEjemplar());
 
-        if (prestamo.getFechasRenovaciones() != null /*&& prestamo.getFechasRenovaciones().size() < maxRenovaciones*/){
+        if (prestamo.getFechasRenovaciones() != null && prestamo.getFechasRenovaciones().size() < Integer.parseInt(parametroService.obtenerParametroPorNombre("cantidadMaxRenovaciones").getValor())){
             prestamo.getFechasRenovaciones().add(req.getFechaFinRenovacion());
         }
 
         //cambio de estados
         estadoPrestamo.setFechaFin(Instant.now());
         PrestamoEstado prestamoEstado = new PrestamoEstado();
-        prestamoEstado.setEstado(EstadoPrestamo.CANCELADO);
+        prestamoEstado.setEstado(EstadoPrestamo.RENOVADO);
         prestamoEstadoRepository.save(prestamoEstado);
         prestamo.getEstado().add(prestamoEstado);
 
