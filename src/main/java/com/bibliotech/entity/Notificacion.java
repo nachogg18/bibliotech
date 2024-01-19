@@ -1,6 +1,5 @@
 package com.bibliotech.entity;
 
-import com.bibliotech.security.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -14,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Notificacion extends Base{
     private String mensaje;
-    private User user;
+    private Long userID;
     private boolean leido;
     private TipoNotificacion tipoNotificacion;
 }

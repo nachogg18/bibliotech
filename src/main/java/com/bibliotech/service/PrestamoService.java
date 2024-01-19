@@ -29,6 +29,4 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     PrestamoResponse renovarPrestamo(Long id, RenovacionDTO req);
 
     PrestamoResponse extravioPrestamo(Long id);
-
-    List<Prestamo> findAllByFechaBajaNullAndFechaFinBefore(Instant instant);
 }

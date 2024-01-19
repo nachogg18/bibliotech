@@ -411,9 +411,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             throw new ValidationException("Préstamo aún no comienza");
         }
 
-        //if (!currentTime.isBefore(prestamo.getFechaInicioEstimada()))
-
-
         //verificacion estado ejemplar
         EjemplarEstado estadoEjemplar = prestamo.getEjemplar().getEjemplarEstadoList().stream()
                 .filter(estado -> estado.getFechaFin() == null)
@@ -643,11 +640,6 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                         .findFirst()
                         .orElse(null)).getEstado().name())
                 .build();
-    }
-
-    @Override
-    public List<Prestamo> findAllByFechaBajaNullAndFechaFinBefore(Instant instant) {
-        return prestamosRepository.findAllByFechaBajaNullAndFechaFinEstimadaBefore(instant);
     }
 
 }

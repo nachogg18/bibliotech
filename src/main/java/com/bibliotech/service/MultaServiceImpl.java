@@ -5,13 +5,19 @@ import com.bibliotech.dto.FindMultaByParamsDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
 import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.entity.*;
+import com.bibliotech.repository.MultaEstadoRepository;
 import com.bibliotech.repository.MultaRepository;
+import com.bibliotech.repository.PrestamoEstadoRepository;
+import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
+import com.bibliotech.security.service.impl.UserServiceImpl;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,9 +34,13 @@ import java.util.Objects;
 public class MultaServiceImpl implements MultaService {
     private final MultaRepository multaRepository;
     private final UserService userService;
-    private final PrestamoService prestamoService;
+    private final PrestamosRepository prestamosRepository;
     private final NotificacionService notificacionService;
     private final TipoMultaService tipoMultaService;
+    private final PrestamoEstadoRepository prestamoEstadoRepository;
+    private final MultaEstadoRepository multaEstadoRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(MultaServiceImpl.class);
 
     @Override
     public List<MultaItemTablaDTO> findByParams(FindMultaByParamsDTO request) {
@@ -73,7 +84,7 @@ public class MultaServiceImpl implements MultaService {
     public boolean createMulta(CreateMultaDTO request) throws Exception {
         User usuarioMultado = userService.findById(request.getIdUsuario())
                 .orElseThrow(() -> new ValidationException(String.format("no existe User con id: %s", request.getIdUsuario())));
-        Prestamo prestamoMultado = prestamoService.findById(request.getIdPrestamo());
+        Prestamo prestamoMultado = prestamosRepository.findById(request.getIdPrestamo()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No se encontró prestamo con id %s", request.getIdPrestamo())));
         Multa multa = Multa.builder()
                 .prestamo(prestamoMultado)
                 .user(usuarioMultado)
@@ -88,6 +99,9 @@ public class MultaServiceImpl implements MultaService {
                                         .estadoMulta(EstadoMulta.ACTIVA)
                                         .build())
                 )
+                .fechaInicio(Instant.now())
+                .fechaAlta(Instant.now())
+                .fechaFin(Instant.now().plus(7, ChronoUnit.DAYS))
                 .build();
         try {
             multaRepository.save(multa);
@@ -96,7 +110,7 @@ public class MultaServiceImpl implements MultaService {
         }
 
         notificacionService.crearNotificacion(
-                usuarioMultado,
+                usuarioMultado.getId(),
                 String.format("Fue multado por el préstamo con la publicación %s",
                         prestamoMultado.getEjemplar().getPublicacion().getTitulo()),
                 TipoNotificacion.MULTA_CREADA
@@ -140,19 +154,19 @@ public class MultaServiceImpl implements MultaService {
     @Override
     public MultaResponse finalizarMulta(Long id) {
         Multa multa = multaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe multa con id %s", id)));
-        multa.getMultaEstados().stream().filter(
+        MultaEstado estadoActual = multa.getMultaEstados().stream().filter(
                 multaEstado -> multaEstado.getFechaFin() == null
-        ).findFirst().orElseThrow(() -> new RuntimeException("Error con la multa")).setFechaFin(Instant.now());
-        multa.getMultaEstados().add(
-                MultaEstado.builder()
-                        .estadoMulta(EstadoMulta.FINALIZADA)
-                        .fechaInicio(Instant.now())
-                        .build()
-        );
+        ).findFirst().orElseThrow(() -> new RuntimeException("Error con la multa"));
+        estadoActual.setFechaFin(Instant.now());
+        MultaEstado nuevoEstado = new MultaEstado();
+        nuevoEstado.setEstadoMulta(EstadoMulta.FINALIZADA);
+        nuevoEstado.setFechaInicio(Instant.now());
+        multaEstadoRepository.save(nuevoEstado);
+        multa.getMultaEstados().add(nuevoEstado);
         multaRepository.save(multa);
 
         notificacionService.crearNotificacion(
-                multa.getUser(),
+                multa.getUser().getId(),
                 String.format("Multa sobre préstamo con publicación %s finalizada", multa.getPrestamo().getEjemplar().getPublicacion().getTitulo()),
                 TipoNotificacion.MULTA_FINALIZADA
         );
@@ -173,17 +187,16 @@ public class MultaServiceImpl implements MultaService {
     @Override
     public MultaResponse cancelarMulta(Long id) {
         Multa multa = multaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No existe multa con id %s", id)));
-        MultaEstado estado = multa.getMultaEstados().stream().filter(
+        MultaEstado estadoActual = multa.getMultaEstados().stream().filter(
                 multaEstado -> multaEstado.getFechaFin() == null
         ).findFirst().orElseThrow(() -> new RuntimeException("Error con la multa"));
-        if (estado.getEstadoMulta() != EstadoMulta.ACTIVA) {
-            estado.setFechaFin(Instant.now());
-            multa.getMultaEstados().add(
-                    MultaEstado.builder()
-                            .estadoMulta(EstadoMulta.FINALIZADA)
-                            .fechaInicio(Instant.now())
-                            .build()
-            );
+        if (estadoActual.getEstadoMulta() != EstadoMulta.ACTIVA) {
+            estadoActual.setFechaFin(Instant.now());
+            MultaEstado nuevoEstado = new MultaEstado();
+            nuevoEstado.setEstadoMulta(EstadoMulta.CANCELADA);
+            nuevoEstado.setFechaInicio(Instant.now());
+            multaEstadoRepository.save(nuevoEstado);
+            multa.getMultaEstados().add(nuevoEstado);
             multaRepository.save(multa);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Multa no se encuentra activa");
@@ -204,7 +217,7 @@ public class MultaServiceImpl implements MultaService {
 
     @Scheduled(cron = "0 0 0 * * *") // medianoche todos los dias
     public void finalizarMultaAutomatico() {
-        List<Multa> multas = multaRepository.findAllByFechaFinBefore(Instant.now());
+        List<Multa> multas = multaRepository.findAllByFechaBajaNullAndFechaFinBefore(Instant.now());
         for (Multa multa : multas) {
             multa.setFechaBaja(Instant.now());
             MultaEstado estadoActual = multa.getMultaEstados().stream().filter(
@@ -213,15 +226,15 @@ public class MultaServiceImpl implements MultaService {
                     .findFirst().
                     orElseThrow(() -> new RuntimeException("Error con la multa"));
             estadoActual.setFechaFin(Instant.now());
-            multa.getMultaEstados().add(
-                    MultaEstado.builder()
-                            .estadoMulta(EstadoMulta.FINALIZADA)
-                            .fechaInicio(Instant.now())
-                            .build()
-            );
+            MultaEstado nuevoEstado = new MultaEstado();
+            nuevoEstado.setEstadoMulta(EstadoMulta.FINALIZADA);
+            nuevoEstado.setFechaInicio(Instant.now());
+            multaEstadoRepository.save(nuevoEstado);
+            multa.getMultaEstados().add(nuevoEstado);
+
             multaRepository.save(multa);
             notificacionService.crearNotificacion(
-                    multa.getUser(),
+                    multa.getUser().getId(),
                     String.format("Multa sobre préstamo con publicación %s finalizada", multa.getPrestamo().getEjemplar().getPublicacion().getTitulo()),
                     TipoNotificacion.MULTA_FINALIZADA
             );
@@ -230,39 +243,44 @@ public class MultaServiceImpl implements MultaService {
 
     @Scheduled(cron = "0 0 0 * * *") // medianoche todos los dias
     public void crearMultaAutomatico() {
-        List<Prestamo> prestamos = prestamoService.findAllByFechaBajaNullAndFechaFinBefore(Instant.now());
+        logger.info("Iniciando proceso de creación de multas automático.");
+        List<Prestamo> prestamos = prestamosRepository.findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant.now());
         for (Prestamo prestamo : prestamos) {
             prestamo.setFechaBaja(Instant.now());
-            PrestamoEstado estadoActual = prestamo.getEstado().stream().filter(
-                            prestamoEstado -> prestamoEstado.getFechaFin() == null
-                    )
-                    .findFirst().
-                    orElseThrow(() -> new RuntimeException("Error con la multa"));
+
+            //cambio de estados
+            PrestamoEstado estadoActual = prestamo.getEstado().stream()
+                    .filter(estado -> estado.getFechaFin() == null)
+                    .findFirst()
+                    .orElse(null);
+            if (estadoActual == null) throw new ValidationException("Error con el préstamo");
+
             estadoActual.setFechaFin(Instant.now());
-            prestamo.getEstado().add(
-                    PrestamoEstado.builder()
-                            .fechaInicio(Instant.now())
-                            .estado(EstadoPrestamo.VENCIDO)
-                            .build()
-            );
+            PrestamoEstado prestamoEstado = new PrestamoEstado();
+            prestamoEstado.setEstado(EstadoPrestamo.VENCIDO);
+            prestamoEstadoRepository.save(prestamoEstado);
+            prestamo.getEstado().add(prestamoEstado);
 
             try {
                 createMulta(CreateMultaDTO.builder()
-                        //.idMotivoMulta());
+                        .idMotivoMulta(1L)
                         .fechaInicioMulta(Instant.now())
                         .idUsuario(prestamo.getUsuario().getId())
                         .idPrestamo(prestamo.getId())
                         .build());
-                prestamoService.save(prestamo);
+                prestamosRepository.save(prestamo);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
             notificacionService.crearNotificacion(
-                    prestamo.getUsuario(),
+                    prestamo.getUsuario().getId(),
                     String.format("Préstamo con publicación %s vencido, multa aplicada", prestamo.getEjemplar().getPublicacion().getTitulo()),
                     TipoNotificacion.PRESTAMO_VENCIDO
             );
+
+
         }
+        logger.info("Proceso de creación de multas automático finalizado. {} multas creadas.",prestamos.size());
     }
 }

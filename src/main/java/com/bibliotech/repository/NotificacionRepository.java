@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface NotificacionRepository extends BaseRepository<Notificacion, Long>{
-    List<Notificacion> findByUser(User user);
-    List<Notificacion> findByUserAndLeidoIsFalse(User user);
+    List<Notificacion> findByUserID(Long userID);
+    List<Notificacion> findByUserIDAndLeidoIsFalse(Long userID);
 }

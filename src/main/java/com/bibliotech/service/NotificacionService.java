@@ -11,7 +11,7 @@ public interface NotificacionService {
 
     List<Notificacion> getUserUnreadNotifications();
 
-    void crearNotificacion(User usuario, String mensaje, TipoNotificacion tipoNotificacion);
+    void crearNotificacion(Long usuarioID, String mensaje, TipoNotificacion tipoNotificacion);
 
     Notificacion setNotificacionRead(Long id);
 }

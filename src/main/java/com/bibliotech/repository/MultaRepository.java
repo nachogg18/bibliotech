@@ -41,5 +41,5 @@ public interface MultaRepository extends JpaRepository<Multa, Long>, JpaSpecific
 
     List<Multa> findByUserId(Long user_id);
 
-    List<Multa> findAllByFechaFinBefore(Instant currentInstant);
+    List<Multa> findAllByFechaBajaNullAndFechaFinBefore(Instant currentInstant);
 }
