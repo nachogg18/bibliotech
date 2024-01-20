@@ -1,5 +1,6 @@
 package com.bibliotech.controller;
 
+import com.bibliotech.dto.BIbliotecaCreateUpdateDTO;
 import com.bibliotech.dto.BibliotecaDetalleDTO;
 import com.bibliotech.dto.UbicacionResponseDTO;
 import com.bibliotech.entity.Biblioteca;
@@ -26,8 +27,20 @@ public class BibliotecaController {
 
     @PostMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'BIBLIOTECA')")
-    public Biblioteca save(@RequestBody Biblioteca biblioteca) {
+    public Biblioteca save(@RequestBody BIbliotecaCreateUpdateDTO biblioteca) {
         return bibliotecaService.save(biblioteca);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'BIBLIOTECA')")
+    public Biblioteca update(@PathVariable Long id ,@RequestBody BIbliotecaCreateUpdateDTO biblioteca) {
+        return bibliotecaService.update(id, biblioteca);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'BIBLIOTECA')")
+    public Biblioteca delete(@PathVariable Long id) {
+        return bibliotecaService.delete(id);
     }
 
     @GetMapping("/{id}")
