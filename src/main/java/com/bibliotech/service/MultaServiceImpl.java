@@ -99,7 +99,11 @@ public class MultaServiceImpl implements MultaService {
                 .user(user)
                 .tipoMulta(tipoMulta)
                 .descripcion(request.getDescripcion())
-                .multaEstados(List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.PENDIENTE ).build()))
+                .multaEstados(
+                        request.getFechaInicioMulta().compareTo(Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS)) == 0
+                        ? List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.ACTIVA ).build())
+                        : List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.PENDIENTE ).build())
+                )
                 .fechaAlta(Instant.now())
                 .fechaInicio(request.getFechaInicioMulta())
                 .fechaFin(request.getFechaInicioMulta().plus(Duration.ofDays(tipoMulta.getCantidadDias())))
@@ -111,9 +115,8 @@ public class MultaServiceImpl implements MultaService {
         }
 
         notificacionService.crearNotificacion(
-                usuarioMultado.getId(),
-                String.format("Fue multado por el préstamo con la publicación %s",
-                        prestamoMultado.getEjemplar().getPublicacion().getTitulo()),
+                user.getId(),
+                String.format("Fue multado por el préstamo con la publicación %s", prestamo.getEjemplar().getPublicacion().getTitulo()),
                 TipoNotificacion.MULTA_CREADA
         );
 
@@ -159,25 +162,28 @@ public class MultaServiceImpl implements MultaService {
         if(estadoMulta.get().getEstadoMulta() != EstadoMulta.PENDIENTE && estadoMulta.get().getEstadoMulta() != EstadoMulta.ACTIVA){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "La multa ya ha finalizado."); }
         multa.get().setFechaBaja(Instant.now());
         List<MultaEstado> historialEstado = multa.get().getMultaEstados();
-        historialEstado.forEach(multaEstado -> {
-            if(Objects.isNull(multaEstado.getFechaFin())){
-                multaEstado.setFechaFin(Instant.now());
-            }
-        });
-        historialEstado.add(
-                MultaEstado
-                        .builder()
-                        .estadoMulta(EstadoMulta.CANCELADA)
-                        .fechaInicio(Instant.now())
-                        .build()
-        );
-        multa.get().setMultaEstados(historialEstado);
-        try {
-            multaRepository.save(multa.get());
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        MultaEstado multaEstado = historialEstado.stream().filter(multaEstado1 -> Objects.isNull(multaEstado1.getFechaFin())).findFirst().get();
+        MultaResponse response = multaEstado.getEstadoMulta() == EstadoMulta.PENDIENTE ? this.cancelarMulta(id) : this.finalizarMulta(id);
+        return true;
+//        historialEstado.forEach(multaEstado -> {
+//            if(Objects.isNull(multaEstado.getFechaFin())){
+//                multaEstado.setFechaFin(Instant.now());
+//            }
+//        });
+//        historialEstado.add(
+//                MultaEstado
+//                        .builder()
+//                        .estadoMulta(EstadoMulta.CANCELADA)
+//                        .fechaInicio(Instant.now())
+//                        .build()
+//        );
+//        multa.get().setMultaEstados(historialEstado);
+//        try {
+//            multaRepository.save(multa.get());
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
     };
 
     @Override
