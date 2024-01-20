@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -27,6 +28,8 @@ public class Biblioteca extends Base {
     @NotNull
     private Instant fechaAlta = Instant.now();
     private Instant fechaBaja;
+
+    @JsonIgnoreProperties("biblioteca")
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "biblioteca")
     private List<Ubicacion> ubicacionList = new ArrayList<>();
 }
