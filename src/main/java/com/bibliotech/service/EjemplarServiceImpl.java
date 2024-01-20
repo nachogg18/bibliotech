@@ -54,8 +54,9 @@ public class EjemplarServiceImpl implements EjemplarService {
 
     @Override
     public List<EjemplarResponseDTO> findEjemplaresByPublicacionId(Long publicacionId) {
-        return ejemplarRepository.findByPublicacionIdAndFechaBajaIsNull(publicacionId)
-                .stream().map(this::mapEjemplarToEjemplarResponseDTO).toList();
+        List<Ejemplar> ejemplares = ejemplarRepository.findByPublicacionIdAndFechaBajaIsNull(publicacionId);
+        List<EjemplarResponseDTO> response = ejemplares.stream().map(this::mapEjemplarToEjemplarResponseDTO).toList();
+        return response;
     }
 
     @Override
