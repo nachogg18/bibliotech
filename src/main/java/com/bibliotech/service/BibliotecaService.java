@@ -1,5 +1,6 @@
 package com.bibliotech.service;
 
+import com.bibliotech.dto.BibliotecaCreateDTO;
 import com.bibliotech.dto.BibliotecaDetalleDTO;
 import com.bibliotech.dto.UbicacionResponseDTO;
 import com.bibliotech.entity.Biblioteca;
@@ -10,7 +11,13 @@ public interface BibliotecaService {
 
     Biblioteca findOne(Long id);
     List<Biblioteca> findAll();
+
+    BibliotecaDetalleDTO crearBiblioteca(BibliotecaCreateDTO biblioteca);
     Biblioteca save(Biblioteca biblioteca);
+
+    BibliotecaDetalleDTO edit(Long id, BibliotecaCreateDTO biblioteca);
+
+    BibliotecaDetalleDTO delete(Long id);
 
     BibliotecaDetalleDTO findBibliotecaDetalle(Long id);
 
