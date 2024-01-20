@@ -109,7 +109,7 @@ public class SeedServiceImpl implements SeedService{
             Biblioteca[] bibliotecas = objectMapper.readValue(bilbiotecasJsonFile.getInputStream(), Biblioteca[].class);
 
             for (Biblioteca biblioteca : bibliotecas) {
-                bibliotecaService.save(biblioteca);
+                bibliotecaService.saveBiblioteca(biblioteca);
             }
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al cargar las bibliotecas -> "+e.getMessage());
