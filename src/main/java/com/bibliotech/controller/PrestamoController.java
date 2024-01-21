@@ -1,11 +1,15 @@
 package com.bibliotech.controller;
 
 import com.bibliotech.dto.*;
+import com.bibliotech.entity.EstadoPrestamo;
 import com.bibliotech.entity.Prestamo;
+import com.bibliotech.entity.PrestamoEstado;
 import com.bibliotech.service.PrestamoService;
 import com.bibliotech.service.PrestamoServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.ValidationException;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @SecurityRequirement(name = "bearer-key")
 @RequiredArgsConstructor
 public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoServiceImpl>{
+
     public final PrestamoService prestamoService;
 
     @GetMapping("/user/{idUsuario}")
@@ -38,9 +43,9 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
     public List<PrestamoItemTablaDTO> getPrestamosListTable() {
         return prestamoService.getPrestamosListTable();
     }
+
     @PostMapping(path = "/findByParams")
-        public List<PrestamoDTO> findByParams(
-            @RequestBody PrestamosByParamsRequest request) throws ValidationException {
+    public List<PrestamoDTO> findByParams(@RequestBody PrestamosByParamsRequest request) throws ValidationException {
 
         request.validate();
 
@@ -60,35 +65,46 @@ public class PrestamoController extends BaseControllerImpl<Prestamo, PrestamoSer
         return ResponseEntity.ok().body(prestamoService.crearPrestamo(request));
     }
 
-
-    @PatchMapping("/{id}/checkout")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    @PostMapping("/{id}/checkout")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> checkOutPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.checkOutPrestamo(id));
     }
 
-    @PatchMapping("/{id}/checkin")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    @PostMapping("/{id}/checkin")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> checkInPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.checkInPrestamo(id));
     }
 
-    @PatchMapping("/{id}/cancelar")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    @PostMapping("/{id}/cancelar")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> cancelarPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.cancelarPrestamo(id));
     }
 
-    @PatchMapping("/{id}/renovar")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    @PostMapping("/{id}/renovar")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> renovarPrestamo(@PathVariable Long id, @RequestBody RenovacionDTO req) {
         return ResponseEntity.ok().body(prestamoService.renovarPrestamo(id, req));
     }
 
-    @PatchMapping("/{id}/extravio")
-    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    @PostMapping("/{id}/extravio")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
     public ResponseEntity<PrestamoResponse> extravioPrestamo(@PathVariable Long id) {
         return ResponseEntity.ok().body(prestamoService.extravioPrestamo(id));
+    }
+
+    @GetMapping("/{id}/historial")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    public ResponseEntity<List<PrestamoEstado>> historialEstadoPrestamo(@PathVariable Long id) {
+        return ResponseEntity.ok().body(prestamoService.getHistorial(id));
+    }
+
+    @GetMapping("/{id}/renovaciones")
+    //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'PRESTAMO')")
+    public ResponseEntity<List<Instant>> renovacionesPrestamo(@PathVariable Long id) {
+        return ResponseEntity.ok().body(prestamoService.getRenovaciones(id));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -16,10 +17,13 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Ejemplar extends Base {
+
     @Column(unique = true)
     private String serialNFC;
+
     @Column(name = "fechaAlta")
     private Instant fechaAlta = Instant.now();
+
     @Column(name = "fechaBaja")
     private Instant fechaBaja;
 
@@ -35,6 +39,7 @@ public class Ejemplar extends Base {
     @OneToMany
     private List<Evento> eventos = new ArrayList<>();
 
+    @JsonIgnoreProperties("ejemplares")
     @ManyToOne
     private Publicacion publicacion;
 

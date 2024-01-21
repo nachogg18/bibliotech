@@ -1,5 +1,6 @@
 package com.bibliotech.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Privilege {
     @ManyToOne(fetch = FetchType.EAGER)
     private Resource resource;
 
+    @JsonIgnoreProperties("privileges")
     @ManyToMany(mappedBy = "privileges", fetch = FetchType.EAGER)
     private Collection<Role> roles;
 

@@ -72,19 +72,19 @@ public class EjemplarController {
         return ResponseEntity.ok().body(ejemplarService.getAllComentarios(id));
     }
 
-    @PatchMapping("/{id}/reparar")
+    @PutMapping("/{id}/reparar")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
     public ResponseEntity<EditEjemplarDTO> repararEjemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(ejemplarService.repararEjemplar(id));
     }
 
-    @PatchMapping("/{id}/extraviar")
+    @PutMapping("/{id}/extraviar")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
     public ResponseEntity<EditEjemplarDTO> extraviarEjemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(ejemplarService.extraviarEjemplar(id));
     }
 
-    @PatchMapping("/{id}/habilitar")
+    @PutMapping("/{id}/habilitar")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'EJEMPLAR')")
     public ResponseEntity<EditEjemplarDTO> habilitarEjemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(ejemplarService.habilitarEjemplar(id));

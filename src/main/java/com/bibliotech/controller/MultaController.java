@@ -2,6 +2,7 @@ package com.bibliotech.controller;
 
 import com.bibliotech.dto.CreateMultaDTO;
 import com.bibliotech.dto.FindMultaByParamsDTO;
+import com.bibliotech.dto.MultaDetalleDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
 import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.service.MultaService;
@@ -35,6 +36,24 @@ public class MultaController {
         return multaService.createMulta(request);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'MULTA')")
+    public boolean modificarMulta(@PathVariable Long id, @RequestBody CreateMultaDTO request) {
+        return multaService.updateMulta(request, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'MULTA')")
+    public boolean eliminarMulta(@PathVariable Long id) {
+        return multaService.deleteMulta(id);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
+    public ResponseEntity<MultaDetalleDTO> detalleMulta(@PathVariable Long id) {
+        return ResponseEntity.ok(multaService.getMultaDetalle(id));
+    }
+        
     @PostMapping("{id}/finalizar")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'MULTA')")
     public ResponseEntity<MultaResponse> finalizarMulta(@PathVariable Long id) throws Exception {

@@ -4,8 +4,7 @@ import com.bibliotech.entity.Comentario;
 import com.bibliotech.entity.Publicacion;
 import java.util.Collection;
 import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +17,7 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long>,
 
     List<Publicacion> findByCategoriaPublicacionListIdInAndTituloContainingIgnoreCase(Collection<Long> categoriaPublicacionList_id, String titulo);
 
-    Page<Publicacion> findAllByFechaBajaIsNull(Pageable pageable);
+    List<Publicacion> findByFechaBajaIsNull();
 
     @Query("SELECT p.comentarios FROM Publicacion p WHERE p.id = :publicacionId")
     List<Comentario> findComentariosByPublicacionId(@Param("publicacionId") Long publicacionId);
@@ -48,7 +47,16 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long>,
             "GROUP BY p.id, p.titulo, p.sinopsis, p.anio, tp.nombre, p.isbn")
     List<Object[]> obtenerPublicacionesItemMobile(@Param("input") String input);
 
-//    Page<Publicacion> findAllByFechaBajaIsNullAndAutoresIdInAndEditorialesIdInAndAnioAndTituloAndEdicionNombre
-//            (Pageable pageable, Collection<Long> autores_id, Collection<Long> editoriales_id, Integer anio, String titulo, String edicion_nombre);
+    @Query("SELECT DISTINCT p.titulo FROM Publicacion p WHERE p.fechaBaja IS NULL ORDER BY p.titulo")
+    List<String> obtenerTitulos();
+
+    @Query("SELECT DISTINCT p.anio FROM Publicacion p WHERE p.fechaBaja IS NULL ORDER BY p.anio")
+    List<String> obtenerAnios();
+
+    @Query("SELECT DISTINCT p.isbn FROM Publicacion p WHERE p.fechaBaja IS NULL ORDER BY p.isbn")
+    List<String> obtenerIsbns();
+
+    //Page<Publicacion> findAllByFechaBajaIsNullAndAutoresIdInAndEditorialesIdInAndAnioAndTituloAndEdicionNombre
+    //(Pageable pageable, Collection<Long> autores_id, Collection<Long> editoriales_id, Integer anio, String titulo, String edicion_nombre);
 
 }

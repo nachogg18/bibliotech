@@ -13,12 +13,16 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 public class AutorServiceImpl implements AutorService {
+
     private final AutorRepository autorRepository;
+
+    @Override
+    public List<String> obtenerNombres() { return autorRepository.obtenerNombres(); }
+
     @Override
     public List<Autor> findAll() {
         return autorRepository.findByFechaBajaNull();
     }
-
 
     @Override
     public Autor save(Autor autor) {

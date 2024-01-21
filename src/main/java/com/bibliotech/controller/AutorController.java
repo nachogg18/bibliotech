@@ -19,6 +19,11 @@ public class AutorController {
 
     private final AutorService autorService;
 
+    @GetMapping("/nombres")
+    public List<String> obtenerNombres() {
+        return autorService.obtenerNombres();
+    }
+
     @GetMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'AUTOR')")
     public List<Autor> findAll() {

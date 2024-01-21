@@ -34,7 +34,7 @@ public class PrestamoDTO {
             .usuario(Objects.nonNull(prestamo.getUsuario()) ? UserDetailDto.userToUserDetailDto(prestamo.getUsuario()) : null)
             .ejemplar(Objects.nonNull(prestamo.getEjemplar()) ? EjemplarDetailDTO.toDTO(prestamo.getEjemplar()) : null)
             .estado(Objects.nonNull(prestamo.getEstado()) ? Objects.requireNonNull(prestamo.getEstado().stream().filter(estado -> estado.getFechaFin() == null).findFirst().orElse(null)).getEstado().name() : "")
-            .multa(Objects.nonNull(prestamo.getMulta()) ? MultaDetailDTO.toDto(prestamo.getMulta()) : null)
+            //.multa(Objects.nonNull(prestamo.getMulta()) ? MultaDetailDTO.toDto(prestamo.getMulta()) : null)
             .build()
         : emptyDTO();
     }

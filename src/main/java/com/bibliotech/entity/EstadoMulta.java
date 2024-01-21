@@ -4,4 +4,5 @@ public enum EstadoMulta {
     ACTIVA,
     FINALIZADA,
     CANCELADA,
+    PENDIENTE,
 }

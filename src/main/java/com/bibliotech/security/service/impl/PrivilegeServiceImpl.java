@@ -15,8 +15,10 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 @Transactional
@@ -29,7 +31,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
   private final ActionService actionService;
 
   public List<Privilege> getAllPrivileges() {
-    return privilegeRepository.findAll();
+    return privilegeRepository.findByEndDateNull();
   }
 
   public Optional<Privilege> getPrivilegeById(Long id) {
@@ -124,5 +126,25 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     } else {
       throw new RuntimeException("Error en la asignación de rol");
     }
+  }
+
+  public Privilege getOne(Long id){
+    Optional<Privilege> isPrivilege = this.privilegeRepository.findByIdAndEndDateNull(id);
+    if (isPrivilege.isPresent()) {
+      return isPrivilege.get();
+    } else {
+      throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Privilegio no encontrado");
+    }
+  }
+
+  public boolean deleteOne(Long id){
+    Privilege privilege = this.getOne(id);
+    privilege.setEndDate(Instant.now());
+    try {
+      this.privilegeRepository.save(privilege);
+    } catch (Exception e) {
+      throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "No se puedo eliminar el privilegio");
+    }
+    return true;
   }
 }

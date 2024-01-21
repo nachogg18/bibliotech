@@ -44,6 +44,12 @@ public class BibliotecaController {
         return ResponseEntity.ok().body(bibliotecaService.delete(id));
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'BIBLIOTECA')")
+    public ResponseEntity<BibliotecaDetalleDTO> update(@PathVariable Long id ,@RequestBody BibliotecaCreateDTO biblioteca) {
+        return ResponseEntity.ok().body(bibliotecaService.edit(id, biblioteca));
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'BIBLIOTECA')")
     public ResponseEntity<BibliotecaDetalleDTO> findBibliotecaDetalle(@PathVariable Long id) {

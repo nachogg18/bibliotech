@@ -10,9 +10,13 @@ import java.util.List;
 public interface BibliotecaService {
 
     Biblioteca findOne(Long id);
+
     List<Biblioteca> findAll();
 
+    Biblioteca saveBiblioteca(Biblioteca biblioteca);
+
     BibliotecaDetalleDTO crearBiblioteca(BibliotecaCreateDTO biblioteca);
+    
     Biblioteca save(Biblioteca biblioteca);
 
     BibliotecaDetalleDTO edit(Long id, BibliotecaCreateDTO biblioteca);
@@ -22,4 +26,6 @@ public interface BibliotecaService {
     BibliotecaDetalleDTO findBibliotecaDetalle(Long id);
 
     List<UbicacionResponseDTO> findBibliotecaUbicaciones(Long id);
+
+
 }

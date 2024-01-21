@@ -2,7 +2,9 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.CreateMultaDTO;
 import com.bibliotech.dto.FindMultaByParamsDTO;
+import com.bibliotech.dto.MultaDetalleDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
+import com.bibliotech.entity.*;
 import com.bibliotech.dto.MultaResponse;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.MultaEstadoRepository;
@@ -20,14 +22,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +81,7 @@ public class MultaServiceImpl implements MultaService {
                                 .idUsuario(multa.getUser().getId())
                                 .fechaDesde(multa.getFechaInicio())
                                 .fechaHasta(multa.getFechaFin())
-                                .estado(multa.getMultaEstados().isEmpty() ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getNombre())
+                                .estado(multa.getMultaEstados().size() == 0 ? null : multa.getMultaEstados().stream().filter(me -> me.getFechaFin() == null).toList().get(0).getEstadoMulta().name())
                                 .tipo(multa.getTipoMulta() == null ? null : multa.getTipoMulta().getNombre())
                                 .build()
                 ).toList();
@@ -82,26 +89,24 @@ public class MultaServiceImpl implements MultaService {
 
     @Override
     public boolean createMulta(CreateMultaDTO request) throws Exception {
-        User usuarioMultado = userService.findById(request.getIdUsuario())
-                .orElseThrow(() -> new ValidationException(String.format("no existe User con id: %s", request.getIdUsuario())));
-        Prestamo prestamoMultado = prestamosRepository.findById(request.getIdPrestamo()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("No se encontró prestamo con id %s", request.getIdPrestamo())));
+
+        TipoMulta tipoMulta = tipoMultaService.findById(request.getIdMotivoMulta()).orElseThrow(() -> new ValidationException(String.format("No existe TipoMulta con id: %s", request.getIdMotivoMulta())));
+        User user = userService.findById(request.getIdUsuario()).orElseThrow(() -> new ValidationException(String.format("No existe User con id: %s", request.getIdUsuario())));
+        Prestamo prestamo = prestamosRepository.findById(request.getIdPrestamo()).orElseThrow(() -> new ValidationException(String.format("No existe Prestamo con id: %s", request.getIdPrestamo())));
+
         Multa multa = Multa.builder()
-                .prestamo(prestamoMultado)
-                .user(usuarioMultado)
-                .tipoMulta(
-                        tipoMultaService.findById(request.getIdMotivoMulta())
-                                .orElseThrow(() -> new ValidationException(String.format("no existe TipoMulta con id: %s", request.getIdMotivoMulta())))
-                )
+                .prestamo(prestamo)
+                .user(user)
+                .tipoMulta(tipoMulta)
+                .descripcion(request.getDescripcion())
                 .multaEstados(
-                        List.of(
-                                MultaEstado.builder()
-                                        .fechaInicio(Instant.now())
-                                        .estadoMulta(EstadoMulta.ACTIVA)
-                                        .build())
+                        request.getFechaInicioMulta().compareTo(Instant.now().truncatedTo(java.time.temporal.ChronoUnit.DAYS)) == 0
+                        ? List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.ACTIVA ).build())
+                        : List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.PENDIENTE ).build())
                 )
-                .fechaInicio(Instant.now())
                 .fechaAlta(Instant.now())
-                .fechaFin(Instant.now().plus(7, ChronoUnit.DAYS))
+                .fechaInicio(request.getFechaInicioMulta())
+                .fechaFin(request.getFechaInicioMulta().plus(Duration.ofDays(tipoMulta.getCantidadDias())))
                 .build();
         try {
             multaRepository.save(multa);
@@ -110,9 +115,8 @@ public class MultaServiceImpl implements MultaService {
         }
 
         notificacionService.crearNotificacion(
-                usuarioMultado.getId(),
-                String.format("Fue multado por el préstamo con la publicación %s",
-                        prestamoMultado.getEjemplar().getPublicacion().getTitulo()),
+                user.getId(),
+                String.format("Fue multado por el préstamo con la publicación %s", prestamo.getEjemplar().getPublicacion().getTitulo()),
                 TipoNotificacion.MULTA_CREADA
         );
 
@@ -130,12 +134,11 @@ public class MultaServiceImpl implements MultaService {
                                 .idUsuario(multa.getUser().getId())
                                 .fechaDesde(multa.getFechaInicio())
                                 .fechaHasta(multa.getFechaFin())
-                                .estado(Objects.requireNonNull(multa.getMultaEstados().stream()
-                                                        .filter(estado -> estado.getFechaFin() == null)
-                                                        .findFirst()
-                                                        .orElse(null))
-                                                .getNombre()
-                                        )
+                                .estado(
+                                        multa.getMultaEstados().stream()
+                                        .filter(estado -> estado.getFechaFin() == null)
+                                        .findFirst().orElse(null).getEstadoMulta().name()
+                                )
                                 .tipo(multa.getTipoMulta().getNombre())
                                 .build()
                 ).toList();
@@ -150,6 +153,99 @@ public class MultaServiceImpl implements MultaService {
         ).findAny().orElse(null) == null;
     }
 
+    @Override
+    @Transactional
+    public boolean deleteMulta(Long id) {
+        Optional<Multa> multa = multaRepository.findById(id);
+        if(!multa.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Multa no encontrada con el id."); }
+        Optional<MultaEstado> estadoMulta = multa.get().getMultaEstados().stream().filter(multaEstado -> Objects.isNull(multaEstado.getFechaFin())).findFirst();
+        if(estadoMulta.get().getEstadoMulta() != EstadoMulta.PENDIENTE && estadoMulta.get().getEstadoMulta() != EstadoMulta.ACTIVA){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "La multa ya ha finalizado."); }
+        multa.get().setFechaBaja(Instant.now());
+        List<MultaEstado> historialEstado = multa.get().getMultaEstados();
+        MultaEstado multaEstado = historialEstado.stream().filter(multaEstado1 -> Objects.isNull(multaEstado1.getFechaFin())).findFirst().get();
+        MultaResponse response = multaEstado.getEstadoMulta() == EstadoMulta.PENDIENTE ? this.cancelarMulta(id) : this.finalizarMulta(id);
+        return true;
+//        historialEstado.forEach(multaEstado -> {
+//            if(Objects.isNull(multaEstado.getFechaFin())){
+//                multaEstado.setFechaFin(Instant.now());
+//            }
+//        });
+//        historialEstado.add(
+//                MultaEstado
+//                        .builder()
+//                        .estadoMulta(EstadoMulta.CANCELADA)
+//                        .fechaInicio(Instant.now())
+//                        .build()
+//        );
+//        multa.get().setMultaEstados(historialEstado);
+//        try {
+//            multaRepository.save(multa.get());
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+    };
+
+    @Override
+    @Transactional
+    public MultaDetalleDTO getMultaDetalle(Long id){
+        Optional<Multa> multa = multaRepository.findById(id);
+        if(!multa.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Multa no encontrada con el id."); }
+        MultaDetalleDTO multaDetalleDTO = MultaDetalleDTO
+                .builder()
+                .multaEstados(multa.get().getMultaEstados())
+                .tipoMulta(multa.get().getTipoMulta())
+                .descripcion(multa.get().getDescripcion())
+                .fechaInicio(multa.get().getFechaInicio())
+                .fechaFin(multa.get().getFechaFin())
+                .fechaAlta(multa.get().getFechaAlta())
+                .fechaBaja(multa.get().getFechaBaja())
+                .idUser(multa.get().getUser().getId())
+                .dniUser(multa.get().getUser().getUserInfo().getDni())
+                .nombreUser(multa.get().getUser().getFirstName() + ' ' + multa.get().getUser().getLastName())
+                .legajoUser(multa.get().getUser().getUserInfo().getLegajo())
+                .idPrestamo(multa.get().getPrestamo().getId())
+                .estadoPrestamo(multa.get().getPrestamo().getEstado().get(multa.get().getPrestamo().getEstado().size() - 1).getEstado().name())
+                .tituloPublicacionPrestamo(multa.get().getPrestamo().getEjemplar().getPublicacion().getTitulo())
+                .idEjemplarPublicacionPrestamo(multa.get().getPrestamo().getEjemplar().getId())
+                .fechaDesdePrestamo(multa.get().getPrestamo().getFechaInicioEstimada())
+                .fechaHastaPrestamo(multa.get().getPrestamo().getFechaFinEstimada())
+                .build();
+        return multaDetalleDTO;
+    };
+
+    @Override
+    @Transactional
+    public boolean updateMulta(CreateMultaDTO request, Long id) {
+
+        Optional<Multa> multa = multaRepository.findById(id);
+        if (!multa.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Multa con id con econtrada"); }
+        Optional<MultaEstado> estadoMulta = multa.get().getMultaEstados().stream().filter(multaEstado -> Objects.isNull(multaEstado.getFechaFin())).findFirst();
+        if(!estadoMulta.isPresent() || estadoMulta.get().getEstadoMulta() != EstadoMulta.PENDIENTE){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "La multa debe estar con estado PENDIENTE"); }
+
+        Optional<Prestamo> prestamo = prestamosRepository.findById(request.getIdPrestamo());
+        if (!multa.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Prestamo con id con econtrado"); }
+
+        Optional<User> usuario = userService.findById(request.getIdUsuario());
+        if (!usuario.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Usuario con id con econtrado"); }
+
+        Optional<TipoMulta> tipo = tipoMultaService.findById(request.getIdMotivoMulta());
+        if (!tipo.isPresent()){ throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Tipo de multa con id con econtrada"); }
+
+        multa.get().setTipoMulta(tipo.get());
+        multa.get().setUser(usuario.get());
+        multa.get().setPrestamo(prestamo.get());
+        multa.get().setFechaInicio(request.getFechaInicioMulta());
+        multa.get().setFechaFin(multa.get().getFechaInicio().plus(Duration.ofDays(tipo.get().getCantidadDias())));
+        multa.get().setDescripcion(request.getDescripcion());
+
+        try {
+            multaRepository.save(multa.get());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    };
 
     @Override
     public MultaResponse finalizarMulta(Long id) {

@@ -73,7 +73,7 @@ public class PublicacionController {
 
   @GetMapping
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public List<PublicacionResponseDTO> findAll() {
+  public List<Publicacion> findAll() {
     return publicacionService.findAll();
   }
 
@@ -83,13 +83,13 @@ public class PublicacionController {
     return publicacionService.findById(id);
   }
 
-  @GetMapping(path = "/paged")
-  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
-  public ResponseEntity<PageDTO<PublicacionPaginadaDTO>> getAllPublicacionPaged(
-      @RequestParam(defaultValue = "1") int page) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(publicacionService.findAllPublicacionPaginatedDTO(page));
-  }
+//  @GetMapping(path = "/paged")
+//  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
+//  public ResponseEntity<PageDTO<PublicacionPaginadaDTO>> getAllPublicacionPaged(
+//      @RequestParam(defaultValue = "1") int page) {
+//    return ResponseEntity.status(HttpStatus.OK)
+//        .body(publicacionService.findAllPublicacionPaginatedDTO(page));
+//  }
 
   @GetMapping(path = "/{id}")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PUBLICACION')")
@@ -97,7 +97,7 @@ public class PublicacionController {
     return ResponseEntity.status(HttpStatus.OK).body(publicacionService.getDetallePublicacion(id));
   }
 
-  @PatchMapping(path = "/{id}")
+  @PutMapping(path = "/{id}")
   public ResponseEntity<?> updatePublicacion(
       @RequestBody ModificarPublicacionDTO req, @PathVariable Long id) {
     return ResponseEntity.ok().body(publicacionService.updatePublicacion(req, id));
@@ -117,6 +117,21 @@ public class PublicacionController {
   @GetMapping(path = "/{id}/link")
   public ResponseEntity<LinkMobileDto> getPublicacionLink(@PathVariable Long id){
     return ResponseEntity.ok().body(publicacionService.getPublicacionLink(id));
+  }
+
+  @GetMapping(path = "/titulos")
+  public ResponseEntity<List<String>> getPublicacionTitulo(){
+    return ResponseEntity.ok().body(publicacionService.getTitulos());
+  }
+
+  @GetMapping(path = "/anios")
+  public ResponseEntity<List<String>> getPublicacionAnios(){
+    return ResponseEntity.ok().body(publicacionService.getAnios());
+  }
+
+  @GetMapping(path = "/isbns")
+  public ResponseEntity<List<String>> getPublicacionIsbns(){
+    return ResponseEntity.ok().body(publicacionService.getIsbns());
   }
 
 }

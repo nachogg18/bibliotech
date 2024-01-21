@@ -14,15 +14,16 @@ import com.bibliotech.security.service.UserService;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
+
+import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -642,4 +643,21 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
                 .build();
     }
 
+    @Override
+    public List<PrestamoEstado> getHistorial(Long id){
+        Optional<Prestamo> prestamo = prestamosRepository.findById(id);
+        if(prestamo.isPresent()){
+            return prestamo.get().getEstado();
+        }
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Prestamo no encontrado.");
+    };
+
+    @Override
+    public List<Instant> getRenovaciones(Long id){
+        Optional<Prestamo> prestamo = prestamosRepository.findById(id);
+        if(prestamo.isPresent()){
+            return prestamo.get().getFechasRenovaciones();
+        }
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Prestamo no encontrado.");
+    };
 }

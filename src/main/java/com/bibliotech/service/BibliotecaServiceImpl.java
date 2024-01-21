@@ -15,6 +15,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,19 @@ public class BibliotecaServiceImpl implements BibliotecaService {
         return biblioteca;
     }
 
+//    @Override
+//    public Biblioteca delete(Long id){
+//        Biblioteca biblioteca = this.findOne(id);
+//        biblioteca.setFechaBaja(Instant.now());
+//        biblioteca.getUbicacionList().forEach(ubicacion -> {
+//            if (Objects.isNull(ubicacion.getFechaBaja())){
+//                ubicacion.setFechaBaja(Instant.now());
+//            }
+//        });
+//        bibliotecaRepository.save(biblioteca);
+//        return biblioteca;
+//    }
+
     @Override
     public List<Biblioteca> findAll() {
         return bibliotecaRepository.findAll();
@@ -40,6 +54,17 @@ public class BibliotecaServiceImpl implements BibliotecaService {
 
     @Override
     public Biblioteca save(Biblioteca biblioteca) {
+        Biblioteca biblioteca1 = new Biblioteca();
+        biblioteca1.setNombre(biblioteca.getNombre());
+        biblioteca1.setUbicacion(biblioteca.getUbicacion());
+        biblioteca1.setContacto(biblioteca.getContacto());
+        biblioteca1.setUbicacionList(new ArrayList<>());
+        biblioteca1.setFechaAlta(Instant.now());
+        return bibliotecaRepository.save(biblioteca1);
+    }
+
+    @Override
+    public Biblioteca saveBiblioteca(Biblioteca biblioteca) {
         return bibliotecaRepository.save(biblioteca);
     }
 
@@ -120,6 +145,7 @@ public class BibliotecaServiceImpl implements BibliotecaService {
         Biblioteca biblioteca = bibliotecaRepository.findOneById(id);
         return biblioteca.getUbicacionList().stream().map(
                 ubicacion -> UbicacionResponseDTO.builder()
+                        .id(ubicacion.getId())
                         .descripcion(ubicacion.getDescripcion())
                         .fechaBaja(ubicacion.getFechaBaja()==null ? null : ubicacion.getFechaBaja().truncatedTo(ChronoUnit.DAYS))
                         .fechaAlta(ubicacion.getFechaAlta().truncatedTo(ChronoUnit.DAYS))

@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,5 +50,19 @@ public class PrivilegeController {
   public ResponseEntity<List<Privilege>> getAll() {
 
     return ResponseEntity.ok(privilegeService.getAllPrivileges());
+  }
+
+  @GetMapping("/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRIVILEGE')")
+  @Secured("SUPERADMIN")
+  public ResponseEntity<Privilege> getOne(@PathVariable Long id) {
+    return ResponseEntity.ok(privilegeService.getOne(id));
+  }
+
+  @DeleteMapping("/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'PRIVILEGE')")
+  @Secured("SUPERADMIN")
+  public ResponseEntity<Boolean> deleteOne(@PathVariable Long id) {
+    return ResponseEntity.ok(privilegeService.deleteOne(id));
   }
 }

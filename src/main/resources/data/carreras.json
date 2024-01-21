@@ -1,62 +1,23 @@
 [
   {
-    "nombre": "Ingenieria en Informatica"
+    "nombre": "Ingenieria en Sistemas de Informacion"
   },
   {
-    "nombre": "Medicina"
+    "nombre": "Ingenieria Quimica"
   },
   {
-    "nombre": "Derecho"
+    "nombre": "Ingenieria Electronica"
   },
   {
-    "nombre": "Administracion de Empresas"
-  },
-  {
-    "nombre": "Psicologia"
-  },
-  {
-    "nombre": "Arquitectura"
-  },
-  {
-    "nombre": "Ciencias Politicas"
-  },
-  {
-    "nombre": "Biologia"
-  },
-  {
-    "nombre": "Economia"
-  },
-  {
-    "nombre": "Comunicacion"
+    "nombre": "Ingenieria Electromecanica"
   },
   {
     "nombre": "Ingenieria Civil"
   },
   {
-    "nombre": "Quimica"
-  },
-  {
-    "nombre": "Educacion"
-  },
-  {
-    "nombre": "Matematicas"
+    "nombre": "Tecnicatura avanzada en programacion"
   },
   {
     "nombre": "Turismo"
-  },
-  {
-    "nombre": "Fisica"
-  },
-  {
-    "nombre": "Historia"
-  },
-  {
-    "nombre": "Geografia"
-  },
-  {
-    "nombre": "Estadistica"
-  },
-  {
-    "nombre": "Arte"
   }
 ]

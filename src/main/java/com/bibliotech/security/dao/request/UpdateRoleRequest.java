@@ -6,11 +6,14 @@ import com.bibliotech.validator.IsOptionalField;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.time.Instant;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 
 public record UpdateRoleRequest(@NotNull Long id,
                                 @IsOptionalField @Pattern(regexp = RoleUtils.VALID_ROLE_NAME_FORMAT) String name,
-                                @NotNull Boolean enabled) {
+                                @NotNull Boolean enabled,
+                                Set<Long> privileges) {
 
     public Role toRole(Role existingRole) {
         

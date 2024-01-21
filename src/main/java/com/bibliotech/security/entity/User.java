@@ -1,5 +1,6 @@
 package com.bibliotech.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
@@ -33,7 +34,8 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private UserInfo userInfo;
-    
+
+    @JsonIgnoreProperties("user_roles")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
@@ -75,8 +77,5 @@ public class User implements UserDetails {
         return Objects.isNull(this.getEndDate())
                 && Objects.isNull(this.getConfirmationDate());
     }
-    
-    
-    
-    
+
 }

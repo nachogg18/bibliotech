@@ -10,15 +10,17 @@ import java.util.Optional;
 
 
 public interface PublicacionService{
-    List<PublicacionResponseDTO> findAll();
+//    List<PublicacionResponseDTO> findAll();
+    List<Publicacion> findAll();
     Optional<Publicacion> findById(Long id);
-    List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
+
+    //List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
 
     List<Publicacion> findByParams(FindPublicacionesByParamsDTO request);
 
     DetallePublicacionDTO getDetallePublicacion(Long id);
 
-    PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page);
+    //PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page);
 
 
     PublicacionResponseDTO create(CreatePublicacionRequestDTO request);
@@ -32,4 +34,10 @@ public interface PublicacionService{
     List<PublicacionMobileSearchItem> getPublicacionesMobile(String input);
 
     LinkMobileDto getPublicacionLink(Long id);
+
+    List<String> getTitulos();
+
+    List<String> getAnios();
+
+    List<String> getIsbns();
 }

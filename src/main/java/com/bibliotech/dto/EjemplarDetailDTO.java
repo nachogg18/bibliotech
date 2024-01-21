@@ -1,8 +1,11 @@
 package com.bibliotech.dto;
 
 import com.bibliotech.entity.Ejemplar;
+import com.bibliotech.entity.EjemplarEstado;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -13,8 +16,10 @@ import java.util.Objects;
 public class EjemplarDetailDTO {
     private Long id;
     private String nombrePublicacion;
+    private Long idUbicacion;
     private String nombreUbicacion;
     private String serialNFC;
+    private List<EjemplarEstado> ejemplarEstadoList = new ArrayList<EjemplarEstado>();
 
     public static EjemplarDetailDTO toDTO (Ejemplar ejemplar) {
         return Objects.nonNull(ejemplar)

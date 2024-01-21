@@ -15,8 +15,6 @@ import lombok.*;
 @Builder
 public class MultaEstado extends Base {
     @Column
-    private String nombre;
-    @Column
     private Instant fechaInicio = Instant.now();
     @Column
     private Instant fechaFin;

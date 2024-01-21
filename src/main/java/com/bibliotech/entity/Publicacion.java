@@ -1,5 +1,6 @@
 package com.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class Publicacion extends Base {
     @ManyToOne
     private Edicion edicion;
 
+    @JsonIgnoreProperties("publicacion")
     @OneToMany
     @JoinTable(name = "publicacion_ejemplar",
             joinColumns = @JoinColumn(name = "publicacion_id"),

@@ -71,8 +71,8 @@ public interface PrestamosRepository extends BaseRepository<Prestamo, Long>, Jpa
             "AND prestamo.id IN (SELECT DISTINCT fechas_renovaciones_prestamo.fecha_renovacion_id FROM fechas_renovaciones_prestamo)) as prestamos_renovados " +
             "LEFT JOIN " +
             "(SELECT COUNT(*) as cantidad FROM prestamo " +
-            "WHERE prestamo.fecha_inicio_estimada >= '2023-10-09' " +
-            "AND prestamo.fecha_inicio_estimada <= '2023-11-30' " +
+            "WHERE prestamo.fecha_inicio_estimada >= :fechaInicio " +
+            "AND prestamo.fecha_inicio_estimada <= :fechaFin " +
             "AND prestamo.id NOT IN (SELECT DISTINCT fechas_renovaciones_prestamo.fecha_renovacion_id FROM fechas_renovaciones_prestamo)) as prestamos_no_renovados ON 1=1")
     Map<String, Long> obtenerCantidadPrestamosSiNoRenovados(
             @Param("fechaInicio") String fechaInicio,

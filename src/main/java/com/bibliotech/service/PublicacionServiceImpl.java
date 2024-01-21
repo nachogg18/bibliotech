@@ -44,67 +44,83 @@ public class PublicacionServiceImpl implements PublicacionService {
     private final PlataformaService plataformaService;
     private final EdicionService edicionService;
     private final PageUtil pageUtil;
-    private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
+//    private final ListToPageDTOMapper<Publicacion, PublicacionPaginadaDTO> listToPageDTOMapper;
 
     @Override
-    public List<PublicacionResponseDTO> findAll() {
+    public List<String> getTitulos(){
+        return this.publicacionRepository.obtenerTitulos();
+    }
+
+    @Override
+    public List<String> getIsbns(){
+        return this.publicacionRepository.obtenerIsbns();
+    }
+
+    @Override
+    public List<String> getAnios(){
+        return this.publicacionRepository.obtenerAnios();
+    }
+
+    @Override
+    public List<Publicacion> findAll() {
         //return publicacionRepository.findAll();
-        List<Publicacion> publicaciones = publicacionRepository.findAll();
+        List<Publicacion> publicaciones = this.publicacionRepository.findByFechaBajaIsNull();
+        return publicaciones;
 
 //        List<String> nombresEditoriales = publicaciones.stream().flatMap(publicacion -> publicacion.getEditoriales().stream()
 //                        .map(Editorial::getNombre))
 //                .collect(Collectors.toList());
 
-        return publicaciones.stream().map(publicacion -> {
-           PublicacionResponseDTO res = PublicacionResponseDTO
-                   .builder()
-                   .anioPublicacion(publicacion.getAnio())
-                   .tituloPublicacion(publicacion.getTitulo())
-                   .nombreEdicion(publicacion.getEdicion().getNombre())
-                   .id(publicacion.getId())
-                   .nombreAutores(publicaciones.stream().flatMap(p -> p.getAutores().stream()
-                                   .map(Autor::getNombre))
-                           .collect(Collectors.toList()))
-                   .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
-                   .build();
-           return res;
-            })
-                .collect(Collectors.toList());
+//        return publicaciones.stream().map(publicacion -> {
+//           PublicacionResponseDTO res = PublicacionResponseDTO
+//                   .builder()
+//                   .anioPublicacion(publicacion.getAnio())
+//                   .tituloPublicacion(publicacion.getTitulo())
+//                   .nombreEdicion(publicacion.getEdicion().getNombre())
+//                   .id(publicacion.getId())
+//                   .nombreAutores(publicaciones.stream().flatMap(p -> p.getAutores().stream()
+//                                   .map(Autor::getNombre))
+//                           .collect(Collectors.toList()))
+//                   .nombreEditorial(publicacion.getEditoriales().get(0).getNombre())
+//                   .build();
+//           return res;
+//            })
+//                .collect(Collectors.toList());
     }
 
     public Optional<Publicacion> findById(Long id) {
         return publicacionRepository.findById(id);
     }
 
-    @Override
-    public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
-
-        List<Long> valoresIdBusqueda = new ArrayList<>();
-        busquedaPublicacionList.forEach(bpl ->
-                bpl.getValores().forEach(v -> {
-                    if (v.isSeleccionadoValor())
-                        valoresIdBusqueda.add(v.getIdValor());
-                }));
-
-        List<Long> categoriaPublicacionIdList = categoriaPublicacionRepository.findByCategoriaValorListIdIn(valoresIdBusqueda).stream().map(Base::getId).toList();
-
-        List<Publicacion> publicaciones = new ArrayList<>();
-        if (contenido == null) {
-            publicaciones = publicacionRepository.findByCategoriaPublicacionListIdIn(categoriaPublicacionIdList);
-        } else {
-            if (Objects.equals(parametro, "Autor")) {
-                List<Autor> autorList = autorRepository.findByApellidoContainingIgnoreCaseOrNombreContainingIgnoreCase(contenido, contenido);
-                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndAutoresIdIn(categoriaPublicacionIdList, autorList.stream().map(Base::getId).toList());
-            } else if (Objects.equals(parametro, "Titulo")) {
-                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndTituloContainingIgnoreCase(categoriaPublicacionIdList, contenido);
-            } else if (Objects.equals(parametro, "Editorial")) {
-                List<Editorial> editorialList = editorialRepository.findByNombreContainingIgnoreCase(contenido);
-                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndAutoresIdIn(categoriaPublicacionIdList, editorialList.stream().map(Base::getId).toList());
-            }
-        }
-
-        return PublicacionRequestMapper.toResponseDTO(publicaciones);
-    }
+//    @Override
+//    public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
+//
+//        List<Long> valoresIdBusqueda = new ArrayList<>();
+//        busquedaPublicacionList.forEach(bpl ->
+//                bpl.getValores().forEach(v -> {
+//                    if (v.isSeleccionadoValor())
+//                        valoresIdBusqueda.add(v.getIdValor());
+//                }));
+//
+//        List<Long> categoriaPublicacionIdList = categoriaPublicacionRepository.findByCategoriaValorListIdIn(valoresIdBusqueda).stream().map(Base::getId).toList();
+//
+//        List<Publicacion> publicaciones = new ArrayList<>();
+//        if (contenido == null) {
+//            publicaciones = publicacionRepository.findByCategoriaPublicacionListIdIn(categoriaPublicacionIdList);
+//        } else {
+//            if (Objects.equals(parametro, "Autor")) {
+//                List<Autor> autorList = autorRepository.findByApellidoContainingIgnoreCaseOrNombreContainingIgnoreCase(contenido, contenido);
+//                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndAutoresIdIn(categoriaPublicacionIdList, autorList.stream().map(Base::getId).toList());
+//            } else if (Objects.equals(parametro, "Titulo")) {
+//                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndTituloContainingIgnoreCase(categoriaPublicacionIdList, contenido);
+//            } else if (Objects.equals(parametro, "Editorial")) {
+//                List<Editorial> editorialList = editorialRepository.findByNombreContainingIgnoreCase(contenido);
+//                publicaciones = publicacionRepository.findByCategoriaPublicacionListIdInAndAutoresIdIn(categoriaPublicacionIdList, editorialList.stream().map(Base::getId).toList());
+//            }
+//        }
+//
+//        return PublicacionRequestMapper.toResponseDTO(publicaciones);
+//    }
 
     @Override
     public DetallePublicacionDTO getDetallePublicacion(Long id) {
@@ -132,7 +148,8 @@ public class PublicacionServiceImpl implements PublicacionService {
         if(Objects.nonNull(publicacion.getAutores())) {
             List<AutorDTO> autores = publicacion.getAutores().stream().map(autor -> {
                 AutorDTO nuevoAutor = new AutorDTO();
-                nuevoAutor.setNombre(autor.getNombre() + autor.getApellido());
+                nuevoAutor.setNombre(autor.getNombre());
+                nuevoAutor.setApellido(autor.getApellido());
                 nuevoAutor.setBiografia(autor.getBiografia());
                 nuevoAutor.setId(autor.getId());
                 nuevoAutor.setFechaNacimiento(autor.getFechaNacimiento());
@@ -156,31 +173,31 @@ public class PublicacionServiceImpl implements PublicacionService {
         return detallePublicacionDTO;
     }
 
-    @Override
-    public PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page) {
-        if (page <= 0)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "page not found");
-
-        Page<Publicacion> categoryPage = publicacionRepository.findAllByFechaBajaIsNull(pageUtil.pageRequest(page));
-
-        if (categoryPage.getTotalPages() != 0 && page > categoryPage.getTotalPages())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "page not found");
-
-        List<PublicacionPaginadaDTO> publicacionesDTOList = categoryPage.getContent().stream()
-                .map(publicacion -> {
-                            PublicacionPaginadaDTO publicacionDTO = new PublicacionPaginadaDTO();
-                            publicacionDTO.setTitulo(publicacion.getTitulo());
-                            publicacionDTO.setAnio(publicacion.getAnio());
-                            publicacionDTO.setEdicion(publicacion.getEdicion().getNombre());
-                            publicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
-                            publicacionDTO.setAutores(publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList());
-                            return publicacionDTO;
-                        }
-                )
-                .collect(Collectors.toList());
-
-        return listToPageDTOMapper.toPageDTO(page, categoryPage, publicacionesDTOList);
-    }
+//    @Override
+//    public PageDTO<PublicacionPaginadaDTO> findAllPublicacionPaginatedDTO(int page) {
+//        if (page <= 0)
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "page not found");
+//
+//        Page<Publicacion> categoryPage = publicacionRepository.findAllByFechaBajaIsNull(pageUtil.pageRequest(page));
+//
+//        if (categoryPage.getTotalPages() != 0 && page > categoryPage.getTotalPages())
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "page not found");
+//
+//        List<PublicacionPaginadaDTO> publicacionesDTOList = categoryPage.getContent().stream()
+//                .map(publicacion -> {
+//                            PublicacionPaginadaDTO publicacionDTO = new PublicacionPaginadaDTO();
+//                            publicacionDTO.setTitulo(publicacion.getTitulo());
+//                            publicacionDTO.setAnio(publicacion.getAnio());
+//                            publicacionDTO.setEdicion(publicacion.getEdicion().getNombre());
+//                            publicacionDTO.setEditoriales(publicacion.getEditoriales().stream().map(Editorial::getNombre).toList());
+//                            publicacionDTO.setAutores(publicacion.getAutores().stream().map(a -> a.getApellido().toUpperCase() + ", " + a.getNombre()).toList());
+//                            return publicacionDTO;
+//                        }
+//                )
+//                .collect(Collectors.toList());
+//
+//        return listToPageDTOMapper.toPageDTO(page, categoryPage, publicacionesDTOList);
+//    }
 
     @Override
     public PublicacionResponseDTO create(CreatePublicacionRequestDTO request) {
