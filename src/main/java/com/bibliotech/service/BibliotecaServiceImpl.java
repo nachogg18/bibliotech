@@ -34,18 +34,18 @@ public class BibliotecaServiceImpl implements BibliotecaService {
         return biblioteca;
     }
 
-    @Override
-    public Biblioteca delete(Long id){
-        Biblioteca biblioteca = this.findOne(id);
-        biblioteca.setFechaBaja(Instant.now());
-        biblioteca.getUbicacionList().forEach(ubicacion -> {
-            if (Objects.isNull(ubicacion.getFechaBaja())){
-                ubicacion.setFechaBaja(Instant.now());
-            }
-        });
-        bibliotecaRepository.save(biblioteca);
-        return biblioteca;
-    }
+//    @Override
+//    public Biblioteca delete(Long id){
+//        Biblioteca biblioteca = this.findOne(id);
+//        biblioteca.setFechaBaja(Instant.now());
+//        biblioteca.getUbicacionList().forEach(ubicacion -> {
+//            if (Objects.isNull(ubicacion.getFechaBaja())){
+//                ubicacion.setFechaBaja(Instant.now());
+//            }
+//        });
+//        bibliotecaRepository.save(biblioteca);
+//        return biblioteca;
+//    }
 
     @Override
     public List<Biblioteca> findAll() {
@@ -53,7 +53,7 @@ public class BibliotecaServiceImpl implements BibliotecaService {
     }
 
     @Override
-    public Biblioteca save(BIbliotecaCreateUpdateDTO biblioteca) {
+    public Biblioteca save(Biblioteca biblioteca) {
         Biblioteca biblioteca1 = new Biblioteca();
         biblioteca1.setNombre(biblioteca.getNombre());
         biblioteca1.setUbicacion(biblioteca.getUbicacion());

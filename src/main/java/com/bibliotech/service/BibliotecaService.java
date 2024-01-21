@@ -11,8 +11,6 @@ public interface BibliotecaService {
 
     Biblioteca findOne(Long id);
 
-    Biblioteca delete(Long id);
-    
     List<Biblioteca> findAll();
 
     Biblioteca saveBiblioteca(Biblioteca biblioteca);
