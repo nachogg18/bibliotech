@@ -15,4 +15,6 @@ public interface TipoMultaService {
     TipoMulta edit(TipoMulta tipoMulta, Long id);
 
     Optional<TipoMulta> delete(Long id);
+
+    TipoMulta findByNombre(String nombre);
 }

@@ -105,8 +105,8 @@ public class MultaServiceImpl implements MultaService {
                         : List.of(MultaEstado.builder().fechaInicio(Instant.now()).estadoMulta(EstadoMulta.PENDIENTE ).build())
                 )
                 .fechaAlta(Instant.now())
-                .fechaInicio(request.getFechaInicioMulta())
-                .fechaFin(request.getFechaInicioMulta().plus(Duration.ofDays(tipoMulta.getCantidadDias())))
+                .fechaInicio(request.getFechaInicioMulta().truncatedTo(ChronoUnit.DAYS))
+                .fechaFin(request.getFechaInicioMulta().truncatedTo(ChronoUnit.DAYS).plus(Duration.ofDays(tipoMulta.getCantidadDias())))
                 .build();
         try {
             multaRepository.save(multa);
@@ -132,8 +132,8 @@ public class MultaServiceImpl implements MultaService {
                                 .id(multa.getId())
                                 .idPrestamo(multa.getPrestamo().getId())
                                 .idUsuario(multa.getUser().getId())
-                                .fechaDesde(multa.getFechaInicio())
-                                .fechaHasta(multa.getFechaFin())
+                                .fechaDesde(multa.getFechaInicio().truncatedTo(java.time.temporal.ChronoUnit.DAYS))
+                                .fechaHasta(multa.getFechaFin().truncatedTo(java.time.temporal.ChronoUnit.DAYS))
                                 .estado(
                                         multa.getMultaEstados().stream()
                                         .filter(estado -> estado.getFechaFin() == null)
@@ -235,8 +235,8 @@ public class MultaServiceImpl implements MultaService {
         multa.get().setTipoMulta(tipo.get());
         multa.get().setUser(usuario.get());
         multa.get().setPrestamo(prestamo.get());
-        multa.get().setFechaInicio(request.getFechaInicioMulta());
-        multa.get().setFechaFin(multa.get().getFechaInicio().plus(Duration.ofDays(tipo.get().getCantidadDias())));
+        multa.get().setFechaInicio(request.getFechaInicioMulta().truncatedTo(ChronoUnit.DAYS));
+        multa.get().setFechaFin(multa.get().getFechaInicio().truncatedTo(ChronoUnit.DAYS).plus(Duration.ofDays(tipo.get().getCantidadDias())));
         multa.get().setDescripcion(request.getDescripcion());
 
         try {
@@ -311,7 +311,7 @@ public class MultaServiceImpl implements MultaService {
                 .build();
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // medianoche todos los dias
+    @Scheduled(cron = "0 0 3 * * *") // 3am todos los dias
     public void finalizarMultaAutomatico() {
         List<Multa> multas = multaRepository.findAllByFechaBajaNullAndFechaFinBefore(Instant.now());
         for (Multa multa : multas) {
@@ -337,7 +337,7 @@ public class MultaServiceImpl implements MultaService {
         }
     }
 
-    @Scheduled(cron = "0 0 0 * * *") // medianoche todos los dias
+    @Scheduled(cron = "0 0 3 * * *") // 3am todos los dias
     public void crearMultaAutomatico() {
         logger.info("Iniciando proceso de creación de multas automático.");
         List<Prestamo> prestamos = prestamosRepository.findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant.now());
@@ -359,7 +359,7 @@ public class MultaServiceImpl implements MultaService {
 
             try {
                 createMulta(CreateMultaDTO.builder()
-                        .idMotivoMulta(1L)
+                        .idMotivoMulta(tipoMultaService.findByNombre("Multa por retraso").getId())
                         .fechaInicioMulta(Instant.now())
                         .idUsuario(prestamo.getUsuario().getId())
                         .idPrestamo(prestamo.getId())
