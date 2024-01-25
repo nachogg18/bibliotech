@@ -112,4 +112,10 @@ public interface PrestamosRepository extends BaseRepository<Prestamo, Long>, Jpa
     );
 
     List<Prestamo> findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant currentInstant);
+
+    @Query("SELECT p FROM Prestamo p WHERE p.fechaBaja IS NULL AND p.fechaFinEstimada BETWEEN :startInstant AND :endInstant")
+    List<Prestamo> findAllByIntervalFechaFinAndFechaBajaNull(
+            @Param("startInstant") Instant startInstant,
+            @Param("endInstant") Instant endInstant
+    );
 }

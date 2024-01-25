@@ -1,11 +1,6 @@
 package com.bibliotech.service;
 
-import com.bibliotech.dto.CreateMultaDTO;
-import com.bibliotech.dto.FindMultaByParamsDTO;
-import com.bibliotech.dto.MultaDetalleDTO;
-import com.bibliotech.dto.MultaItemTablaDTO;
-import com.bibliotech.entity.*;
-import com.bibliotech.dto.MultaResponse;
+import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.MultaEstadoRepository;
 import com.bibliotech.repository.MultaRepository;
@@ -14,7 +9,6 @@ import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
 import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.UserService;
-import com.bibliotech.security.service.impl.UserServiceImpl;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -92,7 +86,7 @@ public class MultaServiceImpl implements MultaService {
 
         TipoMulta tipoMulta = tipoMultaService.findById(request.getIdMotivoMulta()).orElseThrow(() -> new ValidationException(String.format("No existe TipoMulta con id: %s", request.getIdMotivoMulta())));
         User user = userService.findById(request.getIdUsuario()).orElseThrow(() -> new ValidationException(String.format("No existe User con id: %s", request.getIdUsuario())));
-        Prestamo prestamo = prestamosRepository.findById(request.getIdPrestamo()).orElseThrow(() -> new ValidationException(String.format("No existe Prestamo con id: %s", request.getIdPrestamo())));
+        Prestamo prestamo = prestamosRepository.findById(request.getIdPrestamo()).orElseThrow(() -> new ValidationException(String.format("No existe prestamo con id: %s", request.getIdPrestamo())));
 
         Multa multa = Multa.builder()
                 .prestamo(prestamo)
@@ -313,6 +307,7 @@ public class MultaServiceImpl implements MultaService {
 
     @Scheduled(cron = "0 0 3 * * *") // 3am todos los dias
     public void finalizarMultaAutomatico() {
+        logger.info("Iniciando proceso de finalización de multas automático.");
         List<Multa> multas = multaRepository.findAllByFechaBajaNullAndFechaFinBefore(Instant.now());
         for (Multa multa : multas) {
             multa.setFechaBaja(Instant.now());
@@ -335,6 +330,7 @@ public class MultaServiceImpl implements MultaService {
                     TipoNotificacion.MULTA_FINALIZADA
             );
         }
+        logger.info("Proceso de finalización de multas automático finalizado. {} multas finalizadas.",multas.size());
     }
 
     @Scheduled(cron = "0 0 3 * * *") // 3am todos los dias

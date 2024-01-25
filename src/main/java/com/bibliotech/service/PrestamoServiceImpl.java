@@ -660,5 +660,15 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
             return prestamo.get().getFechasRenovaciones();
         }
         throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Prestamo no encontrado.");
-    };
+    }
+
+    @Override
+    public List<Prestamo> findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant now) {
+        return prestamosRepository.findAllByFechaBajaNullAndFechaFinEstimadaBefore(now);
+    }
+
+    @Override
+    public List<Prestamo> findAllByIntervalFechaFinAndFechaBajaNull(Instant startInstant, Instant endInstant) {
+        return prestamosRepository.findAllByIntervalFechaFinAndFechaBajaNull(startInstant, endInstant);
+    }
 }
