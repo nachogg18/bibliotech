@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TipoMultaRepository extends BaseRepository<TipoMulta, Long>{
     List<TipoMulta> findByFechaBajaNull();
+
+    TipoMulta findByNombre(String nombre);
 }

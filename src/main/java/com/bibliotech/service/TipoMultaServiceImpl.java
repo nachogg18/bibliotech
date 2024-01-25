@@ -55,4 +55,9 @@ public class TipoMultaServiceImpl implements TipoMultaService {
         }
         return tipoMultaOptional;
     }
+
+    @Override
+    public TipoMulta findByNombre(String nombre) {
+        return tipoMultaRepository.findByNombre(nombre);
+    }
 }

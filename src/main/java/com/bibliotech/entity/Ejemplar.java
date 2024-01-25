@@ -30,7 +30,7 @@ public class Ejemplar extends Base {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<EjemplarEstado> ejemplarEstadoList = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany
     @JoinTable(name = "ejemplar_comentario",
             joinColumns = @JoinColumn(name = "ejemplar_id"),
             inverseJoinColumns = @JoinColumn(name = "comentario_id"))

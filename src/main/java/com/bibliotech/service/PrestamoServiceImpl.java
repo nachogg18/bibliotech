@@ -17,6 +17,7 @@ import jakarta.validation.ValidationException;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,14 +122,14 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         //verificaciones
         User usuarioPrestamo = verifyUsuarioYEjemplar(prestamoRequest);
         Ejemplar ejemplar =  ejemplarService.findById(prestamoRequest.getEjemplarID()).orElseThrow(() -> new ValidationException(String.format("No existe ejemplar con id %s", prestamoRequest.getEjemplarID())));
-        verifyFechaPrestamos(prestamoRequest.getFechaInicioEstimada(), prestamoRequest.getFechaFinEstimada(), ejemplar);
+        verifyFechaPrestamos(prestamoRequest.getFechaInicioEstimada().truncatedTo(ChronoUnit.DAYS), prestamoRequest.getFechaFinEstimada().truncatedTo(ChronoUnit.DAYS), ejemplar);
 
         //creacion de prestamo
         Prestamo prestamoNuevo = Prestamo.builder()
                 .estado(new ArrayList<>())
                 .fechaAlta(Instant.now())
-                .fechaInicioEstimada(prestamoRequest.getFechaInicioEstimada())
-                .fechaFinEstimada(prestamoRequest.getFechaFinEstimada())
+                .fechaInicioEstimada(prestamoRequest.getFechaInicioEstimada().truncatedTo(ChronoUnit.DAYS))
+                .fechaFinEstimada(prestamoRequest.getFechaFinEstimada().truncatedTo(ChronoUnit.DAYS))
                 .usuario(usuarioPrestamo)
                 .ejemplar(ejemplarService.findById(prestamoRequest.getEjemplarID()).get())
                 .build();
@@ -189,8 +190,8 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         if(Instant.now().isAfter(fechaFin)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fecha fin debe estar en el futuro");
 
         //comparar con dias maximos y minimos parametrizados
-        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > días max parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
-        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) < días min parametrizados) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
+        if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) > Integer.parseInt(parametroService.obtenerParametroPorNombre("cantidadMaxDiasPrestamo").getValor())) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"));
+        // if(fechaInicio.until(fechaFin, ChronoUnit.DAYS) < Integer.parseInt(parametroService.obtenerParametroPorNombre("cantidadMaxDiasPrestamo").getValor())) throw new ValidationException(String.format("El periodo de tiempo supera el permitido"))
 
         //comparar overlap con otras fechas
         if (!ejemplar.getPrestamos().isEmpty()) {
@@ -562,7 +563,7 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
         if (estadoPrestamo == null) throw new ValidationException("Error con el préstamo");
         if (estadoPrestamo.getEstado() != EstadoPrestamo.ACTIVO) throw new ValidationException("El préstamo no está activo");
 
-        verifyFechaPrestamos(req.getFechaInicioRenovacion(), req.getFechaFinRenovacion(), prestamo.getEjemplar());
+        verifyFechaPrestamos(req.getFechaInicioRenovacion().truncatedTo(ChronoUnit.DAYS), req.getFechaFinRenovacion().truncatedTo(ChronoUnit.DAYS), prestamo.getEjemplar());
 
         if (prestamo.getFechasRenovaciones() != null && prestamo.getFechasRenovaciones().size() < Integer.parseInt(parametroService.obtenerParametroPorNombre("cantidadMaxRenovaciones").getValor())){
             prestamo.getFechasRenovaciones().add(req.getFechaFinRenovacion());
