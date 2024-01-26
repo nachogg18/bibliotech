@@ -30,7 +30,7 @@ public class MultaController {
         return multaService.findByParams(request);
     }
 
-    @GetMapping(path = "/user/${id}")
+    @GetMapping(path = "/user/{id}")
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
     public List<MultaItemTablaDTO> findByUser(@PathVariable Long id) {
         return multaService.getMultasByUserId(id);
