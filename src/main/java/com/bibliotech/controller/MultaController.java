@@ -30,6 +30,12 @@ public class MultaController {
         return multaService.findByParams(request);
     }
 
+    @GetMapping(path = "/user/${id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
+    public List<MultaItemTablaDTO> findByUser(@PathVariable Long id) {
+        return multaService.getMultasByUserId(id);
+    }
+
     @PostMapping
     @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('WRITE', 'MULTA')")
     public boolean createMulta(@RequestBody CreateMultaDTO request) throws Exception {
