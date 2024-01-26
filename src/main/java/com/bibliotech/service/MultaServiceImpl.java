@@ -13,6 +13,7 @@ import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.repository.PrestamosRepository;
 import com.bibliotech.repository.specifications.MultaSpecifications;
 import com.bibliotech.security.entity.User;
+import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.UserService;
 import com.bibliotech.security.service.impl.UserServiceImpl;
 import jakarta.validation.ValidationException;
@@ -46,6 +47,7 @@ public class MultaServiceImpl implements MultaService {
     private final TipoMultaService tipoMultaService;
     private final PrestamoEstadoRepository prestamoEstadoRepository;
     private final MultaEstadoRepository multaEstadoRepository;
+    private final AuthenticationService authenticationService;
 
     private static final Logger logger = LoggerFactory.getLogger(MultaServiceImpl.class);
 
@@ -311,6 +313,24 @@ public class MultaServiceImpl implements MultaService {
                 .build();
     }
 
+    @Override
+    public List<MultaResponse> getMultaOfActiveUser() {
+        User usuario = authenticationService.getActiveUser().orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error con el usuario loggeado"));
+        return multaRepository.findByUserId(usuario.getId()).stream().map(
+                multa -> MultaResponse.builder()
+                        .multaId(multa.getId())
+                        .prestamoId(multa.getPrestamo().getId())
+                        .publicacionTitulo(multa.getPrestamo().getEjemplar().getPublicacion().getTitulo())
+                        .fechaInicioMulta(multa.getFechaInicio())
+                        .fechaFinMulta(multa.getFechaFin())
+                        .multaDescripcion(multa.getDescripcion())
+                        .estadoMulta(Objects.requireNonNull(multa.getMultaEstados().stream().filter(
+                                multaEstado -> multaEstado.getFechaFin() == null
+                        ).findFirst().orElse(null)).getEstadoMulta().name())
+                        .build()
+        ).toList();
+    }
+
     @Scheduled(cron = "0 0 3 * * *") // 3am todos los dias
     public void finalizarMultaAutomatico() {
         List<Multa> multas = multaRepository.findAllByFechaBajaNullAndFechaFinBefore(Instant.now());
@@ -379,4 +399,6 @@ public class MultaServiceImpl implements MultaService {
         }
         logger.info("Proceso de creación de multas automático finalizado. {} multas creadas.",prestamos.size());
     }
+
+
 }
