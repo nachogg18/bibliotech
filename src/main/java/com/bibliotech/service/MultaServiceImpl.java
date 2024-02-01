@@ -321,6 +321,7 @@ public class MultaServiceImpl implements MultaService {
                         .estadoMulta(Objects.requireNonNull(multa.getMultaEstados().stream().filter(
                                 multaEstado -> multaEstado.getFechaFin() == null
                         ).findFirst().orElse(null)).getEstadoMulta().name())
+                        .tipoMulta(multa.getTipoMulta().getNombre())
                         .build()
         ).toList();
     }

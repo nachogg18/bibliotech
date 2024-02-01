@@ -19,4 +19,5 @@ public class MultaResponse {
     private Instant fechaInicioMulta;
     private Instant fechaFinMulta;
     private String multaDescripcion;
+    private String tipoMulta;
 }
