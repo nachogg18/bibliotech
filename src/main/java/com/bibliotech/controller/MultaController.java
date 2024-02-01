@@ -66,4 +66,15 @@ public class MultaController {
         return ResponseEntity.ok().body(multaService.cancelarMulta(id));
     }
 
+    @GetMapping("/usuario")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
+    public ResponseEntity<List<MultaResponse>> getMultasOfActiveUser() {
+        return ResponseEntity.ok().body(multaService.getMultaOfActiveUser());
+    }
+
+    @GetMapping("/usuario/{id}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'MULTA')")
+    public ResponseEntity<List<MultaItemTablaDTO>> getMultasOfUserID(@PathVariable Long id) {
+        return ResponseEntity.ok().body(multaService.getMultasByUserId(id));
+    }
 }

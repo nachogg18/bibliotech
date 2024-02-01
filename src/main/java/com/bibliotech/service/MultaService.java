@@ -28,4 +28,6 @@ public interface MultaService {
     MultaResponse finalizarMulta (Long id);
 
     MultaResponse cancelarMulta (Long id);
+
+    List<MultaResponse> getMultaOfActiveUser();
 }
