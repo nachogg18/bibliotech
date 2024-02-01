@@ -5,4 +5,6 @@ public enum TipoNotificacion {
     MULTA_CREADA,
     MULTA_FINALIZADA,
 
+    PRESTAMO_POR_VENCER
+
 }

@@ -34,4 +34,8 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     List<PrestamoEstado> getHistorial(Long id);
 
     List<Instant> getRenovaciones(Long id);
+
+    List<Prestamo> findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant now);
+
+    List<Prestamo> findAllByIntervalFechaFinAndFechaBajaNull(Instant inicio, Instant fin);
 }
