@@ -40,5 +40,11 @@ public interface SeedService {
     @Transactional
     String cargarParametros();
     @Transactional
+    String cargarPaises();
+    @Transactional
+    String cargarProvincias();
+    @Transactional
+    String cargarLocalidades();
+    @Transactional
     String cargaMasiva();
 }

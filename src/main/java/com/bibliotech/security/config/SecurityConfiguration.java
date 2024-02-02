@@ -65,6 +65,8 @@ public class SecurityConfiguration {
                         request
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/localidades").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/localidades/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/provincias").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/facultades").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/carreras").permitAll()
                                 .requestMatchers("/error").permitAll()

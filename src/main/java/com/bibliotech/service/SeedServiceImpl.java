@@ -38,6 +38,9 @@ public class SeedServiceImpl implements SeedService{
     AuthenticationService authenticationService;
     EjemplarService ejemplarService;
     ParametroService parametroService;
+    PaisService paisService;
+    ProvinciaService provinciaService;
+    LocalidadService localidadService;
 
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
@@ -61,7 +64,10 @@ public class SeedServiceImpl implements SeedService{
             UbicacionService ubicacionService,
             AuthenticationService authenticationService,
             EjemplarService ejemplarService,
-            ParametroService parametroService
+            ParametroService parametroService,
+            PaisService paisService,
+            ProvinciaService provinciaService,
+            LocalidadService localidadService
     ) {
         this.bibliotecaService = bibliotecaService;
         this.autorService = autorService;
@@ -80,6 +86,9 @@ public class SeedServiceImpl implements SeedService{
         this.ejemplarService = ejemplarService;
         this.resourceLoader = resourceLoader;
         this.parametroService = parametroService;
+        this.paisService = paisService;
+        this.provinciaService = provinciaService;
+        this.localidadService = localidadService;
         this.objectMapper = objectMapper;
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -301,6 +310,45 @@ public class SeedServiceImpl implements SeedService{
         }
         return "Usuarios cargados";
     }
+    public String cargarPaises(){
+        try {
+            Resource paisJsonFile = resourceLoader.getResource("classpath:data/paises.json");
+            Pais[] paises = objectMapper.readValue(paisJsonFile.getInputStream(), Pais[].class);
+            for (Pais pais : paises) {
+                paisService.save(pais);
+            }
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al cargar los países -> "+e.getMessage());
+        }
+        return "Países cargados";
+    }
+
+    public String cargarProvincias(){
+        try {
+            Resource provinciasJsonFile = resourceLoader.getResource("classpath:data/provincias.json");
+            CrearProvinciaDTO[] provincias = objectMapper.readValue(provinciasJsonFile.getInputStream(), CrearProvinciaDTO[].class);
+            for (CrearProvinciaDTO provincia : provincias) {
+                provinciaService.crearProvincia(provincia);
+            }
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al cargar las provincias -> "+e.getMessage());
+        }
+        return "Provincias cargadas";
+    }
+
+    public String cargarLocalidades(){
+        try {
+            Resource localidadesJsonFile = resourceLoader.getResource("classpath:data/localidades.json");
+            CrearLocalidadDTO[] localidades = objectMapper.readValue(localidadesJsonFile.getInputStream(), CrearLocalidadDTO[].class);
+            for (CrearLocalidadDTO localidad : localidades) {
+                localidadService.crearLocalidad(localidad);
+            }
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al cargar las localidades -> "+e.getMessage());
+        }
+        return "Localidades cargadas";
+    }
+
     public String cargarParametros(){
         try {
             Resource parametrosJsonFile = resourceLoader.getResource("classpath:data/parametros.json");
@@ -332,6 +380,9 @@ public class SeedServiceImpl implements SeedService{
             this.cargarEjemplares();
             this.cargarUsuarios();
             this.cargarParametros();
+            this.cargarPaises();
+            this.cargarProvincias();
+            this.cargarLocalidades();
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Ha ocurrido un error al realizar la carga masiva -> "+e.getMessage());
         }
