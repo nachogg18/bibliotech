@@ -122,6 +122,7 @@ public class UserController {
                     .nombre(user.getFirstName())
                     .apellido(user.getLastName())
                     .email(user.getEmail())
+                    .deshailitado(user.getEndDate())
                     .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of())).build()
 
         ).collect(Collectors.toList()));

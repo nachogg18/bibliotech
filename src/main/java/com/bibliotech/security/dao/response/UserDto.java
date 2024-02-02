@@ -1,5 +1,6 @@
 package com.bibliotech.security.dao.response;
 
+import java.time.Instant;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +16,6 @@ public class UserDto {
     private String nombre;
     private String apellido;
     private String email;
+    private Instant deshailitado;
     private List<String> roles;
 }
