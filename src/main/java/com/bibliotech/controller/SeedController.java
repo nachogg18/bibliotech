@@ -95,6 +95,18 @@ public class SeedController {
     public ResponseEntity<String> cargarParametros() {
         return ResponseEntity.ok().body(seedService.cargarParametros());
     }
+    @GetMapping(path = "pais")
+    public ResponseEntity<String> cargarPaises() {
+        return ResponseEntity.ok().body(seedService.cargarPaises());
+    }
+    @GetMapping(path = "provincia")
+    public ResponseEntity<String> cargarProvincias() {
+        return ResponseEntity.ok().body(seedService.cargarProvincias());
+    }
+    @GetMapping(path = "localidad")
+    public ResponseEntity<String> cargarLocalidades() {
+        return ResponseEntity.ok().body(seedService.cargarLocalidades());
+    }
 
     @GetMapping(path = "carga-masiva")
     public ResponseEntity<String> cargaMasiva() {

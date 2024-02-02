@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface LocalidadRepository extends BaseRepository<Localidad, Long> {
     Optional<Localidad> findByIdAndAndFechaBajaNull(Long id);
     List<Localidad> findByFechaBajaNull();
+    List<Localidad> findByProvinciaId(Long provincia_id);
 }

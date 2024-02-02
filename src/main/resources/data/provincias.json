@@ -1,0 +1,98 @@
+[
+  {
+    "pais_id": 1,
+    "nombre": "Buenos Aires"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Catamarca"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Chaco"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Chubut"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Ciudad Autónoma de Buenos Aires"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Córdoba"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Corrientes"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Entre Ríos"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Formosa"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Jujuy"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "La Pampa"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "La Rioja"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Mendoza"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Misiones"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Neuquén"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Río Negro"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Salta"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "San Juan"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "San Luis"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Santa Cruz"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Santa Fe"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Santiago del Estero"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Tierra del Fuego, Antártidas del Atlántico Sur"
+  },
+  {
+    "pais_id": 1,
+    "nombre": "Tucumán"
+  }
+]

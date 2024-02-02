@@ -21,4 +21,8 @@ public class LocalidadController {
         ).toList());
     }
 
+    @GetMapping("/provincia/{id}")
+    public ResponseEntity<List<LocalidadDTO>> findByProvinciaId(@PathVariable Long id) {
+        return ResponseEntity.ok(localidadService.findByProvinciaId(id));
+    }
 }
