@@ -50,7 +50,7 @@ public class PublicacionSpecifications {
     }
 
     public static Specification<Publicacion> hasAutorWithFirstOrLastName(String autor) {
-        return hasAutorWithLastName(autor).or(hasAutorWithFirstName(autor));
+        return hasAutorWithLastName(autor.split(" ")[0]).and(hasAutorWithFirstName(autor.split(" ")[1]));
     }
 
 }
