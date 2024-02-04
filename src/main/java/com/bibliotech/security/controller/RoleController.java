@@ -2,6 +2,7 @@ package com.bibliotech.security.controller;
 
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.service.RoleService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/roles")
+@SecurityRequirement(name = "bearer-key")
 @RequiredArgsConstructor
 public class RoleController {
   private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
@@ -23,7 +25,7 @@ public class RoleController {
   @Autowired private final RoleService roleService;
 
   @PostMapping("/get-privileges-for-roles")
-  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'ROLE')")
+  //@PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'ROLE')")
   public ResponseEntity<List<GetPrivilegesFromRoleDetailResponse>> getPrivilegesForRoles(
       @RequestBody @Valid GetPrivilegesFromRoleRequest request) {
 
