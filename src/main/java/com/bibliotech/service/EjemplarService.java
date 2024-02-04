@@ -37,4 +37,6 @@ public interface EjemplarService {
 
     @Transactional
     EjemplarNFCDTO busquedaEjemplarNFC(String serialNFC);
+
+    Long count();
 }

@@ -90,4 +90,9 @@ public class UbicacionServiceImpl implements UbicacionService {
     public Ubicacion saveChanges(Ubicacion ubicacion) {
         return ubicacionRepository.save(ubicacion);
     }
+
+    @Override
+    public Long count() {
+        return ubicacionRepository.count();
+    }
 }

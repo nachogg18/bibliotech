@@ -27,5 +27,7 @@ public interface BibliotecaService {
 
     List<UbicacionResponseDTO> findBibliotecaUbicaciones(Long id);
 
+    Long count();
+
 
 }

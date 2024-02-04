@@ -12,4 +12,6 @@ public interface ProvinciaService {
 
     Provincia crearProvincia(CrearProvinciaDTO provinciaDTO);
     Provincia save(Provincia provincia);
+
+    Long count();
 }

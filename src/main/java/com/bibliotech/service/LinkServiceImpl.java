@@ -52,4 +52,9 @@ public class LinkServiceImpl implements LinkService {
 
         linkRepository.save(link);
     }
+
+    @Override
+    public Long count() {
+    return linkRepository.count();
+    }
 }

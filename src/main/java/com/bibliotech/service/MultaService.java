@@ -4,9 +4,7 @@ import com.bibliotech.dto.CreateMultaDTO;
 import com.bibliotech.dto.FindMultaByParamsDTO;
 import com.bibliotech.dto.MultaDetalleDTO;
 import com.bibliotech.dto.MultaItemTablaDTO;
-import com.bibliotech.entity.Multa;
 import com.bibliotech.dto.MultaResponse;
-
 import java.util.List;
 
 public interface MultaService {
@@ -30,4 +28,6 @@ public interface MultaService {
     MultaResponse cancelarMulta (Long id);
 
     List<MultaResponse> getMultaOfActiveUser();
+
+    Long count();
 }

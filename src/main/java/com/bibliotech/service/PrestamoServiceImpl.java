@@ -14,8 +14,6 @@ import com.bibliotech.security.service.UserService;
 import com.bibliotech.utils.RoleUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
-
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -670,5 +668,10 @@ public class PrestamoServiceImpl extends BaseServiceImpl<Prestamo, Long> impleme
     @Override
     public List<Prestamo> findAllByIntervalFechaFinAndFechaBajaNull(Instant startInstant, Instant endInstant) {
         return prestamosRepository.findAllByIntervalFechaFinAndFechaBajaNull(startInstant, endInstant);
+    }
+
+    @Override
+    public Long count() {
+        return parametroService.count();
     }
 }

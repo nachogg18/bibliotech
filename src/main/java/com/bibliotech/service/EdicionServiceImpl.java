@@ -57,4 +57,9 @@ public class EdicionServiceImpl implements EdicionService {
         }
         return edicionOptional;
     }
+
+    @Override
+    public Long count() {
+        return edicionRepository.count();
+    }
 }

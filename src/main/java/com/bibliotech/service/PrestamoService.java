@@ -38,4 +38,6 @@ public interface PrestamoService extends BaseService<Prestamo, Long>{
     List<Prestamo> findAllByFechaBajaNullAndFechaFinEstimadaBefore(Instant now);
 
     List<Prestamo> findAllByIntervalFechaFinAndFechaBajaNull(Instant inicio, Instant fin);
+
+    Long count();
 }

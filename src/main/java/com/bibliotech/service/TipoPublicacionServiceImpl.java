@@ -65,4 +65,9 @@ public class TipoPublicacionServiceImpl implements TipoPublicacionService {
         
         return tipoPublicacionOptional;
     }
+
+    @Override
+    public Long count() {
+        return tipoPublicacionRepository.count();
+    }
 }

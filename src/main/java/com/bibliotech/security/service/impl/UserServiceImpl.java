@@ -207,4 +207,8 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public List<User> findByRole(Role role) {
+        return userRepository.findByRolesContains(role);
+    }
 }

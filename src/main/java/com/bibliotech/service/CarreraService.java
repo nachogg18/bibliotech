@@ -15,4 +15,6 @@ public interface CarreraService {
     Carrera edit(Carrera carrera, Long id);
 
     Optional<Carrera> delete(Long id);
+
+    Long count();
 }

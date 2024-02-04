@@ -57,4 +57,9 @@ public class CarreraServiceImpl implements CarreraService {
         }
         return carreraOptional;
     }
+
+    @Override
+    public Long count() {
+        return carreraRepository.count();
+    }
 }

@@ -15,4 +15,6 @@ public interface FacultadService {
     Facultad edit(Facultad facultad, Long id);
 
     Optional<Facultad> delete(Long id);
+
+    Long count();
 }

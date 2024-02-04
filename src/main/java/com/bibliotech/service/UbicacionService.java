@@ -25,4 +25,6 @@ public interface UbicacionService {
     Optional<Ubicacion> delete(Long id);
 
     Ubicacion saveChanges(Ubicacion ubicacion);
+
+    Long count();
 }

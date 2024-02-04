@@ -52,4 +52,9 @@ public class PlataformaServiceImpl implements PlataformaService {
 
         plataformaRepository.save(plataforma);
     }
+
+    @Override
+    public Long count() {
+        return plataformaRepository.count();
+    }
 }

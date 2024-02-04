@@ -2,23 +2,18 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
-import com.bibliotech.mapper.ListToPageDTOMapper;
-import com.bibliotech.mapper.PublicacionRequestMapper;
 import com.bibliotech.repository.*;
 import com.bibliotech.repository.specifications.PublicacionSpecifications;
 import com.bibliotech.utils.PageUtil;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.Streams;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -467,5 +462,10 @@ public class PublicacionServiceImpl implements PublicacionService {
                 .url(publicacion.get().getLink().getUrl())
                 .instrucciones(publicacion.get().getLink().getPlataforma().getInstrucciones())
                 .build();
+    }
+
+    @Override
+    public Long count() {
+        return publicacionRepository.count();
     }
 }

@@ -14,4 +14,6 @@ public interface ResourceService {
     Optional<Resource> getResourceByName(String name);
 
     Resource saveResource(Resource resource);
+
+    Long count();
 }

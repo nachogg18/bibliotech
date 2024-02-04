@@ -8,7 +8,6 @@ import com.bibliotech.security.entity.User;
 import com.bibliotech.security.repository.RoleRepository;
 import com.bibliotech.security.service.PrivilegeService;
 import com.bibliotech.security.service.RoleService;
-import com.bibliotech.utils.PrivilegeUtils;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import java.time.Instant;
@@ -200,5 +199,10 @@ public class RoleServiceImpl implements RoleService {
         role.get().setEndDate(Instant.now());
         roleRepository.save(role.get());
         return new CreateRoleResponse(role.get().getId().toString(), role.get().getName(), role.get().getStartDate().toString(), role.get().getEndDate().toString());
+    }
+
+    @Override
+    public Long count() {
+        return roleRepository.count();
     }
 }

@@ -4,22 +4,19 @@ import com.bibliotech.dto.ComentarioDTO;
 import com.bibliotech.dto.CrearComentarioDTO;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.ComentarioRepository;
+import com.bibliotech.security.entity.User;
+import com.bibliotech.security.service.AuthenticationService;
 import jakarta.validation.ValidationException;
-
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import com.bibliotech.security.entity.User;
-import com.bibliotech.security.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -214,5 +211,10 @@ public class ComentarioServiceImpl implements ComentarioService {
     public List<ComentarioDTO> findByPublicacionId(Long id) {
         return publicacionService.getAllComentarios(id);
 
+    }
+
+    @Override
+    public Long count() {
+        return comentarioRepository.count();
     }
 }
