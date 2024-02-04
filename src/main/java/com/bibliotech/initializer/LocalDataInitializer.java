@@ -78,14 +78,6 @@ public class LocalDataInitializer implements ApplicationRunner {
    createBibliotecarioRole(privileges);
 
    createSuperAdminUser(superAdminRole);
-//
-//    User userTest = createTestBasicUser(userBasicRole);
-//
-//    Pais argentinaPais = createPais();
-//
-//    Provincia mendozaProvincia = createProvincia(argentinaPais);
-//
-//    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
 
   }
 
