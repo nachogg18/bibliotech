@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProdDataInitializer implements ApplicationRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(LocalDataInitializer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProdDataInitializer.class);
 
     private final Environment env;
 

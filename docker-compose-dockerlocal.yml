@@ -11,7 +11,7 @@ services:
     ports:
       - "3001:3306"
     volumes:
-      - ../db_data:/var/lib/mysql
+      - ./drop_database.sql:/docker-entrypoint-initdb.d/drop_database.sql
     env_file:
       - .env
     healthcheck:
@@ -39,20 +39,40 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_ROOT_PASSWORD}
       DB_NAME: ${DB_NAME}
-    depends_on: [restore]
-  restore:
-    image: mysql:8.0
-    volumes:
-      - ./restore.sh:/restore.sh
-      - ../backup_data:/backup
-    command: [ "sh", "/restore.sh" ]
-    environment:
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_ROOT_PASSWORD}
-      DB_NAME: ${DB_NAME}
+    depends_on: [db]
+  #restore:
+  #  image: mysql:8.0
+  #  volumes:
+  #    - ./restore.sh:/restore.sh
+  #    - ../backup_data:/backup
+  #  command: [ "sh", "/restore.sh" ]
+  #  environment:
+  #    DB_USER: ${DB_USER}
+  #    DB_PASS: ${DB_ROOT_PASSWORD}
+  #    DB_NAME: ${DB_NAME}
+  #  depends_on:
+  #    db:
+  #      condition: service_healthy
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8080
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dockerlocal
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_PORT: ${DB_PORT}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    env_file:
+      - .env
+    volumes:
+      - ../backup_data:/backup
 networks:
-  net:
+  bibliotech:
     external: true
