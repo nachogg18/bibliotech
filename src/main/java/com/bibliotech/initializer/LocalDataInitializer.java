@@ -5,10 +5,7 @@ import com.bibliotech.repository.PrestamoEstadoRepository;
 import com.bibliotech.security.dao.request.SignUpRequest;
 import com.bibliotech.security.dao.request.SignUpWithoutRequiredConfirmationRequest;
 import com.bibliotech.security.entity.*;
-import com.bibliotech.security.service.AuthenticationService;
-import com.bibliotech.security.service.PrivilegeService;
-import com.bibliotech.security.service.ResourceService;
-import com.bibliotech.security.service.RoleService;
+import com.bibliotech.security.service.*;
 import com.bibliotech.service.*;
 import com.bibliotech.utils.PrivilegeUtils;
 import com.bibliotech.utils.ResourceNames;
@@ -16,9 +13,7 @@ import com.bibliotech.utils.ResourceUtils;
 import com.bibliotech.utils.RoleUtils;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -64,135 +59,183 @@ public class LocalDataInitializer implements ApplicationRunner {
   private final ProvinciaService provinciaService;
 
   private final PaisService paisService;
+  
+  private final UserService userService;
 
   private final PrestamoEstadoRepository prestamoEstadoRepository;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
 
-//    Set<Resource> resources = createResources();
-//
-//    Set<Privilege> privileges = createBasicPrivileges(resources);
-//
-//    Role superAdminRole = createSuperAdminRole(privileges);
-//
-//    Role userBasicRole = createUserRole(privileges);
-//
-//    createBibliotecarioRole(privileges);
-//
-//    createSuperAdminUser(superAdminRole);
-//
-//    User userTest = createTestBasicUser(userBasicRole);
-//
-//    Pais argentinaPais = createPais();
-//
-//    Provincia mendozaProvincia = createProvincia(argentinaPais);
-//
-//    Localidad gcLocalidad = createLocalidad(mendozaProvincia);
+   Set<Resource> resources = createResources();
+
+   Set<Privilege> privileges = createBasicPrivileges(resources);
+
+   Role superAdminRole = createSuperAdminRole(privileges);
+
+   Role userBasicRole = createUserRole(privileges);
+
+   createBibliotecarioRole(privileges);
+
+   createSuperAdminUser(superAdminRole);
 
   }
 
   private Set<Resource> createResources() {
-    return ResourceUtils.getResourceNames().stream()
-        .map(
-            resourceName ->
-                resourceService.saveResource(Resource.builder().name(resourceName).build()))
-        .collect(Collectors.toSet());
+
+    if (resourceService.count() == 0) {
+      return ResourceUtils.getResourceNames().stream()
+              .map(
+                      resourceName ->
+                              resourceService.saveResource(Resource.builder().name(resourceName).build()))
+              .collect(Collectors.toSet());
+    } else {
+      logger.info("resources existentes en db, asumiendo que ya fueron cargados");
+      return resourceService.getAllResources().stream().collect(Collectors.toSet());
+    }
+
   }
 
   private Set<Privilege> createBasicPrivileges(Set<Resource> resources) {
     logger.info("creating basic privileges");
 
-    return resources.stream()
-        .flatMap(
-            resource -> {
-              logger.info(resource.getName());
-              return Arrays.stream(Action.values())
-                  .map(
-                      action ->
-                          Privilege.builder()
-                              .resource(resource)
-                              .name(String.format("%s_%s", action.name(), resource.getName()))
-                              .actions(Set.of(action))
-                              .build());
-            })
-        .peek(
-            privilege -> {
-              logger.info(
-                  String.format("Create privilege: %s, %s", privilege.getName(), privilege));
-              privilegeService.savePrivilege(privilege);
-            })
-        .collect(Collectors.toSet());
+    if (resourceService.count() == 0) {
+
+      return resources.stream()
+          .flatMap(
+              resource -> {
+                logger.info(resource.getName());
+                return Arrays.stream(Action.values())
+                    .map(
+                        action ->
+                            Privilege.builder()
+                                .resource(resource)
+                                .name(String.format("%s_%s", action.name(), resource.getName()))
+                                .actions(Set.of(action))
+                                .build());
+              })
+          .peek(
+              privilege -> {
+                logger.info(
+                    String.format("Create privilege: %s, %s", privilege.getName(), privilege));
+                privilegeService.savePrivilege(privilege);
+              })
+          .collect(Collectors.toSet());
+    } else {
+      logger.info("resources existentes en db, asumiendo que ya fueron cargados");
+      return privilegeService.getAllPrivileges().stream().collect(Collectors.toSet());
+    }
   }
 
   private Role createSuperAdminRole(Set<Privilege> privileges) {
     // get admin privilege
 
-    // crea default rol super admin user
-    return roleService.create(
-        Role.builder()
-            .startDate(Instant.now())
-            .endDate(null)
-            .name(RoleUtils.ROLE_SUPER_ADMIN)
-            .privileges(privileges)
-            .build());
+    Optional<Role> optionalSuperAdminRole = roleService.findByName(RoleUtils.ROLE_SUPER_ADMIN);
+
+    if (optionalSuperAdminRole.isEmpty()) {
+
+      // crea default rol super admin user
+      return roleService.create(
+          Role.builder()
+              .startDate(Instant.now())
+              .endDate(null)
+              .name(RoleUtils.ROLE_SUPER_ADMIN)
+              .privileges(privileges)
+              .build());
+    } else {
+      logger.info("rol superadmin ya existente");
+
+      return optionalSuperAdminRole.get();
+
+    }
+
   }
 
   private Role createUserRole(Set<Privilege> privileges) {
+    Optional<Role> optionalUserRole = roleService.findByName(RoleUtils.DEFAULT_ROLE_USER);
 
-    // obtiene privilegios de lectura para todas las entidades
-    var privilegiosLectura =
-        privileges.stream()
-            .filter(privilege -> privilege.getName().contains(PrivilegeUtils.DEFAULT_PRIVILEGE));
+    if (optionalUserRole.isEmpty()) {
+      // obtiene privilegios de lectura para todas las entidades
+      var privilegiosLectura =
+              privileges.stream()
+                      .filter(privilege -> privilege.getName().contains(PrivilegeUtils.DEFAULT_PRIVILEGE));
 
-    return roleService.create(
-        Role.builder()
-            .startDate(Instant.now())
-            .endDate(null)
-            .name(RoleUtils.DEFAULT_ROLE_USER)
-            .privileges(privilegiosLectura.collect(Collectors.toSet()))
-            .build());
+      return roleService.create(
+              Role.builder()
+                      .startDate(Instant.now())
+                      .endDate(null)
+                      .name(RoleUtils.DEFAULT_ROLE_USER)
+                      .privileges(privilegiosLectura.collect(Collectors.toSet()))
+                      .build());
+    } else {
+      logger.info("rol usuario basico ya existente");
+
+      return optionalUserRole.get();
+    }
+
+
   }
 
   private Role createBibliotecarioRole(Set<Privilege> privileges) {
+    Optional<Role> optionalBibliotecarioRole = roleService.findByName(RoleUtils.BIBLIOTECARIO_ROLE);
 
-    var recursosAdministradasPorBibliotecario =
-        Set.of(
-            ResourceNames.PRESTAMO,
-            ResourceNames.EDICION,
-            ResourceNames.EJEMPLAR,
-            ResourceNames.PLATAFORMA,
-            ResourceNames.EDITORIAL);
+    if (optionalBibliotecarioRole.isEmpty()) {
 
-    // obtiene privilegios de lectura para todas las entidades
-    var privilegiosBibliotecario =
-        recursosAdministradasPorBibliotecario.stream()
-            .flatMap(
-                resourceName ->
-                    privileges.stream()
-                        .filter(
-                            privilege ->
-                                privilege.getResource().getName().equals(resourceName.name())));
+      var recursosAdministradasPorBibliotecario =
+          Set.of(
+              ResourceNames.PRESTAMO,
+              ResourceNames.EDICION,
+              ResourceNames.EJEMPLAR,
+              ResourceNames.PLATAFORMA,
+              ResourceNames.EDITORIAL);
 
-    return roleService.create(
-        Role.builder()
-            .startDate(Instant.now())
-            .endDate(null)
-            .name(RoleUtils.BIBLIOTECARIO_ROLE)
-            .privileges(privilegiosBibliotecario.collect(Collectors.toSet()))
-            .build());
+      // obtiene privilegios de lectura para todas las entidades
+      var privilegiosBibliotecario =
+          recursosAdministradasPorBibliotecario.stream()
+              .flatMap(
+                  resourceName ->
+                      privileges.stream()
+                          .filter(
+                              privilege ->
+                                  privilege.getResource().getName().equals(resourceName.name())));
+
+      return roleService.create(
+          Role.builder()
+              .startDate(Instant.now())
+              .endDate(null)
+              .name(RoleUtils.BIBLIOTECARIO_ROLE)
+              .privileges(privilegiosBibliotecario.collect(Collectors.toSet()))
+              .build());
+    } else {
+
+      logger.info("rol bibliotecario ya existente");
+
+      return optionalBibliotecarioRole.get();
+    }
   }
 
   private void createSuperAdminUser(Role superAdminRole) {
-    // crea
-    authenticationService.signupWithoutRequiredConfirmation(
-        new SignUpWithoutRequiredConfirmationRequest(
-            new SignUpRequest(
-                env.getRequiredProperty("superadmin.firstname"),
-                env.getRequiredProperty("superadmin.lastname"),
-                env.getRequiredProperty("superadmin.email"),
-                env.getRequiredProperty("superadmin.password")),
-            List.of(superAdminRole.getId())));
+    
+    List<User> usersAsSuperAdminList = userService.findByRole(superAdminRole);
+
+    if (usersAsSuperAdminList.isEmpty()) {
+      // crea
+      authenticationService.signupWithoutRequiredConfirmation(
+              new SignUpWithoutRequiredConfirmationRequest(
+                      new SignUpRequest(
+                              env.getRequiredProperty("superadmin.firstname"),
+                              env.getRequiredProperty("superadmin.lastname"),
+                              env.getRequiredProperty("superadmin.email"),
+                              env.getRequiredProperty("superadmin.password")),
+                      List.of(superAdminRole.getId())));
+    } else {
+      logger.info("usuario/s superadmins ya existentes");
+
+      usersAsSuperAdminList.stream().forEach(
+              user -> logger.info(String.format("id: %s, email: %s", user.getId(), Objects.toString(user.getEmail(), ""))
+      ));
+    }
+
   }
 
   private User createTestBasicUser(Role basicRole) {

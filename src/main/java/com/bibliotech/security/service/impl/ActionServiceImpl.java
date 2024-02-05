@@ -26,5 +26,4 @@ public class ActionServiceImpl implements ActionService {
     public Optional<Action> getActionByName(String name) {
         return actionRepository.findByName(name);
     }
-
 }

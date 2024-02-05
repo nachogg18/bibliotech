@@ -14,4 +14,6 @@ public interface EdicionService {
     Edicion edit(Edicion edicion, Long id);
 
     Optional<Edicion> delete(Long id);
+
+    Long count();
 }

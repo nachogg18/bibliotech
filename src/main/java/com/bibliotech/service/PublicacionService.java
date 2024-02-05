@@ -2,12 +2,9 @@ package com.bibliotech.service;
 
 
 import com.bibliotech.dto.*;
-import com.bibliotech.entity.Comentario;
-import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Publicacion;
 import java.util.List;
 import java.util.Optional;
-
 
 public interface PublicacionService{
 //    List<PublicacionResponseDTO> findAll();
@@ -40,4 +37,6 @@ public interface PublicacionService{
     List<String> getAnios();
 
     List<String> getIsbns();
+
+    Long count();
 }

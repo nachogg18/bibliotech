@@ -57,4 +57,9 @@ public class EditorialServiceImpl implements EditorialService {
         }
         return editorialOptional;
     }
+
+    @Override
+    public Long count() {
+        return editorialRepository.count();
+    }
 }

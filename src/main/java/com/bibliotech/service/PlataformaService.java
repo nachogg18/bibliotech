@@ -16,4 +16,6 @@ public interface PlataformaService {
     Plataforma edit(Plataforma plataforma, Long id);
 
     void delete(Long id);
+
+    Long count();
 }

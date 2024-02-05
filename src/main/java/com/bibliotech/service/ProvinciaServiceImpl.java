@@ -5,7 +5,6 @@ import com.bibliotech.entity.Pais;
 import com.bibliotech.entity.Provincia;
 import com.bibliotech.repository.ProvinciaRepository;
 import jakarta.transaction.Transactional;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -47,5 +46,10 @@ public class ProvinciaServiceImpl implements ProvinciaService {
     @Override
     public Provincia save(Provincia provincia) {
         return provinciaRepository.save(provincia);
+    }
+
+    @Override
+    public Long count() {
+        return provinciaRepository.count();
     }
 }

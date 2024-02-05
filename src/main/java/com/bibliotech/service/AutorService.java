@@ -14,4 +14,6 @@ public interface AutorService {
     Optional<Autor> delete(Long id);
 
     List<String> obtenerNombres();
+
+    Long count();
 }

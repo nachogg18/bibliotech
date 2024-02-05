@@ -81,4 +81,9 @@ public class NotificacionServiceImpl implements NotificacionService{
         }
         logger.info("Proceso de creación de notificaciones de préstamos a vencer automático finalizado. {} notificaciones creadas.",prestamos.size());
     }
+
+    @Override
+    public Long count() {
+        return notificacionRepository.count();
+    }
 }

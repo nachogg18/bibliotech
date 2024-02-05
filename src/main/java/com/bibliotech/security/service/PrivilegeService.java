@@ -27,4 +27,6 @@ public interface PrivilegeService {
     Privilege getOne(Long id);
 
     boolean deleteOne(Long id);
+
+    Long count();
 }

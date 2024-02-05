@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.4'
 services:
   db:
     image: mysql:8.0
@@ -11,12 +11,15 @@ services:
     ports:
       - "3001:3306"
     volumes:
-      - ../db_data:/var/lib/mysql
+      - ./drop_database.sql:/docker-entrypoint-initdb.d/drop_database.sql
     env_file:
       - .env
-    networks:
-      net:
-        ipv4_address: 172.16.1.3
+    healthcheck:
+      test: mysqladmin ping -h localhost
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
   grafana-service:
     image: grafana/grafana
     restart: always
@@ -26,9 +29,48 @@ services:
       - "3002:3000"
     volumes:
       - ../grafana_data:/var/lib/grafana
-    networks:
-      net:
-        ipv4_address: 172.16.1.4
+  backup:
+    image: mysql:8.0
+    volumes:
+      - ./backup.sh:/backup.sh
+      - ../backup_data:/backup
+    command: [ "sh", "/backup.sh" ]
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_ROOT_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on: [db]
+  restore:
+    image: mysql:8.0
+    volumes:
+      - ./restore.sh:/restore.sh
+      - ../backup_data:/backup
+    command: [ "sh", "/restore.sh" ]
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_ROOT_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    image: iggatsc/bibliotech-images:02-05
+    ports:
+      - 8081:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dockerlocal
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_PORT: ${DB_PORT}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    env_file:
+      - .env
+    volumes:
+      - ../backup_data:/backup
 networks:
-  net:
+  bibliotech:
     external: true

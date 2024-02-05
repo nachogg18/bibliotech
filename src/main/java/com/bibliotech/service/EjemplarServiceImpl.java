@@ -4,20 +4,14 @@ import com.bibliotech.dto.*;
 import com.bibliotech.entity.*;
 import com.bibliotech.repository.EjemplarEstadoRepository;
 import com.bibliotech.repository.EjemplarRepository;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-
 import jakarta.validation.ValidationException;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -330,5 +324,10 @@ public class EjemplarServiceImpl implements EjemplarService {
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al buscar ejemplar -> "+e.getMessage());
         }
+    }
+
+    @Override
+    public Long count() {
+        return ejemplarRepository.count();
     }
 }

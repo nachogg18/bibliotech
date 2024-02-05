@@ -26,4 +26,6 @@ public interface ComentarioService {
     List<ComentarioDTO> findByEjemplarId(Long id);
 
     List<ComentarioDTO> findByPublicacionId(Long id);
+
+    Long count();
 }

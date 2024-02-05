@@ -14,4 +14,6 @@ public interface LinkService {
     Link edit(Link link, Long id);
 
     void delete(Long id);
+
+    Long count();
 }

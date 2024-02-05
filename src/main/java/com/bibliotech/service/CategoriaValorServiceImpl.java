@@ -76,4 +76,9 @@ public class CategoriaValorServiceImpl implements CategoriaValorService {
         }
         return valorDTOOptional;
     }
+
+    @Override
+    public Long count() {
+        return categoriaValorRepository.count();
+    }
 }

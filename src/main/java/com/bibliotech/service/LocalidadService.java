@@ -16,4 +16,6 @@ public interface LocalidadService {
     List<LocalidadDTO> findByProvinciaId(Long id);
 
     Localidad save(Localidad localidad);
+
+    Long count();
 }

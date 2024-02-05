@@ -20,4 +20,6 @@ public interface CategoriaService {
     Optional<Categoria> delete(Long id);
 
     List<FiltroCategoriaDTO> findAllDTO();
+
+    Long count();
 }
