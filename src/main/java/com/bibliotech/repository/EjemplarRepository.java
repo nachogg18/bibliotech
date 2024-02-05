@@ -14,6 +14,9 @@ import java.util.Optional;
 public interface EjemplarRepository extends BaseRepository<Ejemplar, Long> {
     Optional<Ejemplar> findById(Long id);
 
+    @Query("SELECT e FROM Ejemplar e WHERE e.ubicacion.id = :id")
+    Optional<Ejemplar> findEjemplarByUbicacionId(Long id);
+
     List<Ejemplar> findByFechaBajaNull();
 
     List<Ejemplar> findByPublicacionIdAndFechaBajaIsNull(Long publicacion_id);

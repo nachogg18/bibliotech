@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -47,6 +48,20 @@ public class EjemplarServiceImpl implements EjemplarService {
     }
 
     @Override
+    public EjemplarDetailDTO findOneByUbicacion(Long id) {
+        Ejemplar ejemplar = ejemplarRepository.findEjemplarByUbicacionId(id).orElseThrow(() -> new RuntimeException(String.format("No existe ejemplar en la ubicación %s", id)));
+        EjemplarDetailDTO dto = new EjemplarDetailDTO();
+        dto.setId(ejemplar.getId());
+        dto.setEjemplarEstadoList(ejemplar.getEjemplarEstadoList());
+        dto.setNombrePublicacion(ejemplar.getPublicacion().getTitulo());
+        dto.setIdUbicacion(ejemplar.getUbicacion().getId());
+        dto.setNombreUbicacion(ejemplar.getUbicacion().getBiblioteca().getNombre() + " - " + ejemplar.getUbicacion().getDescripcion());
+        dto.setSerialNFC(ejemplar.getSerialNFC());
+
+        return dto;
+    }
+
+    @Override
     public List<EjemplarResponseDTO> findEjemplaresByPublicacionId(Long publicacionId) {
         List<Ejemplar> ejemplares = ejemplarRepository.findByPublicacionIdAndFechaBajaIsNull(publicacionId);
         List<EjemplarResponseDTO> response = ejemplares.stream().map(this::mapEjemplarToEjemplarResponseDTO).toList();
@@ -55,6 +70,7 @@ public class EjemplarServiceImpl implements EjemplarService {
 
     @Override
     public Ejemplar createEjemplar(CrearEjemplarDTO request) throws Exception {
+
         Optional<Publicacion> publicacion = publicacionService.findById(request.getIdPublicacion());
 
         if (publicacion.isEmpty()) {
@@ -94,9 +110,11 @@ public class EjemplarServiceImpl implements EjemplarService {
         if (request.getSerialNFC() != null && request.getSerialNFC() != ejemplar.getSerialNFC())
             ejemplar.setSerialNFC(request.getSerialNFC());
         if(request.getIdUbicacion() != null && request.getIdUbicacion() != ejemplar.getPublicacion().getId()) {
-            Ubicacion ubicacion = ubicacionService.findById(request.getIdUbicacion())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
+            Ubicacion ubicacion = ubicacionService.findById(request.getIdUbicacion()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity not found"));
             ubicacionService.changeOcupada(ejemplar.getUbicacion().getId(), false);
+            if (ubicacion.isOcupada()){
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Ubicación seleccionada ya ocupada.");
+            }
             ubicacion.setOcupada(true);
             ejemplar.setUbicacion(ubicacion);
         }
@@ -136,13 +154,8 @@ public class EjemplarServiceImpl implements EjemplarService {
         ejemplar.setId(id);
         ejemplar.setFechaBaja(Instant.now());
 
-        ubicacionService.findById(ejemplar.getUbicacion().getId()).orElseThrow(() -> new RuntimeException("Error en la ubicación")).setOcupada(false);
-
+        ubicacionService.changeOcupada(ejemplar.getUbicacion().getId(), false);
         ejemplarRepository.save(ejemplar);
-
-        Ubicacion ubicacion = ejemplar.getUbicacion();
-        ubicacion.setOcupada(false);
-        ubicacionService.saveChanges(ubicacion);
     }
 
     @Override
