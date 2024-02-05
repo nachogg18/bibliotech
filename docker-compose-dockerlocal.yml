@@ -54,9 +54,7 @@ services:
       db:
         condition: service_healthy
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: iggatsc/bibliotech-images:02-05
     ports:
       - 8081:8080
     depends_on:
