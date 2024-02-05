@@ -1,6 +1,9 @@
 package com.bibliotech.security.controller;
 
 import com.bibliotech.dto.UserInfoDTO;
+import com.bibliotech.entity.Carrera;
+import com.bibliotech.entity.Facultad;
+import com.bibliotech.entity.Localidad;
 import com.bibliotech.security.dao.request.*;
 import com.bibliotech.security.dao.response.*;
 import com.bibliotech.security.entity.Role;
@@ -8,6 +11,9 @@ import com.bibliotech.security.entity.User;
 import com.bibliotech.security.service.AuthenticationService;
 import com.bibliotech.security.service.RoleService;
 import com.bibliotech.security.service.UserService;
+import com.bibliotech.service.CarreraService;
+import com.bibliotech.service.FacultadService;
+import com.bibliotech.service.LocalidadService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
@@ -41,6 +47,10 @@ public class UserController {
   @Autowired private final RoleService roleService;
 
   @Autowired private final UserService userService;
+
+  private final LocalidadService localidadService;
+  private final FacultadService facultadService;
+  private final CarreraService carreraService;
 
   @PreAuthorize("@authenticationService.authentication.authenticated")
   @GetMapping("/get-active-user-info")
@@ -194,23 +204,26 @@ public class UserController {
     }
 
     @PostMapping("/edit/my")
-    public ResponseEntity<UserDetailDto> editMyUser(@RequestBody @Valid EditUserRequest editUserRequest){
+    public ResponseEntity<UserDetailDto> editMyUser(@RequestBody @Valid UpdateMyUser editUserRequest){
         Optional<User> user = authenticationService.getActiveUser();
         if (!user.isPresent()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Usuario no encontrado.");
         }
-        user.get().setEmail(editUserRequest.email());
-        user.get().setFirstName(editUserRequest.firstName());
-        user.get().setLastName(editUserRequest.lastName());
-        if (Objects.nonNull(editUserRequest.password())){
-            user.get().setPassword(editUserRequest.password());
-        }
-        List<Role> rolesToAssing = new ArrayList<>();
-        editUserRequest.roleIds().forEach(aLong -> {
-            Role role = roleService.findOne(aLong);
-            rolesToAssing.add(role);
-        });
-        user.get().setRoles(rolesToAssing);
+
+        Localidad localidad = localidadService.findByIdAndFechaBajaNull(editUserRequest.getLocalidadId()).orElseThrow(() -> new ValidationException("Localidad no existente o habilitada"));
+        Facultad facultad = facultadService.findByIdAndFechaBajaNull(editUserRequest.getFacultadId()).orElseThrow(() -> new ValidationException("Facultad no existente o habilitada"));
+        Carrera carrera = carreraService.findByIdAndFechaBajaNull(editUserRequest.getCarreraId()).orElseThrow(() -> new ValidationException("Carrera no existente o habilitada"));
+
+        user.get().setEmail(editUserRequest.getEmail());
+        user.get().setFirstName(editUserRequest.getFirstName());
+        user.get().setLastName(editUserRequest.getLastName());
+        user.get().getUserInfo().setDni(editUserRequest.getDni());
+        user.get().getUserInfo().setLegajo(editUserRequest.getLegajo());
+        user.get().getUserInfo().setDireccionContacto(editUserRequest.getDireccionContacto());
+        user.get().getUserInfo().setTelefono(editUserRequest.getTelefonoContacto());
+        user.get().getUserInfo().setLocalidad(localidad);
+        user.get().getUserInfo().setFacultad(facultad);
+        user.get().getUserInfo().setCarrera(carrera);
         userService.save(user.get());
         return ResponseEntity.ok(UserDetailDto.builder()
                 .apellido(user.get().getLastName())
