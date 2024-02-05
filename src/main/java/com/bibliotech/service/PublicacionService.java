@@ -11,6 +11,8 @@ public interface PublicacionService{
     List<Publicacion> findAll();
     Optional<Publicacion> findById(Long id);
 
+    boolean deletePublicacion(Long id);
+
     //List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
 
     List<Publicacion> findByParams(FindPublicacionesByParamsDTO request);

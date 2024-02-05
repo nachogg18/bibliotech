@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.stream.Streams;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     private final PublicacionRepository publicacionRepository;
     private final LinkService linkService;
+    private final EjemplarRepository ejemplarRepository;
+    private final UbicacionService ubicacionService;
     private final EditorialRepository editorialRepository;
     private final EdicionRepository edicionRepository;
     private final CategoriaPublicacionRepository categoriaPublicacionRepository;
@@ -86,6 +90,41 @@ public class PublicacionServiceImpl implements PublicacionService {
     public Optional<Publicacion> findById(Long id) {
         return publicacionRepository.findById(id);
     }
+
+    public boolean deletePublicacion(Long id){
+        Optional<Publicacion> publicacionOptional = this.findById(id);
+        if (publicacionOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Publicación con id "+id+" no entontrada.");
+        }
+        Publicacion publicacion = publicacionOptional.get();
+        if (Objects.nonNull(publicacion.getFechaBaja())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Publicación con id "+id+" ya ha sido dada de baja previamente.");
+        }
+        List<Ejemplar> ejemplares = ejemplarRepository.findByPublicacionIdAndFechaBajaIsNull(id);
+        ejemplares.forEach(ejemplar -> {
+            if (Objects.isNull(ejemplar.getFechaBaja())){
+                //ejemplarService.delete(ejemplar.getId());
+                EjemplarEstado estadoEjemplar = ejemplar.getEjemplarEstadoList().stream().filter(estado -> !Objects.nonNull(estado.getFechaFin())).findFirst().get();
+                estadoEjemplar.setFechaFin(Instant.now());
+                if (estadoEjemplar.getEstadoEjemplar() == EstadoEjemplar.DISPONIBLE || estadoEjemplar.getEstadoEjemplar() == EstadoEjemplar.EN_REPARACION){
+                    EjemplarEstado nuevoEstado = new EjemplarEstado();
+                    nuevoEstado.setFechaInicio(Instant.now());
+                    nuevoEstado.setFechaFin(Instant.now());
+                    ejemplar.getEjemplarEstadoList().add(nuevoEstado);
+                } else if (estadoEjemplar.getEstadoEjemplar() != EstadoEjemplar.EXTRAVIADO){
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Para eliminar el ejemplar, debe estar en DISPONIBLE, EN_REPARACION o EXTRAVIADO");
+                }
+                ejemplar.setId(id);
+                ejemplar.setFechaBaja(Instant.now());
+                ubicacionService.changeOcupada(ejemplar.getUbicacion().getId(), false);
+                ejemplarRepository.save(ejemplar);
+            }
+        });
+        publicacion.setFechaBaja(Instant.now());
+        publicacionRepository.save(publicacion);
+        return true;
+    }
+
 
 //    @Override
 //    public List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList) {
