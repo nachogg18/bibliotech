@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mvn clean package -U
+mvn clean package spring-boot:repackage -U
 
 docker-compose down --remove-orphans
 
