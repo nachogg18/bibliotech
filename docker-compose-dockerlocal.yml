@@ -20,15 +20,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  grafana-service:
-    image: grafana/grafana
-    restart: always
-    depends_on:
-      - db
-    ports:
-      - "3002:3000"
-    volumes:
-      - ../grafana_data:/var/lib/grafana
   backup:
     image: mysql:8.0
     volumes:
