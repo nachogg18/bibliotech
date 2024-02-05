@@ -40,19 +40,19 @@ services:
       DB_PASS: ${DB_ROOT_PASSWORD}
       DB_NAME: ${DB_NAME}
     depends_on: [db]
-  #restore:
-  #  image: mysql:8.0
-  #  volumes:
-  #    - ./restore.sh:/restore.sh
-  #    - ../backup_data:/backup
-  #  command: [ "sh", "/restore.sh" ]
-  #  environment:
-  #    DB_USER: ${DB_USER}
-  #    DB_PASS: ${DB_ROOT_PASSWORD}
-  #    DB_NAME: ${DB_NAME}
-  #  depends_on:
-  #    db:
-  #      condition: service_healthy
+  restore:
+    image: mysql:8.0
+    volumes:
+      - ./restore.sh:/restore.sh
+      - ../backup_data:/backup
+    command: [ "sh", "/restore.sh" ]
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_ROOT_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      db:
+        condition: service_healthy
   web:
     build:
       context: .

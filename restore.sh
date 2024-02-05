@@ -1,4 +1,5 @@
 #!/bin/bash
+sleep 300
 while true; do
   echo "inicio de restauracion automatica del sistema"
   LATEST_DUMP=$(ls -t /backup | grep .sql | head -n 1)
