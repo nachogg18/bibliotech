@@ -193,7 +193,7 @@ public class UserController {
               .build());
     }
 
-    @PutMapping("/edit/my")
+    @PostMapping("/edit/my")
     public ResponseEntity<UserDetailDto> editMyUser(@RequestBody @Valid EditUserRequest editUserRequest){
         Optional<User> user = authenticationService.getActiveUser();
         if (!user.isPresent()) {
