@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 3600
+sleep 300
 while true; do
   TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
   echo "inicio de creacion de backup"
