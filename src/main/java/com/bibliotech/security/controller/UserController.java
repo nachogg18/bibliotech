@@ -125,15 +125,17 @@ public class UserController {
 
   @GetMapping("")
   @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('READ', 'USER')")
-  public ResponseEntity<List<UserDto>> getAllUsers() {
+  public ResponseEntity<List<GetUserAllReponse>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll().stream().map(
-            user -> UserDto.builder()
+            user -> GetUserAllReponse.builder()
                     .id((Objects.nonNull(user.getId())) ? user.getId() : 0)
                     .nombre(user.getFirstName())
                     .apellido(user.getLastName())
                     .email(user.getEmail())
                     .deshailitado(user.getEndDate())
-                    .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of())).build()
+                    .roles((Objects.nonNull(user.getRoles()) ? user.getRoles().stream().map(Role::getName).collect(Collectors.toList()) : List.of()))
+                    .userInfoDTO(Objects.nonNull(user.getUserInfo()) ? UserInfoDTO.toDto(user.getUserInfo()) : null)
+                    .build()
 
         ).collect(Collectors.toList()));
   }
@@ -240,7 +242,25 @@ public class UserController {
         if (!user.isPresent()) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User no enconcado con el id correspondiente");
         }
+        if (!user.get().isEnabled()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User ya deshabilitado");
+        }
         user.get().setEndDate(Instant.now());
+        userService.save(user.get());
+        return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/habilitar/{userId}")
+    @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('EDIT', 'USER')")
+    public ResponseEntity<Boolean> habilitarOneUser(@PathVariable @Valid @NotNull Long userId){
+        Optional<User> user = userService.findById(userId);
+        if (!user.isPresent()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User no enconcado con el id correspondiente");
+        }
+        if (user.get().isEnabled()) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "User ya habilitado");
+        }
+        user.get().setEndDate(null);
         userService.save(user.get());
         return ResponseEntity.ok(true);
     }
