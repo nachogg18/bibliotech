@@ -15,4 +15,6 @@ public interface EditorialService {
     Editorial edit(Editorial editorial, Long id);
 
     Optional<Editorial> delete(Long id);
+
+    Long count();
 }

@@ -60,4 +60,9 @@ public class TipoMultaServiceImpl implements TipoMultaService {
     public TipoMulta findByNombre(String nombre) {
         return tipoMultaRepository.findByNombre(nombre);
     }
+
+    @Override
+    public Long count() {
+        return tipoMultaRepository.count();
+    }
 }

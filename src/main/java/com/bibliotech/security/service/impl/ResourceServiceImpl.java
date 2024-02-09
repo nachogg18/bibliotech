@@ -36,4 +36,9 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource saveResource(Resource resource) {
         return resourceRepository.save(resource);
     }
+
+    @Override
+    public Long count() {
+        return resourceRepository.count();
+    }
 }

@@ -29,4 +29,9 @@ public class PaisServiceImpl implements PaisService {
     public Pais save(Pais pais) {
         return paisRepository.save(pais);
     }
+
+    @Override
+    public Long count() {
+        return paisRepository.count();
+    }
 }

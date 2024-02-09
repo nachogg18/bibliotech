@@ -2,14 +2,10 @@ package com.bibliotech.service;
 
 import com.bibliotech.dto.CrearLocalidadDTO;
 import com.bibliotech.dto.LocalidadDTO;
-import com.bibliotech.dto.MultaItemTablaDTO;
-import com.bibliotech.dto.ProvinciaDTO;
 import com.bibliotech.entity.Localidad;
-import com.bibliotech.entity.Pais;
 import com.bibliotech.entity.Provincia;
 import com.bibliotech.repository.LocalidadRepository;
 import jakarta.transaction.Transactional;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -61,5 +57,10 @@ public class LocalidadServiceImpl implements LocalidadService {
     @Override
     public Localidad save(Localidad localidad) {
         return localidadRepository.save(localidad);
+    }
+
+    @Override
+    public Long count() {
+        return localidadRepository.count();
     }
 }

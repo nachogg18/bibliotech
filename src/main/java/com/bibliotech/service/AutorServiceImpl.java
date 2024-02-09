@@ -52,4 +52,9 @@ public class AutorServiceImpl implements AutorService {
         }
         return autorOptional;
     }
+
+    @Override
+    public Long count() {
+        return autorRepository.count();
+    }
 }

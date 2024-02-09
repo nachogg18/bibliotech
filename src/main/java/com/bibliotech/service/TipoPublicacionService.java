@@ -16,4 +16,6 @@ public interface TipoPublicacionService {
     Optional<TipoPublicacion> delete(Long id);
 
     Optional<TipoPublicacion> findByIdAndFechaBajaNull(Long id);
+
+    Long count();
 }

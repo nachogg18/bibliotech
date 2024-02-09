@@ -55,4 +55,9 @@ public class FacultadServiceImpl implements FacultadService {
         }
         return facultadOptional;
     }
+
+    @Override
+    public Long count() {
+        return facultadRepository.count();
+    }
 }

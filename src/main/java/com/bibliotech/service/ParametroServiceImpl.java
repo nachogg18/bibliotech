@@ -4,14 +4,12 @@ import com.bibliotech.dto.ParametroDTO;
 import com.bibliotech.entity.Parametro;
 import com.bibliotech.repository.ParametroRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ValidationException;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -43,5 +41,8 @@ public class ParametroServiceImpl implements ParametroService {
         return parametroRepository.save(parametro);
     }
 
-
+    @Override
+    public Long count() {
+    return parametroRepository.count();
+    }
 }

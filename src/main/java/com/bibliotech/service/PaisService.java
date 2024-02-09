@@ -10,4 +10,6 @@ public interface PaisService {
     List<Pais> findByFechaBajaNull();
     
     Pais save(Pais pais);
+
+    Long count();
 }

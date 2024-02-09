@@ -16,4 +16,6 @@ public interface CategoriaValorService {
     MostrarCategoriaValorDTO edit(CrearValorDTO valorDTO, Long id);
 
     Optional<MostrarCategoriaValorDTO> delete(Long id);
+
+    Long count();
 }

@@ -147,4 +147,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
     return true;
   }
+
+  @Override
+  public Long count() {
+    return privilegeRepository.count();
+  }
 }

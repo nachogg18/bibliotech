@@ -119,6 +119,12 @@ public class PublicacionController {
     return ResponseEntity.ok().body(publicacionService.getPublicacionLink(id));
   }
 
+  @DeleteMapping(path = "/{id}")
+  @PreAuthorize("@authenticationService.hasPrivilegeOfDoActionForResource('DELETE', 'PUBLICACION')")
+  public ResponseEntity<Boolean> deletePublicacion(@PathVariable Long id){
+    return ResponseEntity.ok().body(publicacionService.deletePublicacion(id));
+  }
+
   @GetMapping(path = "/titulos")
   public ResponseEntity<List<String>> getPublicacionTitulo(){
     return ResponseEntity.ok().body(publicacionService.getTitulos());

@@ -13,6 +13,8 @@ public interface EjemplarService {
 
     EjemplarDetailDTO findOne(Long id);
 
+    EjemplarDetailDTO findOneByUbicacion(Long id);
+
     List<EjemplarResponseDTO> findEjemplaresByPublicacionId(Long publicacionId);
 
     Ejemplar createEjemplar(CrearEjemplarDTO request) throws Exception;
@@ -37,4 +39,6 @@ public interface EjemplarService {
 
     @Transactional
     EjemplarNFCDTO busquedaEjemplarNFC(String serialNFC);
+
+    Long count();
 }

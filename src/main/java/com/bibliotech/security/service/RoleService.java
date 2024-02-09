@@ -31,5 +31,7 @@ public interface RoleService  {
 
     public List<Role> getRoles();
 
+    Long count();
+
 
 }

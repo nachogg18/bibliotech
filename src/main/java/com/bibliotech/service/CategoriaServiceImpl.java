@@ -79,4 +79,9 @@ public class CategoriaServiceImpl implements CategoriaService {
     public List<FiltroCategoriaDTO> findAllDTO() {
         return FiltroCategoriaDTOMapper.toCategoriaDTO(categoriaRepository.findAll());
     }
+
+    @Override
+    public Long count() {
+        return categoriaRepository.count();
+    }
 }

@@ -17,4 +17,6 @@ public interface TipoMultaService {
     Optional<TipoMulta> delete(Long id);
 
     TipoMulta findByNombre(String nombre);
+
+    Long count();
 }

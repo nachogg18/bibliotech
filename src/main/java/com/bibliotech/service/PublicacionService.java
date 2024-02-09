@@ -2,17 +2,16 @@ package com.bibliotech.service;
 
 
 import com.bibliotech.dto.*;
-import com.bibliotech.entity.Comentario;
-import com.bibliotech.entity.Link;
 import com.bibliotech.entity.Publicacion;
 import java.util.List;
 import java.util.Optional;
-
 
 public interface PublicacionService{
 //    List<PublicacionResponseDTO> findAll();
     List<Publicacion> findAll();
     Optional<Publicacion> findById(Long id);
+
+    boolean deletePublicacion(Long id);
 
     //List<PublicacionResponseDTO> findAllPublicacionDTO(String parametro, String contenido, List<BusquedaPublicacionCategoriaDTO> busquedaPublicacionList);
 
@@ -40,4 +39,6 @@ public interface PublicacionService{
     List<String> getAnios();
 
     List<String> getIsbns();
+
+    Long count();
 }
